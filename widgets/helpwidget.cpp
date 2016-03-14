@@ -6,8 +6,7 @@
 
 HelpWidget::HelpWidget(QWidget *parent) :
     QWidget(parent),
-    m_tabWidget(new QTabWidget)
-{
+    m_tabWidget(new QTabWidget(this)) {
 
     QString helpLocation = "roboHelp.qhc";
     m_helpEngine = new QHelpEngine(helpLocation);
@@ -32,7 +31,7 @@ HelpWidget::HelpWidget(QWidget *parent) :
     mainLayout->addWidget(m_tabWidget);
 }
 
-void HelpWidget::goToHelpUrl(QUrl url){
+void HelpWidget::goToHelpUrl(QUrl url) {
     m_helpViewer->setSource(url);
     m_tabWidget->setCurrentWidget(m_helpViewer);
 }

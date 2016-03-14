@@ -1,20 +1,14 @@
-/****************************************************************************
-** This file is part of the documentation of Qt. It was originally
-** published as part of Qt Quarterly.
-** http://doc.qt.digia.com/qq/qq28-qthelp.html
-****************************************************************************/
-
 #include "helpbrowserwidget.h"
 
 HelpBrowser::HelpBrowser(QHelpEngine* helpEngine,
                          QWidget* parent):QTextBrowser(parent),
-                         helpEngine(helpEngine)
+                         m_helpEngine(helpEngine)
 {
 }
 
-QVariant HelpBrowser::loadResource(int type, const QUrl &name){
+QVariant HelpBrowser::loadResource(int type, const QUrl &name) {
     if (name.scheme() == "qthelp")
-        return QVariant(helpEngine->fileData(name));
+        return QVariant(m_helpEngine->fileData(name));
     else
         return QTextBrowser::loadResource(type, name);
 }
