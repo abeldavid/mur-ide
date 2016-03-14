@@ -54,19 +54,23 @@ void CompilerSettingsWidget::setCompilationSettings(const QString &ccPath, const
 QString CompilerSettingsWidget::sysrootPath()
 {
     //return m_sysrootEdit->text();
+    return " ";
 }
 
 QString CompilerSettingsWidget::compilerOpt()
 {
     //return m_compilerOptEdit->text();
+    return " ";
 }
 
 QString CompilerSettingsWidget::compilerPath()
 {
     //return m_compilerPathEdit->text();
+    return " ";
 }
 
 QString CompilerSettingsWidget::mingwMakePath()
 {
     //return m_mingwMakePathEdit->text();
+    return " ";
 }
