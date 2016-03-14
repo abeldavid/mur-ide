@@ -106,6 +106,7 @@ void MainWindow::runApp()
             m_localApp->kill();
         }
         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        QString pathToBins = QCoreApplication::applicationDirPath() + "mingw492_32\\murlibs";
         env.insert("PATH", env.value("Path") + ";D:\\Projects\\RoboIDE\\build-RoboIDE-Desktop_Qt_5_5_1_MinGW_32bit-Debug\\debug\\mingw492_32\\murlibs");
         m_localApp->setProcessEnvironment(env);
         m_localApp->start(m_sourceCompiller->pathToBinary());
@@ -126,8 +127,6 @@ void MainWindow::killApp()
         m_localApp->kill();
     }
     m_roboIdeConsole->append("Программа остановлена!");
-
-
 }
 
 void MainWindow::openFileOrProject()

@@ -18,11 +18,11 @@ signals:
 
 public slots:
 private:
-    QLineEdit *m_sysrootEdit;
-    QLineEdit *m_compilerPathEdit;
-    QLineEdit *m_compilerOptEdit;
-    QLineEdit *m_mingwMakePathEdit;
-    bool m_isValid = false;
+    //QLineEdit *m_sysrootEdit;
+    //QLineEdit *m_compilerPathEdit;
+    //QLineEdit *m_compilerOptEdit;
+    //QLineEdit *m_mingwMakePathEdit;
+    //bool m_isValid = false;
 };
 
 #endif // COMPILERSETTINGSWIDGET_H

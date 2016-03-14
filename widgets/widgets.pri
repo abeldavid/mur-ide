@@ -12,7 +12,8 @@ HEADERS += \
     $$PWD/helpwidget.h \
     $$PWD/helpbrowserwidget.h \
     $$PWD/projecttreewidget.h \
-    $$PWD/compilersettingswidget.h
+    $$PWD/compilersettingswidget.h \
+    $$PWD/compilationoptionsview.h
 
 SOURCES += \
     $$PWD/mainwindow.cpp \
@@ -25,4 +26,5 @@ SOURCES += \
     $$PWD/helpwidget.cpp \
     $$PWD/helpbrowserwidget.cpp \
     $$PWD/projecttreewidget.cpp \
-    $$PWD/compilersettingswidget.cpp
+    $$PWD/compilersettingswidget.cpp \
+    $$PWD/compilationoptionsview.cpp
