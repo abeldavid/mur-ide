@@ -3,6 +3,7 @@
 #include "wifipasswordwidget.h"
 #include "settingsmanager.h"
 #include "projectmanager.h"
+#include "helpwidget.h"
 
 #include <QToolBar>
 #include <QAction>
@@ -16,7 +17,6 @@
 #include <QCoreApplication>
 #include <QDesktopServices>
 #include <QMessageBox>
-#include <QtHelp>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -26,7 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
       m_connectedDevicesList(new ConnectedDevicesList(this)),
       m_settingsWidget(new SettingsWidget(this)),
       m_wifiConnection(new WiFiConnection(this)),
-      m_localApp(new QProcess(this))
+      m_localApp(new QProcess(this)),
+      m_helpWidget(new HelpWidget(this)),
+      m_projectTree(new ProjectTree(this))
 {
     setCentralWidget(m_roboIdeTextEdit);
     createActions();
@@ -151,8 +153,7 @@ void MainWindow::openFileOrProject()
 
 void MainWindow::openHelp()
 {
-    QString file =  "file:///" + QCoreApplication::applicationDirPath() + "/help.pdf";
-    QDesktopServices::openUrl(QUrl(file));
+    this->m_toggleHelpVisibilityAct->trigger();
 }
 
 void MainWindow::switchCompilationTargetToEdison()
@@ -350,6 +351,27 @@ void MainWindow::createDockWindows()
     dock->setStyleSheet(styleSheet);
     dock->toggleViewAction()->setDisabled(true);
     dock->setVisible(false);
+
+    dock = new QDockWidget(tr("Справка"), this);
+    dock->setObjectName("HelpWidget");
+    dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea
+                          | Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
+    dock->setWidget(m_helpWidget);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
+    m_toggleHelpVisibilityAct = dock->toggleViewAction();
+    m_viewMenu->addAction(m_toggleHelpVisibilityAct);
+    dock->setStyleSheet(styleSheet);
+    dock->setVisible(false);
+
+    dock = new QDockWidget(tr("Проект"), this);
+    dock->setObjectName("ProjectTreeWidget");
+    dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea
+                          | Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
+    dock->setWidget(m_projectTree);
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    m_viewMenu->addAction(dock->toggleViewAction());
+    dock->setStyleSheet(styleSheet);
+    dock->setVisible(true);
 }
 
 

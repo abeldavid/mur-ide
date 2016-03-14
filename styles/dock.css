@@ -1,18 +1,20 @@
 
 QDockWidget {
     border: none;
+    color: #FFFFFF;
 }
 
 QDockWidget::title {
-    background: #464646;
-    padding-left: 0px;
+    background-color: #464646;
+/*    background-color: #666666;*/
     border: none;
-    padding: 0px;
+    padding: 2px 2px;
 }
 
 QDockWidget::close-button, QDockWidget::float-button {
     border: none;
-    background: #464646;
+    background-color: #464646;
+/*    background-color: #666666;*/
     padding: 0px;
 }
 
@@ -27,4 +29,10 @@ QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
 QDockWidget > QWidget {
     border: 0px solid #464646;
 }
-
+QDockWidget > QTextEdit {
+    background-color: #252525;
+    color: #CCCCCC;
+    font-family: Courier;
+    font-style: normal;
+    font-size: 12pt;
+}

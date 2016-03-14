@@ -2,18 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtHelp>
 
 #include "widgets/roboidetexteditor.h"
 #include "widgets/roboideconsole.h"
-#include "widgets/projecttree.h"
-#include "widgets/helptreewidget.h"
+#include "widgets/projecttreewidget.h"
 #include "logic/sourcecompiler.h"
 #include "logic/projectmanager.h"
 #include "widgets/connecteddeviceslist.h"
 #include "widgets/settingswidget.h"
 #include "widgets/cameraswidget.h"
 #include "filetransfer/wificonnection.h"
+#include "widgets/helpwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -67,6 +66,7 @@ private:
     QAction *m_openHelpAct;
     QAction *m_edisonCompileAct;
     QAction *m_mingwCompileAct;
+    QAction *m_toggleHelpVisibilityAct;
 
     RoboIdeTextEditor *m_roboIdeTextEdit;
     RoboIdeConsole *m_roboIdeConsole;
@@ -75,6 +75,8 @@ private:
     SettingsWidget *m_settingsWidget;
     WiFiConnection *m_wifiConnection;
     QProcess *m_localApp;
+    HelpWidget *m_helpWidget;
+    ProjectTree *m_projectTree;
 };
 
 #endif // MAINWINDOW_H

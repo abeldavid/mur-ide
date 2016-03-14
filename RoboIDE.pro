@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = RoboIDE
 TEMPLATE = app
-
+RC_FILE = icon.rc
 CONFIG += c++11
 
 win32 {
@@ -55,13 +55,26 @@ CONFIG(debug, debug | release) : {
         $$PWD\extlibs\zmq\mingw32\bin\libzmq.dll
 }
 
+HELP_COMMAND = $$[QT_INSTALL_BINS]\qcollectiongenerator
+HELP_SOURCE = $$PWD\help\robohelp.qhcp
+HELP_INDEX = $$PWD\help\robohelp.qhc
+HELP_CONTENT =$$PWD\help\help.qch
 # Replace slashes in paths with backslashes for Windows
-#EXTRA_DLL ~= s,/,\\,g
+HELP_COMMAND ~= s,/,\\,g
+HELP_SOURCE ~= s,/,\\,g
+HELP_INDEX ~= s,/,\\,g
+HELP_CONTENT ~= s,/,\\,g
+
+build_help.commands = $$quote(cmd /c $${HELP_COMMAND} /S /I /Y $${HELP_SOURCE} -o $${HELP_INDEX})
+copy_help_index.commands = $$quote(cmd /c xcopy /S /I /Y $${HELP_INDEX} $${DESTINATION_DIR})
+copy_help_content.commands = $$quote(cmd /c xcopy /S /I /Y $${HELP_CONTENT} $${DESTINATION_DIR})
+
+HELP_TARGETS = build_help copy_help_index copy_help_content
 
 copyToDestdir($$EXTRA_DLL)
 
-QMAKE_EXTRA_TARGETS += copyfiles
-POST_TARGETDEPS += copyfiles
+QMAKE_EXTRA_TARGETS += copyfiles $${HELP_TARGETS}
+POST_TARGETDEPS += copyfiles $${HELP_TARGETS}
 
 }
 

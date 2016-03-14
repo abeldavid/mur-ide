@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>RoboIDE</namespace>
+    <virtualFolder>robo</virtualFolder>
+    <filterSection>
+        <filterAttribute>RoboIDE</filterAttribute>
+        <filterAttribute>MUR</filterAttribute>
+        <toc>
+            <section title="MUR RoboIDE" ref="doc.html">
+                <section title="Камера" ref="doc.html#Camera"/>
+                <section title="Движители" ref="doc.html#Engines"/>
+                <section title="Инерциальный сенсор" ref="doc.html#Sensors"/>
+				<section title="IDE" ref="doc.html#IDE"/>
+            </section>
+			<section title="IDE MUR Robot" ref="doc.html">
+                <section title="Камера" ref="doc.html#Camera"/>
+                <section title="Движители" ref="doc.html#Engines"/>
+                <section title="Инерциальный сенсор" ref="doc.html#Sensors"/>
+				<section title="IDE" ref="doc.html#IDE"/>
+            </section>
+			<section title="MUR IDE Robot" ref="doc.html">
+                <section title="Камера" ref="doc.html#Camera"/>
+                <section title="Движители" ref="doc.html#Engines"/>
+                <section title="Инерциальный сенсор" ref="doc.html#Sensors"/>
+				<section title="IDE" ref="doc.html#IDE"/>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="IDE" id="MyApplication::foo" ref="doc.html#IDE"/>
+            <keyword name="Camera" ref="doc.html#Camera"/>
+        </keywords>
+        <files>
+            <file>*.html</file>
+        </files>
+    </filterSection>
+</QtHelpProject>
