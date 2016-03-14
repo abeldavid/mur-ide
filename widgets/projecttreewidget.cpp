@@ -17,7 +17,7 @@ ProjectTree::ProjectTree(QWidget *parent) :
     }
 //    qDebug() << projectsRoot;
     m_fileModel->setRootPath(projectsRoot);
-    QTreeView *tree = new QTreeView();
+    QTreeView *tree = new QTreeView(this);
     tree->setModel(m_fileModel);
     tree->hideColumn(1);
     tree->hideColumn(2);
