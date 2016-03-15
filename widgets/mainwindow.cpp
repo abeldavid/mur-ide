@@ -2,7 +2,6 @@
 #include "roboideconsole.h"
 #include "wifipasswordwidget.h"
 #include "settingsmanager.h"
-#include "projectmanager.h"
 #include "helpwidget.h"
 
 #include <QToolBar>

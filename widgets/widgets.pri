@@ -6,23 +6,25 @@ HEADERS += \
     $$PWD/roboideconsole.h \
     $$PWD/roboidetexteditor.h \
     $$PWD/connecteddeviceslist.h \
-    $$PWD/projectmanagerwindow.h \
     $$PWD/wifipasswordwidget.h \
     $$PWD/settingswidget.h \
     $$PWD/helpwidget.h \
     $$PWD/helpbrowserwidget.h \
     $$PWD/projecttreewidget.h \
-    $$PWD/compilersettingswidget.h
+    $$PWD/compilersettingswidget.h \
+    $$PWD/projectcreatedialog.h \
+    $$PWD/fileadddialog.h
 
 SOURCES += \
     $$PWD/mainwindow.cpp \
     $$PWD/roboideconsole.cpp \
     $$PWD/roboidetexteditor.cpp \
     $$PWD/connecteddeviceslist.cpp \
-    $$PWD/projectmanagerwindow.cpp \
     $$PWD/wifipasswordwidget.cpp \
     $$PWD/settingswidget.cpp \
     $$PWD/helpwidget.cpp \
     $$PWD/helpbrowserwidget.cpp \
     $$PWD/projecttreewidget.cpp \
-    $$PWD/compilersettingswidget.cpp
+    $$PWD/compilersettingswidget.cpp \
+    $$PWD/projectcreatedialog.cpp \
+    $$PWD/fileadddialog.cpp

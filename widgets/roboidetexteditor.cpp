@@ -1,5 +1,4 @@
 #include "roboidetexteditor.h"
-#include "logic/projectmanager.h"
 
 #include <Qsci/qscilexercpp.h>
 #include <QFontDatabase>
@@ -69,10 +68,6 @@ void RoboIdeTextEditor::saveFile()
 {
     if (m_isFileExist)
     {
-        if (ProjectManager::instance().getProject()->isOpened()) {
-            emit projectFileSaved();
-        }
-
         QFile fileToSave(m_pathToFile);
         if (!fileToSave.open(QIODevice::WriteOnly | QFile::Truncate | QIODevice::Text))
         {
@@ -142,14 +137,7 @@ QString RoboIdeTextEditor::pathToFile() const
 }
 void RoboIdeTextEditor::handleChangedText()
 {
-    if (ProjectManager::instance().getProject()->isOpened()) {
-        if (m_skipNullTextChanged) {
-            m_skipNullTextChanged = false;
-        }
-        else {
-           emit textChanged(text());
-        }
-    }
+
 }
 
 void RoboIdeTextEditor::setupEditor()
