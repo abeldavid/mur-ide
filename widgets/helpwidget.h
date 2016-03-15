@@ -1,13 +1,9 @@
 #ifndef HELPWIDGET_H
 #define HELPWIDGET_H
 #include <QWidget>
-#include <QVBoxLayout>
 #include <QTabWidget>
-#include <QSplitter>
 #include <helpbrowserwidget.h>
 #include <QtHelp/QHelpEngine>
-#include <QtHelp/QHelpContentWidget>
-#include <QtHelp/QHelpIndexWidget>
 
 class HelpWidget : public QWidget
 {

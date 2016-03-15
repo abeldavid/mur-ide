@@ -1,4 +1,5 @@
 #include "helpbrowserwidget.h"
+#include <QDebug>
 
 HelpBrowser::HelpBrowser(QHelpEngine* helpEngine,
                          QWidget* parent):QTextBrowser(parent),

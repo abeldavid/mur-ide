@@ -1,6 +1,8 @@
 #include <QFile>
 #include <QLabel>
 #include <QDebug>
+#include <QVBoxLayout>
+#include <QtHelp/QHelpContentWidget>
 
 #include "helpwidget.h"
 
