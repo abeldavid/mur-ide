@@ -1,21 +1,18 @@
 #include "projecttreewidget.h"
-#include "logic/projectmanager.h"
+#include "projectmanager.h"
 #include <QDebug>
-
+#include <QTreeWidget>
+#include <QVBoxLayout>
+#include <QDir>
+#include <QString>
 
 ProjectTree::ProjectTree(QWidget *parent) :
     QWidget(parent)
 {
     QFileSystemModel *m_fileModel = new QFileSystemModel;
-    QString projectsRoot = QStandardPaths::locate(QStandardPaths::DocumentsLocation,
-                                                  "MURProjects",
-                                                  QStandardPaths::LocateDirectory);
-    if (projectsRoot.isEmpty()) {
-        projectsRoot = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
-                + QDir::separator() + QString("MURProjects");
-        QDir().mkdir(projectsRoot);
-    }
-//    qDebug() << projectsRoot;
+
+    QString projectsRoot = ProjectManager::instance().projectsRoot();
+    qDebug() << projectsRoot;
     m_fileModel->setRootPath(projectsRoot);
     QTreeView *tree = new QTreeView(this);
     tree->setModel(m_fileModel);

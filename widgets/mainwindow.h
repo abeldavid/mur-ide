@@ -7,7 +7,6 @@
 #include "widgets/roboideconsole.h"
 #include "widgets/projecttreewidget.h"
 #include "logic/sourcecompiler.h"
-#include "logic/projectmanager.h"
 #include "widgets/connecteddeviceslist.h"
 #include "widgets/settingswidget.h"
 #include "widgets/cameraswidget.h"
@@ -31,6 +30,9 @@ private slots:
     void switchCompilationTargetToEdison();
     void switchCompilationTargetToDesktop();
     void processOutReceived();
+    void projectCreateDialog();
+//    void projectOpenDialog();
+    void fileAddDialog();
 
 private:
     void createMenus();
@@ -48,7 +50,9 @@ private:
 
     QToolBar *m_toolBar;
 
-    QAction *m_newFileAct;
+    QAction *m_createProjectAct;
+    QAction *m_openProjectAct;
+    QAction *m_createFileAct;
     QAction *m_saveAct;
     QAction *m_saveAsAct;
     QAction *m_undoAct;

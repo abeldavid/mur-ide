@@ -3,6 +3,8 @@
 #include "wifipasswordwidget.h"
 #include "settingsmanager.h"
 #include "helpwidget.h"
+#include "fileadddialog.h"
+#include "projectcreatedialog.h"
 
 #include <QToolBar>
 #include <QAction>
@@ -150,6 +152,15 @@ void MainWindow::openFileOrProject()
     m_roboIdeTextEdit->openFile(fileName);
 }
 
+void MainWindow::projectCreateDialog() {
+    ProjectCreateDialog dialog(this);
+    dialog.exec();
+}
+
+void MainWindow::fileAddDialog() {
+
+}
+
 void MainWindow::openHelp()
 {
     this->m_toggleHelpVisibilityAct->trigger();
@@ -203,9 +214,13 @@ void MainWindow::createActions()
     m_saveAsAct->setShortcut(QKeySequence::SaveAs);
     m_saveAsAct->setIconVisibleInMenu(false);
 
-    m_newFileAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый файл"), this);
-    m_newFileAct->setShortcut(QKeySequence::New);
-    m_newFileAct->setIconVisibleInMenu(false);
+    m_createFileAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый файл"), this);
+    m_createFileAct->setShortcut(QKeySequence::New);
+    m_createFileAct->setIconVisibleInMenu(false);
+
+    m_createProjectAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый проект"), this);
+//    m_createProjectAct->setShortcut(QKeySequence::New);
+//    m_createProjectAct->setIconVisibleInMenu(false);
 
     m_pasteAct = new QAction(QIcon(":/icons/icons/tools/paste.png"), tr("Вставить"), this);
     m_pasteAct->setShortcut(QKeySequence::Paste);
@@ -268,7 +283,7 @@ void MainWindow::createToolBars()
     m_viewMenu->addAction(m_toolBar->toggleViewAction());
     m_toolBar->setIconSize(QSize(22, 22));
 
-    m_toolBar->addAction(m_newFileAct);
+    m_toolBar->addAction(m_createFileAct);
     m_toolBar->addAction(m_openFileAct);
     m_toolBar->addAction(m_saveAct);
     m_toolBar->addAction(m_saveAsAct);
@@ -296,10 +311,13 @@ void MainWindow::createMenus()
     m_fileMenu = menuBar()->addMenu(tr("&Файл"));
     menuBar()->setStyleSheet(styleSheet);
 
-    m_fileMenu->addAction(m_newFileAct);
+//    m_fileMenu->addAction(m_newFileAct);
+//    m_fileMenu->addAction(m_openFileAct);
+    m_fileMenu->addAction(m_createProjectAct);
+//    m_fileMenu->addAction(m_openProjectAct);
     m_fileMenu->addAction(m_openFileAct);
     m_fileMenu->addAction(m_saveAct);
-    m_fileMenu->addAction(m_saveAsAct);
+//    m_fileMenu->addAction(m_saveAsAct);
 
     m_editMenu = menuBar()->addMenu(tr("&Правка"));
     m_editMenu->addAction(m_redoAct);
@@ -373,18 +391,20 @@ void MainWindow::createDockWindows()
     dock->setVisible(true);
 }
 
-
 void MainWindow::connectActionsToSlots()
 {
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
-    QObject::connect(m_openFileAct, SIGNAL(triggered(bool)), this, SLOT(openFileOrProject()));
+//    QObject::connect(m_openFileAct, SIGNAL(triggered(bool)), this, SLOT(openFileOrProject()));
+    QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectCreateDialog()));
+//    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
+//    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
     QObject::connect(m_saveAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFile()));
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFileAs()));
     QObject::connect(m_redoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(redo()));
     QObject::connect(m_undoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(undo()));
     QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(copy()));
     QObject::connect(m_pasteAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(paste()));
-    QObject::connect(m_newFileAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(blankFile()));
+    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(blankFile()));
     //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
     QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));

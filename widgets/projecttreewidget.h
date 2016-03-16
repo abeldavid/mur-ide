@@ -3,11 +3,8 @@
 
 #include <QWidget>
 #include <QFileSystemModel>
-#include <QTreeWidget>
-#include <QDir>
-#include <QStandardPaths>
 //#include <QAction>
-#include <QVBoxLayout>
+
 
 class ProjectTree : public QWidget
 {
