@@ -1,5 +1,4 @@
 #include "projecttreewidget.h"
-#include "projectmanager.h"
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QDir>
@@ -20,7 +19,6 @@ ProjectTree::ProjectTree(QWidget *parent) :
     mainLayout->addWidget(m_tree);
 
     connect(m_tree, SIGNAL(clicked(QModelIndex)), this, SLOT(itemSelected(QModelIndex)));
-    connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(loadProject(QString)));
 }
 
 void ProjectTree::loadProject(QString projectDir) {

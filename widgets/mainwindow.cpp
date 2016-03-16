@@ -4,6 +4,7 @@
 #include "settingsmanager.h"
 #include "helpwidget.h"
 #include "fileadddialog.h"
+#include "projectmanager.h"
 #include "projectcreatedialog.h"
 
 #include <QToolBar>
@@ -393,11 +394,12 @@ void MainWindow::createDockWindows()
 
 void MainWindow::connectActionsToSlots()
 {
-    QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
-//    QObject::connect(m_openFileAct, SIGNAL(triggered(bool)), this, SLOT(openFileOrProject()));
+    //    QObject::connect(m_openFileAct, SIGNAL(triggered(bool)), this, SLOT(openFileOrProject()));
     QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectCreateDialog()));
-//    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
-//    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), m_projectTree, SLOT(loadProject(QString)));
+    //    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
+    //    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
+    QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
     QObject::connect(m_saveAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFile()));
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFileAs()));
     QObject::connect(m_redoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(redo()));
