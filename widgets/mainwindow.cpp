@@ -15,6 +15,7 @@
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QDebug>
+#include <QDir>
 #include <QJsonDocument>
 #include <QCoreApplication>
 #include <QDesktopServices>
@@ -165,6 +166,14 @@ void MainWindow::fileAddDialog() {
 void MainWindow::openHelp()
 {
     this->m_toggleHelpVisibilityAct->trigger();
+}
+
+void MainWindow::openDefaultFile(QString projectDir)
+{
+    m_roboIdeTextEdit->openFile(projectDir +
+                                QDir::separator() +
+                                ProjectManager::instance().defaulOpenFileName());
+
 }
 
 void MainWindow::switchCompilationTargetToEdison()
@@ -397,6 +406,7 @@ void MainWindow::connectActionsToSlots()
     //    QObject::connect(m_openFileAct, SIGNAL(triggered(bool)), this, SLOT(openFileOrProject()));
     QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectCreateDialog()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), m_projectTree, SLOT(loadProject(QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(openDefaultFile(QString)));
     //    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
     //    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));

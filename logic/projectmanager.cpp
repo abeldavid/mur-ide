@@ -23,6 +23,10 @@ QString ProjectManager::projectsRoot() const {
     return m_project->m_projectsRoot;
 }
 
+QString ProjectManager::defaulOpenFileName() const {
+    return Project::defaultSourceName;
+}
+
 QString ProjectManager::defaultNewProjectName() const {
     return m_project->getDefaultProjectName();
 }
