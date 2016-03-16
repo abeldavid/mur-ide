@@ -6,6 +6,8 @@
 #include <QStandardPaths>
 #include <QStringList>
 #include <QRegExp>
+#include <QCollator>
+#include <algorithm>
 
 const QString Project::defaultSourceName = "main.cpp";
 const QString Project::defaultSource = "#include \"main.h\"\n\n"
@@ -50,18 +52,27 @@ bool Project::create(const QString &path, const QString &name) {
 
 QString Project::getDefaultProjectName() {
     QDir dir(m_projectsRoot);
+    qDebug() << m_projectsRoot;
     QStringList filters;
     filters << Project::defaultProjectPrefix + QString("*");
-    QStringList dirsInRoot = dir.entryList(filters, QDir::Dirs, QDir::Name);
-    int maxProjectIndex = 0;
-    if (dirsInRoot.size() > 0 ) {
+    QStringList dirsInRoot = dir.entryList(filters, QDir::Dirs, QDir::NoSort);
+    int maxProjectNumber = 0;
+    if (dirsInRoot.size() > 0) {
+        // Как все сложно
+        QCollator collator;
+        collator.setNumericMode(true);
+        std::sort(dirsInRoot.begin(),
+                  dirsInRoot.end(),
+                  [&collator](const QString &file1, const QString &file2) {
+                      return collator.compare(file1, file2) < 0;
+                  });
         QRegExp rx(Project::defaultProjectPrefix + "\\d+");
-        int lastProjectINdex = dirsInRoot.lastIndexOf(rx);
-        if (lastProjectINdex != -1) {
-            maxProjectIndex = dirsInRoot.at(lastProjectINdex).split(Project::defaultProjectPrefix)[1].toInt();
+        int lastProjectIndex = dirsInRoot.lastIndexOf(rx);
+        if (lastProjectIndex != -1) {
+            maxProjectNumber = dirsInRoot.at(lastProjectIndex).split(Project::defaultProjectPrefix)[1].toInt();
         }
     }
-    return Project::defaultProjectPrefix + QString::number(maxProjectIndex + 1);
+    return Project::defaultProjectPrefix + QString::number(maxProjectNumber + 1);
 }
 
 bool Project::addDefaultFile(const QString &name, const QString &content){
