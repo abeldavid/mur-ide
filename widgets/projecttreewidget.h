@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QFileSystemModel>
+#include <QTreeView>
 //#include <QAction>
 
 
@@ -12,9 +13,11 @@ class ProjectTree : public QWidget
 public:
     explicit ProjectTree(QWidget *parent = 0);
     virtual ~ProjectTree();
+public slots:
+    void loadProject(QString projectDir);
 private:
-    QFileSystemModel m_fileModel;
-//    QTreeWidget m_treeView;
+    QFileSystemModel *m_fileModel;
+    QTreeView *m_tree;
 private slots:
     void itemSelected(const QModelIndex & index);
 };

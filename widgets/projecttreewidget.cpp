@@ -1,32 +1,36 @@
 #include "projecttreewidget.h"
 #include "projectmanager.h"
 #include <QDebug>
-#include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QDir>
 #include <QString>
 
 ProjectTree::ProjectTree(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    m_fileModel(new QFileSystemModel(this)),
+    m_tree(new QTreeView(this))
 {
-    QFileSystemModel *m_fileModel = new QFileSystemModel;
-
-    QString projectsRoot = ProjectManager::instance().projectsRoot();
-//    qDebug() << projectsRoot;
-    m_fileModel->setRootPath(projectsRoot);
-    QTreeView *tree = new QTreeView(this);
-    tree->setModel(m_fileModel);
-    tree->hideColumn(1);
-    tree->hideColumn(2);
-    tree->hideColumn(3);
-    tree->setRootIndex(m_fileModel->index(projectsRoot));
+    m_tree->setModel(m_fileModel);
+    m_tree->hideColumn(1);
+    m_tree->hideColumn(2);
+    m_tree->hideColumn(3);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     setLayout(mainLayout);
-    mainLayout->addWidget(tree);
+    mainLayout->addWidget(m_tree);
 
-    connect(tree,SIGNAL(clicked(QModelIndex)),this,SLOT(itemSelected(QModelIndex)));
+    connect(m_tree, SIGNAL(clicked(QModelIndex)), this, SLOT(itemSelected(QModelIndex)));
+    connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(loadProject(QString)));
 }
+
+void ProjectTree::loadProject(QString projectDir) {
+    m_fileModel->setRootPath(projectDir);
+    m_tree->setRootIndex(m_fileModel->index(projectDir));
+    m_tree->hideColumn(1);
+    m_tree->hideColumn(2);
+    m_tree->hideColumn(3);
+}
+
 void ProjectTree::itemSelected(const QModelIndex & index){
     qDebug()<<index;
 
@@ -34,5 +38,4 @@ void ProjectTree::itemSelected(const QModelIndex & index){
 
 ProjectTree::~ProjectTree()
 {
-//    m_treeView->deleteLater();
 }

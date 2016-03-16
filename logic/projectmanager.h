@@ -21,7 +21,7 @@ public:
     Project* project() const;
 
 signals:
-    void projectCreated();
+    void projectCreated(QString path);
     void projectCreateFailed();
 
 public slots:

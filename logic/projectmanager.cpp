@@ -1,4 +1,5 @@
 #include "projectmanager.h"
+#include <QDebug>
 
 ProjectManager::ProjectManager(QObject *parent) :
     QObject(parent),
@@ -28,7 +29,7 @@ QString ProjectManager::defaultNewProjectName() const {
 
 void ProjectManager::createProject(const QString &name, const QString &path) {
     if (m_project->create(name, path)) {
-        emit projectCreated();
+        emit projectCreated(m_project->m_projectDir.absolutePath());
     } else {
         emit projectCreateFailed();
     }
