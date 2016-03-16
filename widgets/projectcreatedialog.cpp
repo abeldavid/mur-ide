@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QDebug>
 
 ProjectCreateDialog::ProjectCreateDialog(QWidget *parent) :
     QDialog(parent),
@@ -32,24 +33,26 @@ ProjectCreateDialog::ProjectCreateDialog(QWidget *parent) :
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel);
 
+    layout->addWidget(buttonBox);
+
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-    connect(loadPathButton, SIGNAL(clicked(bool)), this, SLOT(onLoadClicked()));
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(createProject()));
 
-    layout->addWidget(buttonBox);
-
-//    QPushButton *okButton = new QPushButton(tr("OK"), this);
-//    layout->addWidget(okButton, 2, 1);
-//    okButton->setDefault(true);
+    connect(loadPathButton, SIGNAL(clicked(bool)), this, SLOT(selectFolder()));
 }
 
-void ProjectCreateDialog::onLoadClicked()
-{
+void ProjectCreateDialog::selectFolder() {
     QString dir = QFileDialog::getExistingDirectory(this,
                                                     tr("Директория с проектами"),
                                                     ProjectManager::instance().projectsRoot());
     if (!dir.isEmpty()) {
         m_dirLocationEdit->setText(dir);
     }
+}
+
+void ProjectCreateDialog::createProject() {
+    ProjectManager::instance().createProject(m_dirLocationEdit->text(), m_nameEdit->text());
+
 }

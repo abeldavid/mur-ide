@@ -12,7 +12,7 @@ ProjectTree::ProjectTree(QWidget *parent) :
     QFileSystemModel *m_fileModel = new QFileSystemModel;
 
     QString projectsRoot = ProjectManager::instance().projectsRoot();
-    qDebug() << projectsRoot;
+//    qDebug() << projectsRoot;
     m_fileModel->setRootPath(projectsRoot);
     QTreeView *tree = new QTreeView(this);
     tree->setModel(m_fileModel);
@@ -25,9 +25,9 @@ ProjectTree::ProjectTree(QWidget *parent) :
     setLayout(mainLayout);
     mainLayout->addWidget(tree);
 
-    connect(tree,SIGNAL(clicked(QModelIndex)),this,SLOT(ItemSelected(QModelIndex)));
+    connect(tree,SIGNAL(clicked(QModelIndex)),this,SLOT(itemSelected(QModelIndex)));
 }
-void ProjectTree::ItemSelected(const QModelIndex & index){
+void ProjectTree::itemSelected(const QModelIndex & index){
     qDebug()<<index;
 
 }

@@ -9,7 +9,7 @@
 
 const QString Project::defaultSourceName = "main.cpp";
 const QString Project::defaultSource = "#include \"main.h\"\n\n"
-                                        "void main(){}";
+                                        "void main (){\n\n}";
 const QString Project::defaultHeaderName = "main.h";
 const QString Project::defaultHeader = "#define HELLO \"Hello World!\" ";
 const QString Project::defaultProjectPrefix = "Project_";
@@ -30,15 +30,15 @@ Project::~Project(){
 //    delete *m_projectDir;
 }
 
-bool Project::create(const QString &name, const QString &path){
+bool Project::create(const QString &path, const QString &name) {
     bool result;
     QDir projectDir(path);
     if (projectDir.exists() and
             projectDir.mkdir(name) and
             projectDir.cd(name) and
-            this->addDefaultFile(Project::defaultSourceName,
+            this->addDefaultFile(projectDir.absolutePath() + QDir::separator() + Project::defaultSourceName,
                                  Project::defaultSource) and
-            this->addDefaultFile(Project::defaultHeaderName,
+            this->addDefaultFile(projectDir.absolutePath() + QDir::separator() + Project::defaultHeaderName,
                                  Project::defaultHeader)) {
         m_projectDir = projectDir;
         result = true;
@@ -48,7 +48,7 @@ bool Project::create(const QString &name, const QString &path){
     return result;
 }
 
-QString Project::getDefaultProjectName(){
+QString Project::getDefaultProjectName() {
     QDir dir(m_projectsRoot);
     QStringList filters;
     filters << Project::defaultProjectPrefix + QString("*");

@@ -1,3 +1,7 @@
+/*
+It is a singleton which manages project.h and emits signals for interface widgets (it has slots also)
+*/
+
 #ifndef PROJECTMANAGER_H
 #define PROJECTMANAGER_H
 
@@ -21,7 +25,7 @@ signals:
     void projectCreateFailed();
 
 public slots:
-    void createProject(const QString &name, const QString &path);
+    void createProject(const QString &path, const QString &name);
 
 private:
 

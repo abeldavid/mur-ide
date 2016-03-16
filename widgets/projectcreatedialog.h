@@ -13,7 +13,8 @@ private:
     QLineEdit *m_dirLocationEdit;
     QLineEdit *m_nameEdit;
 private slots:
-    void onLoadClicked();
+    void selectFolder();
+    void createProject();
 
 };
 

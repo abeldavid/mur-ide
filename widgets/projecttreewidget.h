@@ -16,7 +16,7 @@ private:
     QFileSystemModel m_fileModel;
 //    QTreeWidget m_treeView;
 private slots:
-    void ItemSelected(const QModelIndex & index);
+    void itemSelected(const QModelIndex & index);
 };
 
 #endif // PROJECTTREE_H
