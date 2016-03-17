@@ -2,9 +2,11 @@
 #include "projectmanager.h"
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <QComboBox>
 #include <QLabel>
-#include <QPushButton>
 #include <QDebug>
+#include <QHash>
+#include <QStringList>
 
 FileCreateDialog::FileCreateDialog(QWidget *parent) :
     QDialog(parent),
@@ -19,21 +21,38 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
 
     layout->addWidget(nameLabel);
     layout->addWidget(m_nameEdit);
-    m_nameEdit->setText(ProjectManager::instance().defaultNewFileName(".cpp"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel);
-
     layout->addWidget(buttonBox);
+
+    QComboBox *comboBox = new QComboBox(this);
+    comboBox->addItems(QStringList(Project::defaultFilePrefixes.keys()));
+    layout->addWidget(comboBox);
+
+    this->setDefaultFileName(comboBox->currentText());
 
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(createFile()));
+
+    connect(comboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setDefaultFileName(QString)));
 }
 
 void FileCreateDialog::createFile()
 {
-    qDebug()<<"create";
-    ProjectManager::instance().createFile(m_nameEdit->text());
+    QStringList fileNames = m_nameEdit->text().split(Project::multiFileSeparator);
+    for (int i = 0; i < fileNames.size(); ++i) {
+        ProjectManager::instance().createFile(fileNames[i]);
+    }
+}
+
+void FileCreateDialog::setDefaultFileName(QString extension)
+{
+    QStringList extensionList = extension.split(Project::multiFileSeparator);
+    for (int i = 0; i < extensionList.size(); ++i) {
+        extensionList[i] = ProjectManager::instance().defaultNewFileName(extension) + extensionList[i];
+    }
+    m_nameEdit->setText(extensionList.join(Project::multiFileSeparator));
 }

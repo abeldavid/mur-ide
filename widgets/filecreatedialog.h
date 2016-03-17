@@ -19,6 +19,7 @@ private:
 
 private slots:
     void createFile();
+    void setDefaultFileName(QString extension);
 };
 
 #endif // FILECREATEDIALOG_H

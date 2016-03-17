@@ -15,8 +15,12 @@ const QString Project::defaultSource = "#include \"main.h\"\n\n"
 const QString Project::defaultHeaderName = "main.h";
 const QString Project::defaultHeader = "#define HELLO \"Hello World!\" ";
 const QString Project::defaultProjectPrefix = "Project_";
-const QHash<QString, QString> Project::defaultFilePrefixes({{QString(".cpp"), QString("source_")},
-                                                         {QString(".h"), QString("header_")}});
+const QString Project::multiFileSeparator = " + ";
+const QHash<QString, QString> Project::defaultFilePrefixes({
+                            {QString(".cpp"), QString("source_")},
+                            {QString(".h"), QString("header_")},
+                            {QString(".cpp" + Project::multiFileSeparator + ".h"), QString("module_")}
+                           });
 
 Project::Project(QObject *parent) : QObject(parent)
 {
@@ -74,7 +78,7 @@ QString Project::getDefaultProjectName()
     QStringList filters;
     filters << projectPrefix + QString("*");
     QStringList dirsInRoot = dir.entryList(filters, QDir::Dirs, QDir::NoSort);
-    int newProjectNumber = this->getFilenameAutoIncrement(dirsInRoot, projectPrefix);
+    int newProjectNumber = this->getFileNameAutoIncrement(dirsInRoot, projectPrefix);
     return projectPrefix + QString::number(newProjectNumber);
 }
 
@@ -85,8 +89,13 @@ QString Project::getDefaultFileName(const QString &extension)
     QStringList filters;
     filters << filePrefix + QString("*");
     QStringList filesInProject = dir.entryList(filters, QDir::Files, QDir::NoSort);
-    int newFileNumber = getFilenameAutoIncrement(filesInProject, filePrefix, extension);
-    return filePrefix + QString::number(newFileNumber) + extension;
+    QStringList extensionList = extension.split(Project::multiFileSeparator);
+    int newFileNumber = 0;
+    for(int i = 0; i < extensionList.size(); ++i) {
+        int currFileNumber = getFileNameAutoIncrement(filesInProject, filePrefix, extensionList[i]);
+        newFileNumber = std::max(newFileNumber, currFileNumber);
+    }
+    return filePrefix + QString::number(newFileNumber);
 }
 
 bool Project::addDefaultFile(const QString &pathName, const QString &content)
@@ -107,7 +116,7 @@ bool Project::addEmptyFile(const QString &name)
     return result;
 }
 
-int Project::getFilenameAutoIncrement(QStringList &fileList,
+int Project::getFileNameAutoIncrement(QStringList &fileList,
                                       const QString &prefix,
                                       const QString &postfix)
 {
@@ -123,7 +132,7 @@ int Project::getFilenameAutoIncrement(QStringList &fileList,
         QRegularExpression re(prefix + "(\\d+)" + postfix);
         QRegularExpressionMatch reMatch;
         int lastProjectIndex = fileList.lastIndexOf(re);
-//TODO: check file creation
+//TODO: check file creation on existent project with different indexes
         if (lastProjectIndex != -1) {
             reMatch = re.match(fileList.at(lastProjectIndex));
             maxNumber = reMatch.captured(1).toInt();

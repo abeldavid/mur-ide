@@ -16,6 +16,7 @@ public:
     static const QString defaultHeaderName;
     static const QString defaultHeader;
     static const QString defaultProjectPrefix;
+    static const QString multiFileSeparator;
     static const QHash<QString, QString> defaultFilePrefixes;
 
     QString m_projectsRoot;
@@ -33,7 +34,7 @@ public slots:
 private:
     bool addDefaultFile(const QString &pathName, const QString &content = "");
     bool addEmptyFile(const QString &name);
-    int getFilenameAutoIncrement(QStringList &fileList,
+    int getFileNameAutoIncrement(QStringList &fileList,
                                  const QString &prefix,
                                  const QString &postfix = "");
 };
