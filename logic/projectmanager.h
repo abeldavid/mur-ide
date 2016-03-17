@@ -19,18 +19,19 @@ public:
     QString projectsRoot() const;
     QString defaultNewProjectName() const;
     QString defaultOpenFileName() const;
-    QString defaultNewFileName() const;
+    QString defaultNewFileName(const QString &extension) const;
 //    Project* project() const;
 
 signals:
     void projectCreated(QString path);
-    void projectCreateFailed();
+//    void projectCreateFailed();
+    void fileCreated(QString name);
 
 public slots:
     void createProject(const QString &path, const QString &name);
+    void createFile(const QString &name);
 
 private:
-
     explicit ProjectManager(QObject *parent = 0);
     virtual ~ProjectManager();
     ProjectManager(ProjectManager const&) = delete;

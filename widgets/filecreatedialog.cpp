@@ -19,7 +19,7 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
 
     layout->addWidget(nameLabel);
     layout->addWidget(m_nameEdit);
-    m_nameEdit->setText(ProjectManager::instance().defaultNewFileName());
+    m_nameEdit->setText(ProjectManager::instance().defaultNewFileName(".cpp"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel);
@@ -28,4 +28,12 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
 
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(createFile()));
+}
+
+void FileCreateDialog::createFile()
+{
+    qDebug()<<"create";
+    ProjectManager::instance().createFile(m_nameEdit->text());
 }

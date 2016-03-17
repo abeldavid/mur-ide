@@ -16,6 +16,9 @@ public slots:
 
 private:
     QLineEdit *m_nameEdit;
+
+private slots:
+    void createFile();
 };
 
 #endif // FILECREATEDIALOG_H

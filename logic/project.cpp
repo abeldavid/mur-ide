@@ -4,8 +4,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStandardPaths>
-#include <QStringList>
-#include <QRegExp>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 #include <QCollator>
 #include <algorithm>
 
@@ -15,6 +15,8 @@ const QString Project::defaultSource = "#include \"main.h\"\n\n"
 const QString Project::defaultHeaderName = "main.h";
 const QString Project::defaultHeader = "#define HELLO \"Hello World!\" ";
 const QString Project::defaultProjectPrefix = "Project_";
+const QHash<QString, QString> Project::defaultFilePrefixes({{QString(".cpp"), QString("source_")},
+                                                         {QString(".h"), QString("header_")}});
 
 Project::Project(QObject *parent) : QObject(parent)
 {
@@ -36,7 +38,7 @@ Project::~Project()
 bool Project::create(const QString &path, const QString &name)
 {
     bool result;
-    QDir projectDir(path);
+    QDir projectDir(path); //here it is project parent dir, later it cds to project dir
     if (projectDir.exists() and
             projectDir.mkdir(name) and
             projectDir.cd(name) and
@@ -46,7 +48,20 @@ bool Project::create(const QString &path, const QString &name)
                                  Project::defaultHeader)) {
         m_projectDir = projectDir;
         result = true;
-    } else {
+    }
+    else {
+        result = false;
+    }
+    return result;
+}
+
+bool Project::createFile(const QString &name)
+{
+    bool result;
+    if (m_projectDir.exists() and this->addEmptyFile(name)) {
+        result = true;
+    }
+    else {
         result = false;
     }
     return result;
@@ -55,32 +70,28 @@ bool Project::create(const QString &path, const QString &name)
 QString Project::getDefaultProjectName()
 {
     QDir dir(m_projectsRoot);
-    qDebug() << m_projectsRoot;
+    QString projectPrefix = Project::defaultProjectPrefix;
     QStringList filters;
-    filters << Project::defaultProjectPrefix + QString("*");
+    filters << projectPrefix + QString("*");
     QStringList dirsInRoot = dir.entryList(filters, QDir::Dirs, QDir::NoSort);
-    int maxProjectNumber = 0;
-    if (dirsInRoot.size() > 0) {
-        // Как все сложно
-        QCollator collator;
-        collator.setNumericMode(true);
-        std::sort(dirsInRoot.begin(),
-                  dirsInRoot.end(),
-                  [&collator](const QString &file1, const QString &file2) {
-                      return collator.compare(file1, file2) < 0;
-                  });
-        QRegExp rx(Project::defaultProjectPrefix + "\\d+");
-        int lastProjectIndex = dirsInRoot.lastIndexOf(rx);
-        if (lastProjectIndex != -1) {
-            maxProjectNumber = dirsInRoot.at(lastProjectIndex).split(Project::defaultProjectPrefix)[1].toInt();
-        }
-    }
-    return Project::defaultProjectPrefix + QString::number(maxProjectNumber + 1);
+    int newProjectNumber = this->getFilenameAutoIncrement(dirsInRoot, projectPrefix);
+    return projectPrefix + QString::number(newProjectNumber);
 }
 
-bool Project::addDefaultFile(const QString &name, const QString &content)
+QString Project::getDefaultFileName(const QString &extension)
 {
-    QFile file(name);
+    QDir dir(m_projectDir);
+    QString filePrefix = Project::defaultFilePrefixes[extension];
+    QStringList filters;
+    filters << filePrefix + QString("*");
+    QStringList filesInProject = dir.entryList(filters, QDir::Files, QDir::NoSort);
+    int newFileNumber = getFilenameAutoIncrement(filesInProject, filePrefix, extension);
+    return filePrefix + QString::number(newFileNumber) + extension;
+}
+
+bool Project::addDefaultFile(const QString &pathName, const QString &content)
+{
+    QFile file(pathName);
     bool result = file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
     out << content;
@@ -88,6 +99,35 @@ bool Project::addDefaultFile(const QString &name, const QString &content)
     return result;
 }
 
-QString Project::getDefaultFileName() {
-    return "module_1";
+bool Project::addEmptyFile(const QString &name)
+{
+    QFile file(m_projectDir.absolutePath() + QDir::separator() + name);
+    bool result = file.open(QIODevice::WriteOnly | QIODevice::Text);
+    file.close();
+    return result;
+}
+
+int Project::getFilenameAutoIncrement(QStringList &fileList,
+                                      const QString &prefix,
+                                      const QString &postfix)
+{
+    int maxNumber = 0;
+    if (fileList.size() > 0) {
+        QCollator collator;
+        collator.setNumericMode(true);
+        std::sort(fileList.begin(),
+                  fileList.end(),
+                  [&collator](const QString &fileName1, const QString &fileName2) {
+                      return collator.compare(fileName1, fileName2) < 0;
+                  });
+        QRegularExpression re(prefix + "(\\d+)" + postfix);
+        QRegularExpressionMatch reMatch;
+        int lastProjectIndex = fileList.lastIndexOf(re);
+//TODO: check file creation
+        if (lastProjectIndex != -1) {
+            reMatch = re.match(fileList.at(lastProjectIndex));
+            maxNumber = reMatch.captured(1).toInt();
+        }
+    }
+    return maxNumber + 1;
 }

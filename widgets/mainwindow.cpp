@@ -326,7 +326,6 @@ void MainWindow::createMenus()
     m_fileMenu = menuBar()->addMenu(tr("&Файл"));
     menuBar()->setStyleSheet(styleSheet);
 
-//    m_fileMenu->addAction(m_newFileAct);
 //    m_fileMenu->addAction(m_openFileAct);
     m_fileMenu->addAction(m_createProjectAct);
     m_fileMenu->addAction(m_createFileAct);
@@ -423,7 +422,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_undoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(undo()));
     QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(copy()));
     QObject::connect(m_pasteAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(paste()));
-    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(blankFile()));
+    //QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(blankFile()));
     //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
     QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));
