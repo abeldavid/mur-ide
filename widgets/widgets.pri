@@ -13,7 +13,7 @@ HEADERS += \
     $$PWD/projecttreewidget.h \
     $$PWD/compilersettingswidget.h \
     $$PWD/projectcreatedialog.h \
-    $$PWD/fileadddialog.h
+    $$PWD/filecreatedialog.h
 
 SOURCES += \
     $$PWD/mainwindow.cpp \
@@ -27,4 +27,4 @@ SOURCES += \
     $$PWD/projecttreewidget.cpp \
     $$PWD/compilersettingswidget.cpp \
     $$PWD/projectcreatedialog.cpp \
-    $$PWD/fileadddialog.cpp
+    $$PWD/filecreatedialog.cpp

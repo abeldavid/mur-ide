@@ -31,6 +31,7 @@ private slots:
     void switchCompilationTargetToDesktop();
     void processOutReceived();
     void projectCreateDialog();
+    void fileCreateDialog();
 //    void projectOpenDialog();
     void fileAddDialog();
     void openDefaultFile(QString projectDir);

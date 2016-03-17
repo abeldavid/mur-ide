@@ -88,3 +88,6 @@ bool Project::addDefaultFile(const QString &name, const QString &content)
     return result;
 }
 
+QString Project::getDefaultFileName() {
+    return "module_1";
+}

@@ -24,7 +24,12 @@ QString ProjectManager::projectsRoot() const
     return m_project->m_projectsRoot;
 }
 
-QString ProjectManager::defaulOpenFileName() const
+QString ProjectManager::defaultNewFileName() const
+{
+    return m_project->getDefaultFileName();
+}
+
+QString ProjectManager::defaultOpenFileName() const
 {
     return Project::defaultSourceName;
 }

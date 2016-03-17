@@ -3,7 +3,7 @@
 #include "wifipasswordwidget.h"
 #include "settingsmanager.h"
 #include "helpwidget.h"
-#include "fileadddialog.h"
+#include "filecreatedialog.h"
 #include "projectmanager.h"
 #include "projectcreatedialog.h"
 
@@ -159,6 +159,11 @@ void MainWindow::projectCreateDialog() {
     dialog.exec();
 }
 
+void MainWindow::fileCreateDialog() {
+    FileCreateDialog dialog(this);
+    dialog.exec();
+}
+
 void MainWindow::fileAddDialog() {
 
 }
@@ -172,7 +177,7 @@ void MainWindow::openDefaultFile(QString projectDir)
 {
     m_roboIdeTextEdit->openFile(projectDir +
                                 QDir::separator() +
-                                ProjectManager::instance().defaulOpenFileName());
+                                ProjectManager::instance().defaultOpenFileName());
 
 }
 
@@ -230,7 +235,7 @@ void MainWindow::createActions()
 
     m_createProjectAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый проект"), this);
 //    m_createProjectAct->setShortcut(QKeySequence::New);
-//    m_createProjectAct->setIconVisibleInMenu(false);
+    m_createProjectAct->setIconVisibleInMenu(false);
 
     m_pasteAct = new QAction(QIcon(":/icons/icons/tools/paste.png"), tr("Вставить"), this);
     m_pasteAct->setShortcut(QKeySequence::Paste);
@@ -324,6 +329,7 @@ void MainWindow::createMenus()
 //    m_fileMenu->addAction(m_newFileAct);
 //    m_fileMenu->addAction(m_openFileAct);
     m_fileMenu->addAction(m_createProjectAct);
+    m_fileMenu->addAction(m_createFileAct);
 //    m_fileMenu->addAction(m_openProjectAct);
     m_fileMenu->addAction(m_openFileAct);
     m_fileMenu->addAction(m_saveAct);
@@ -407,6 +413,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectCreateDialog()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), m_projectTree, SLOT(loadProject(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(openDefaultFile(QString)));
+    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileCreateDialog()));
     //    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
     //    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));

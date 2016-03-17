@@ -21,6 +21,7 @@ public:
     ~Project();
     bool create(const QString &name, const QString &path);
     QString getDefaultProjectName();
+    QString getDefaultFileName();
 signals:
 
 public slots:

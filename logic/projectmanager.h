@@ -18,7 +18,8 @@ public:
 
     QString projectsRoot() const;
     QString defaultNewProjectName() const;
-    QString defaulOpenFileName() const;
+    QString defaultOpenFileName() const;
+    QString defaultNewFileName() const;
 //    Project* project() const;
 
 signals:
