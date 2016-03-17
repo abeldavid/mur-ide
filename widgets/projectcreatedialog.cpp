@@ -43,7 +43,8 @@ ProjectCreateDialog::ProjectCreateDialog(QWidget *parent) :
     connect(loadPathButton, SIGNAL(clicked(bool)), this, SLOT(selectFolder()));
 }
 
-void ProjectCreateDialog::selectFolder() {
+void ProjectCreateDialog::selectFolder()
+{
     QString dir = QFileDialog::getExistingDirectory(this,
                                                     tr("Директория с проектами"),
                                                     ProjectManager::instance().projectsRoot());
@@ -52,7 +53,8 @@ void ProjectCreateDialog::selectFolder() {
     }
 }
 
-void ProjectCreateDialog::createProject() {
+void ProjectCreateDialog::createProject()
+{
     ProjectManager::instance().createProject(m_dirLocationEdit->text(), m_nameEdit->text());
 
 }

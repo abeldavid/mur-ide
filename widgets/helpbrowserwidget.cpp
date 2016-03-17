@@ -7,9 +7,12 @@ HelpBrowser::HelpBrowser(QHelpEngine* helpEngine,
 {
 }
 
-QVariant HelpBrowser::loadResource(int type, const QUrl &name) {
-    if (name.scheme() == "qthelp")
+QVariant HelpBrowser::loadResource(int type, const QUrl &name)
+{
+    if (name.scheme() == "qthelp") {
         return QVariant(m_helpEngine->fileData(name));
-    else
+    }
+    else {
         return QTextBrowser::loadResource(type, name);
+    }
 }

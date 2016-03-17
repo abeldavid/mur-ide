@@ -21,7 +21,8 @@ ProjectTree::ProjectTree(QWidget *parent) :
     connect(m_tree, SIGNAL(clicked(QModelIndex)), this, SLOT(itemSelected(QModelIndex)));
 }
 
-void ProjectTree::loadProject(QString projectDir) {
+void ProjectTree::loadProject(QString projectDir)
+{
     m_fileModel->setRootPath(projectDir);
     m_tree->setRootIndex(m_fileModel->index(projectDir));
     m_tree->hideColumn(1);
@@ -29,7 +30,8 @@ void ProjectTree::loadProject(QString projectDir) {
     m_tree->hideColumn(3);
 }
 
-void ProjectTree::itemSelected(const QModelIndex & index){
+void ProjectTree::itemSelected(const QModelIndex & index)
+{
     qDebug()<<index;
 
 }

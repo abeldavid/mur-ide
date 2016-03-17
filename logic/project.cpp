@@ -11,7 +11,7 @@
 
 const QString Project::defaultSourceName = "main.cpp";
 const QString Project::defaultSource = "#include \"main.h\"\n\n"
-                                        "void main (){\n\n}";
+                                        "void main () {\n\n}";
 const QString Project::defaultHeaderName = "main.h";
 const QString Project::defaultHeader = "#define HELLO \"Hello World!\" ";
 const QString Project::defaultProjectPrefix = "Project_";
@@ -28,11 +28,13 @@ Project::Project(QObject *parent) : QObject(parent)
     }
 }
 
-Project::~Project(){
+Project::~Project()
+{
 //    delete *m_projectDir;
 }
 
-bool Project::create(const QString &path, const QString &name) {
+bool Project::create(const QString &path, const QString &name)
+{
     bool result;
     QDir projectDir(path);
     if (projectDir.exists() and
@@ -50,7 +52,8 @@ bool Project::create(const QString &path, const QString &name) {
     return result;
 }
 
-QString Project::getDefaultProjectName() {
+QString Project::getDefaultProjectName()
+{
     QDir dir(m_projectsRoot);
     qDebug() << m_projectsRoot;
     QStringList filters;
@@ -75,7 +78,8 @@ QString Project::getDefaultProjectName() {
     return Project::defaultProjectPrefix + QString::number(maxProjectNumber + 1);
 }
 
-bool Project::addDefaultFile(const QString &name, const QString &content){
+bool Project::addDefaultFile(const QString &name, const QString &content)
+{
     QFile file(name);
     bool result = file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
