@@ -11,6 +11,7 @@ class Project : public QObject
 {
     Q_OBJECT
 public:
+    static const QString projectFileName;
     static const QString defaultSourceName;
     static const QString defaultSource;
     static const QString defaultHeaderName;
@@ -33,8 +34,6 @@ public:
     QString getDefaultFileName(const QString &extension);
 signals:
 
-public slots:
-
 private:
     bool isOpened = false;
     bool addDefaultFile(const QString &pathName, const QString &content = "");
@@ -42,6 +41,7 @@ private:
     int getFileNameAutoIncrement(QStringList &fileList,
                                  const QString &prefix,
                                  const QString &postfix = "");
+    bool createProjectFile(const QString &pathName);
 };
 
 #endif // PROJECT_H

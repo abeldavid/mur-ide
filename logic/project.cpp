@@ -10,15 +10,16 @@
 #include <QFile>
 #include <QFileInfo>
 
-const QString Project::defaultSourceName = "main.cpp";
-const QString Project::defaultSource = "#include \"main.h\"\n\n"
+const QString Project::projectFileName = ".roboproject";
+const QString Project::sourceFileExtension = ".cpp";
+const QString Project::headerFileExtension = ".h";
+const QString Project::defaultSourceName = "main" + Project::sourceFileExtension;
+const QString Project::defaultHeaderName = "main" + Project::headerFileExtension;
+const QString Project::defaultSource = "#include \"" + Project::defaultHeaderName + "\"\n\n"
                                         "void main () {\n\n}";
-const QString Project::defaultHeaderName = "main.h";
 const QString Project::defaultHeader = "#define HELLO \"Hello World!\" ";
 const QString Project::defaultProjectPrefix = "Project_";
 const QString Project::multiFileSeparator = " + ";
-const QString Project::sourceFileExtension = ".cpp";
-const QString Project::headerFileExtension = ".h";
 const QHash<QString, QString> Project::defaultFilePrefixes({
         {Project::sourceFileExtension, QString("source_")},
         {Project::headerFileExtension, QString("header_")},
@@ -54,7 +55,9 @@ bool Project::create(const QString &path, const QString &name)
             this->addDefaultFile(projectDir.filePath(Project::defaultSourceName),
                                  Project::defaultSource) and
             this->addDefaultFile(projectDir.filePath(Project::defaultHeaderName),
-                                 Project::defaultHeader)) {
+                                 Project::defaultHeader) and
+            this->createProjectFile(projectDir.filePath(Project::projectFileName))
+            ) {
         m_projectDir = projectDir;
         result = true;
         this->isOpened = true;
@@ -161,6 +164,12 @@ int Project::getFileNameAutoIncrement(QStringList &fileList,
         }
     }
     return maxNumber + 1;
+}
+
+bool Project::createProjectFile(const QString &pathName)
+{
+    qDebug() << pathName;
+    return true;
 }
 
 bool Project::getIsOpened()
