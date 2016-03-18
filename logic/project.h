@@ -28,6 +28,7 @@ public:
     bool getIsOpened();
     bool create(const QString &name, const QString &path);
     bool createFile(const QString &name);
+    bool addExistingFile(const QString &path);
     QString getDefaultProjectName();
     QString getDefaultFileName(const QString &extension);
 signals:

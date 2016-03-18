@@ -29,9 +29,9 @@ QString ProjectManager::defaultNewFileName(const QString &extension) const
     return m_project->getDefaultFileName(extension);
 }
 
-QString ProjectManager::defaultOpenFileName() const
+QString ProjectManager::defaultOpenFilePath() const
 {
-    return Project::defaultSourceName;
+    return m_project->m_projectDir.filePath(Project::defaultSourceName);
 }
 
 QString ProjectManager::defaultNewProjectName() const
@@ -42,6 +42,11 @@ QString ProjectManager::defaultNewProjectName() const
 bool ProjectManager::projectOpened() const
 {
     return m_project->getIsOpened();
+}
+
+QString ProjectManager::getProjectPath() const
+{
+    return m_project->m_projectDir.absolutePath();
 }
 
 void ProjectManager::createProject(const QString &name, const QString &path)
@@ -60,3 +65,11 @@ void ProjectManager::createFile(const QString &name)
         emit fileCreated(name);
     }
 }
+
+void ProjectManager::addExistingFile(const QString &path)
+{
+    if (m_project->addExistingFile(path)) {
+        emit fileAdded();
+    }
+}
+

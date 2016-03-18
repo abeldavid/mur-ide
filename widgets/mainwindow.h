@@ -62,7 +62,7 @@ private:
     QAction *m_copyAct;
     QAction *m_pasteAct;
     QAction *m_aboutAct;
-    QAction *m_openFileAct;
+    QAction *m_addFileAct;
     QAction *m_findAct;
     QAction *m_buildAct;
     QAction *m_uploadAndRunAct;

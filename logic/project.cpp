@@ -7,6 +7,8 @@
 #include <QRegularExpression>
 #include <QCollator>
 #include <algorithm>
+#include <QFile>
+#include <QFileInfo>
 
 const QString Project::defaultSourceName = "main.cpp";
 const QString Project::defaultSource = "#include \"main.h\"\n\n"
@@ -49,9 +51,9 @@ bool Project::create(const QString &path, const QString &name)
     if (projectDir.exists() and
             projectDir.mkdir(name) and
             projectDir.cd(name) and
-            this->addDefaultFile(projectDir.absolutePath() + QDir::separator() + Project::defaultSourceName,
+            this->addDefaultFile(projectDir.filePath(Project::defaultSourceName),
                                  Project::defaultSource) and
-            this->addDefaultFile(projectDir.absolutePath() + QDir::separator() + Project::defaultHeaderName,
+            this->addDefaultFile(projectDir.filePath(Project::defaultHeaderName),
                                  Project::defaultHeader)) {
         m_projectDir = projectDir;
         result = true;
@@ -70,6 +72,28 @@ bool Project::createFile(const QString &name)
         result = false;
     }
     return result;
+}
+
+bool Project::addExistingFile(const QString &path)
+{
+    QFileInfo sourceFileInfo(path);
+    bool fileCopySuccess = false;
+    int fileNameIncrement = 1;
+    QString targetFileName = m_projectDir.filePath(sourceFileInfo.fileName());
+    QFileInfo initTargetFileInfo(targetFileName);
+    QFileInfo targetFileInfo = initTargetFileInfo;
+    while (targetFileInfo.exists() and targetFileInfo.isFile()) {
+        targetFileName = m_projectDir.filePath(
+                    initTargetFileInfo.completeBaseName() +
+                    QString("_") +
+                    QString::number(fileNameIncrement++) +
+                    QString(".") +
+                    initTargetFileInfo.suffix()
+                    );
+        targetFileInfo.setFile(targetFileName);
+    }
+    fileCopySuccess = QFile::copy(path, targetFileName);
+    return fileCopySuccess;
 }
 
 QString Project::getDefaultProjectName()

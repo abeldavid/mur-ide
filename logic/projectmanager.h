@@ -15,9 +15,10 @@ public:
     static ProjectManager& instance();
 
     bool projectOpened() const;
+    QString getProjectPath() const;
     QString projectsRoot() const;
     QString defaultNewProjectName() const;
-    QString defaultOpenFileName() const;
+    QString defaultOpenFilePath() const;
     QString defaultNewFileName(const QString &extension) const;
 //    Project* project() const;
 
@@ -25,10 +26,12 @@ signals:
     void projectCreated(QString path);
 //    void projectCreateFailed();
     void fileCreated(QString name);
+    void fileAdded();
 
 public slots:
     void createProject(const QString &path, const QString &name);
     void createFile(const QString &name);
+    void addExistingFile(const QString &path);
 
 private:
     explicit ProjectManager(QObject *parent = 0);

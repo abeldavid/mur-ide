@@ -4,6 +4,7 @@
 #include "settingsmanager.h"
 #include "helpwidget.h"
 #include "filecreatedialog.h"
+#include "project.h"
 #include "projectmanager.h"
 #include "projectcreatedialog.h"
 
@@ -20,6 +21,8 @@
 #include <QCoreApplication>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <QFile>
+#include <QFileInfo>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -165,7 +168,16 @@ void MainWindow::fileCreateDialog() {
 }
 
 void MainWindow::fileAddDialog() {
-
+    QString filePath = QFileDialog::getOpenFileName(
+                        this,
+                        tr("Добавить существующий файл"),
+                        ProjectManager::instance().projectsRoot(),
+                        "C++ (*" + Project::sourceFileExtension +  " *" + Project::headerFileExtension + ")"
+                        );
+    qDebug() << filePath;
+    if (!filePath.isNull()) {
+        ProjectManager::instance().addExistingFile(filePath);
+    }
 }
 
 void MainWindow::openHelp()
@@ -175,10 +187,9 @@ void MainWindow::openHelp()
 
 void MainWindow::onProjectCreated(QString projectDir)
 {
+    m_addFileAct->setEnabled(true);
     m_createFileAct->setEnabled(true);
-    m_roboIdeTextEdit->openFile(projectDir +
-                                QDir::separator() +
-                                ProjectManager::instance().defaultOpenFileName());
+    m_roboIdeTextEdit->openFile(ProjectManager::instance().defaultOpenFilePath());
 }
 
 void MainWindow::switchCompilationTargetToEdison()
@@ -227,14 +238,22 @@ void MainWindow::createActions()
     m_saveAsAct->setShortcut(QKeySequence::SaveAs);
     m_saveAsAct->setIconVisibleInMenu(false);
 
-    m_createFileAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый файл"), this);
-    m_createFileAct->setShortcut(QKeySequence::New);
-    m_createFileAct->setIconVisibleInMenu(false);
-    m_createFileAct->setDisabled(true);
-
     m_createProjectAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый проект"), this);
 //    m_createProjectAct->setShortcut(QKeySequence::New);
     m_createProjectAct->setIconVisibleInMenu(false);
+
+    m_openProjectAct = new QAction(QIcon(":/icons/icons/tools/open.png"), tr("Открыть проект"), this);
+    m_openProjectAct->setShortcut(QKeySequence::Open);
+    m_openProjectAct->setIconVisibleInMenu(false);
+
+    m_createFileAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый файл"), this);
+    m_createFileAct->setShortcut(QKeySequence::New);
+    m_createFileAct->setIconVisibleInMenu(false);
+    m_createFileAct->setEnabled(false);
+
+    m_addFileAct = new QAction(tr("Добавить файл"), this);
+    m_addFileAct->setIconVisibleInMenu(false);
+    m_addFileAct->setEnabled(false);
 
     m_pasteAct = new QAction(QIcon(":/icons/icons/tools/paste.png"), tr("Вставить"), this);
     m_pasteAct->setShortcut(QKeySequence::Paste);
@@ -243,10 +262,6 @@ void MainWindow::createActions()
     m_copyAct = new QAction(QIcon(":/icons/icons/tools/copy.png"), tr("Копировать"), this);
     m_copyAct->setShortcut(QKeySequence::Copy);
     m_copyAct->setIconVisibleInMenu(false);
-
-    m_openFileAct = new QAction(QIcon(":/icons/icons/tools/open.png"), tr("Открыть файл"), this);
-    m_openFileAct->setShortcut(QKeySequence::Open);
-    m_openFileAct->setIconVisibleInMenu(false);
 
     m_findAct = new QAction(QIcon(":/icons/icons/tools/search.png"), tr("Поиск"), this);
     m_findAct->setShortcut(QKeySequence::Find);
@@ -298,7 +313,7 @@ void MainWindow::createToolBars()
     m_toolBar->setIconSize(QSize(22, 22));
 
     m_toolBar->addAction(m_createFileAct);
-    m_toolBar->addAction(m_openFileAct);
+//    m_toolBar->addAction(m_addFileAct);
     m_toolBar->addAction(m_saveAct);
     m_toolBar->addAction(m_saveAsAct);
     m_toolBar->addSeparator();
@@ -327,9 +342,9 @@ void MainWindow::createMenus()
 
 //    m_fileMenu->addAction(m_openFileAct);
     m_fileMenu->addAction(m_createProjectAct);
+    m_fileMenu->addAction(m_openProjectAct);
     m_fileMenu->addAction(m_createFileAct);
-//    m_fileMenu->addAction(m_openProjectAct);
-    m_fileMenu->addAction(m_openFileAct);
+    m_fileMenu->addAction(m_addFileAct);
     m_fileMenu->addAction(m_saveAct);
 //    m_fileMenu->addAction(m_saveAsAct);
 
@@ -412,8 +427,8 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), m_projectTree, SLOT(loadProject(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(onProjectCreated(QString)));
     QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileCreateDialog()));
+    QObject::connect(m_addFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
     //    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
-    //    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
     QObject::connect(m_saveAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFile()));
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFileAs()));
