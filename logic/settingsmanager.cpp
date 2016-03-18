@@ -61,7 +61,7 @@ void SettingsManager::setPscpPath(const QString &path)
     m_settings->endGroup();
 }
 
-QString SettingsManager::sysrootPath() const
+QString SettingsManager::edisonSysrootPath() const
 {
     m_settings->beginGroup("i586-poky-linux");
     QString sysroot = m_settings->value("Sysroot",
@@ -77,7 +77,7 @@ void SettingsManager::setSysrootPath(const QString &path)
     m_settings->endGroup();
 }
 
-QString SettingsManager::compilerPath() const
+QString SettingsManager::edisonCompilerPath() const
 {
     m_settings->beginGroup("i586-poky-linux");
     QString compiler = m_settings->value("CC",
@@ -153,19 +153,71 @@ void SettingsManager::setUserPassword(const QString &password) const
     m_settings->endGroup();
 }
 
-QString SettingsManager::compilerOptions() const
+QStringList SettingsManager::edisonCompilerOptions() const
 {
     m_settings->beginGroup("i586-poky-linux");
-    QString compilerOpt = m_settings->value("CCOPT", " -O2 -lstdc++ ").toString();
+    QStringList defaultOptions;
+    defaultOptions << "-O2";
+    defaultOptions << "-std=c++11";
+    defaultOptions << "-lmur";
+    defaultOptions << "-lopencv_core";
+    defaultOptions << "-lopencv_highgui";
+    defaultOptions << "-lopencv_imgproc";
+    defaultOptions << "-lopencv_features2d";
+    defaultOptions << "-lopencv_flann";
+    defaultOptions << "-lopencv_objdetect";
+    defaultOptions << "-lopencv_videostab";
+
+    QStringList compilerOpt = m_settings->value("CCOPT", defaultOptions).toStringList();
     m_settings->endGroup();
     return compilerOpt;
 }
 
-void SettingsManager::setCompilerOptions(const QString &options) const
+void SettingsManager::setEdisonCompilerOptions(const QStringList &options) const
 {
     m_settings->beginGroup("i586-poky-linux");
     m_settings->setValue("CCOPT", options);
     m_settings->endGroup();
+}
+
+QString SettingsManager::mingwCompilerPath() const
+{
+    return "";
+}
+
+void SettingsManager::setMingwCompilerPath(const QString &options) const
+{
+
+}
+
+QStringList SettingsManager::mingwCompilerOptions() const
+{
+    return QStringList();
+}
+
+void SettingsManager::setMingwCompilerOptions(const QStringList &options) const
+{
+
+}
+
+QString SettingsManager::mingwLibsPaths() const
+{
+    return "";
+}
+
+void SettingsManager::setMingwLibsPaths(const QStringList &options) const
+{
+
+}
+
+QStringList SettingsManager::mingwIncludesPath() const
+{
+    return QStringList();
+}
+
+void SettingsManager::setMingwIncludesPath(const QStringList &options) const
+{
+
 }
 
 SettingsManager::SettingsManager(QObject *parent) :

@@ -23,10 +23,10 @@ public:
     QString pscpPath() const;
     void setPscpPath(const QString &path);
 
-    QString sysrootPath() const;
+    QString edisonSysrootPath() const;
     void setSysrootPath(const QString &path);
 
-    QString compilerPath() const;
+    QString edisonCompilerPath() const;
     void setCompilerPath(const QString &path);
 
     QString mingwMakePath() const;
@@ -41,8 +41,22 @@ public:
     QString userPassword() const;
     void setUserPassword(const QString &password) const;
 
-    QString compilerOptions() const;
-    void setCompilerOptions(const QString &options) const;
+    QStringList edisonCompilerOptions() const;
+    void setEdisonCompilerOptions(const QStringList &options) const;
+
+    QString mingwCompilerPath() const;
+    void setMingwCompilerPath(const QString &options) const;
+
+    QStringList mingwCompilerOptions() const;
+    void setMingwCompilerOptions(const QStringList &options) const;
+
+    QString mingwLibsPaths() const;
+    void setMingwLibsPaths(const QStringList &options) const;
+
+    QStringList mingwIncludesPath() const;
+    void setMingwIncludesPath(const QStringList &options) const;
+
+
 signals:
 
 public slots:

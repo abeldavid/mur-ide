@@ -12,7 +12,9 @@ public:
     explicit CompilationOptionsView(QWidget *parent = 0);
     void setOptions(const QStringList &options);
     void addOption(const QString &option);
-    QStringList getOptions();
+    void setModified(bool modified);
+    bool isModified() const;
+    QStringList getOptions() const;
 signals:
 
 public slots:
@@ -23,10 +25,10 @@ private:
     QAction* m_addOptionAct;
     QAction* m_removeOptionAct;
     QMenu* m_contextMenu;
+    bool m_isModified = false;
 
     void createMenu();
     void setup();
-    void
 };
 
 #endif // COMPILATIONOPTIONSVIEW_H

@@ -7,8 +7,8 @@
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QDialog(parent),
     m_tabWidget(new QTabWidget(this)),
-    m_wifiPasswordWidget(new WiFiPasswordWidget),
-    m_compilerSettingsWidget(new CompilerSettingsWidget)
+    m_wifiPasswordWidget(new WiFiPasswordWidget(this)),
+    m_compilerSettingsWidget(new CompilerSettingsWidget(this))
 {
     //!Diable "?" button
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -26,21 +26,17 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     QString ip = SettingsManager::instance().ipAddress();
     QString login = SettingsManager::instance().userLogin();
     QString password = SettingsManager::instance().userPassword();
-
     QString pscpPath = SettingsManager::instance().pscpPath();
     QString plinkPath = SettingsManager::instance().plinkPath();
 
     m_wifiPasswordWidget->setTxInfo(pscpPath, plinkPath);
     m_wifiPasswordWidget->setLoginInfo(ip, login, password);
 
-    QString sysroot = SettingsManager::instance().sysrootPath();
-    QString ccOpt = SettingsManager::instance().compilerOptions();
-    QString cc = SettingsManager::instance().compilerPath();
-    QString make = SettingsManager::instance().mingwMakePath();
-
-    m_compilerSettingsWidget->setCompilationSettings(cc, sysroot, ccOpt, make);
-
+    QObject::connect(m_compilerSettingsWidget, SIGNAL(requireToUpdateCompilationOptions()), this, SLOT(setupCompilationOptions()));
     QObject::connect(applyButton, SIGNAL(pressed()),this, SLOT(applySettings()));
+    QObject::connect(m_compilerSettingsWidget, SIGNAL(requireToSave()), this, SLOT(applySettings()));
+
+    setupCompilationOptions();
 }
 
 void SettingsWidget::applySettings()
@@ -49,12 +45,22 @@ void SettingsWidget::applySettings()
     SettingsManager::instance().setUserLogin(m_wifiPasswordWidget->login());
     SettingsManager::instance().setUserPassword(m_wifiPasswordWidget->password());
 
-    SettingsManager::instance().setSysrootPath(m_compilerSettingsWidget->sysrootPath());
-    SettingsManager::instance().setCompilerOptions(m_compilerSettingsWidget->compilerOpt());
-    SettingsManager::instance().setCompilerPath(m_compilerSettingsWidget->compilerPath());
-    SettingsManager::instance().setMingwMakePath(m_compilerSettingsWidget->mingwMakePath());
+    if (m_compilerSettingsWidget->currentTarget() == SourceCompiler::TARGET::EDISON) {
+        SettingsManager::instance().setEdisonCompilerOptions(m_compilerSettingsWidget->compilerOptions());
+    } else if (m_compilerSettingsWidget->currentTarget() == SourceCompiler::TARGET::MINGW) {
+        SettingsManager::instance().setMingwCompilerOptions(m_compilerSettingsWidget->compilerOptions());
+    }
+}
 
-    close();
+void SettingsWidget::setupCompilationOptions()
+{
+    QStringList compilerOptions;
+    if (m_compilerSettingsWidget->currentTarget() == SourceCompiler::TARGET::EDISON) {
+        compilerOptions = SettingsManager::instance().edisonCompilerOptions();
+    } else if (m_compilerSettingsWidget->currentTarget() == SourceCompiler::TARGET::MINGW) {
+        compilerOptions = SettingsManager::instance().mingwCompilerOptions();
+    }
+    m_compilerSettingsWidget->setCompilationOptions(compilerOptions);
 }
 
 void SettingsWidget::setupTabs()

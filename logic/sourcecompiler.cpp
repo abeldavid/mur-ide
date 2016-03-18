@@ -48,9 +48,9 @@ void SourceCompiler::setTarget(SourceCompiler::TARGET target)
 void SourceCompiler::onRunCompilation(QString src)
 {   
     if (m_target == TARGET::EDISON) {
-        QString pathToSysRoot = SettingsManager::instance().sysrootPath();
-        QString pathToCC = SettingsManager::instance().compilerPath();
-        QString options = SettingsManager::instance().compilerOptions();
+        QString pathToSysRoot = SettingsManager::instance().edisonSysrootPath();
+        QString pathToCC = SettingsManager::instance().edisonCompilerPath();
+        QStringList options = SettingsManager::instance().edisonCompilerOptions();
 
         QString processPath;
         QStringList processArgs;
@@ -61,7 +61,7 @@ void SourceCompiler::onRunCompilation(QString src)
         processArgs << "--sysroot=" + pathToSysRoot;
         processArgs << src;
         processArgs << "-o" + binaryName;
-        processArgs << options.split(" ", QString::SkipEmptyParts);
+        processArgs << options;
 
         m_pathToBinary = src + ".bin";
         qDebug() << processArgs;

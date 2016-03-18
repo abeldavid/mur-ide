@@ -187,9 +187,11 @@ void MainWindow::createActions()
 {
     //!Edit file actions
 
-    m_redoAct = new QAction(QIcon(":/icons/icons/tools/redo.png"), tr("Повторить"), this);
+    m_redoAct = new QAction(QIcon(":/icons/icons/tools/try-me-icon.png"), tr("Повторить"), this);
     m_redoAct->setShortcut(QKeySequence::Redo);
     m_redoAct->setIconVisibleInMenu(false);
+    m_redoAct->setDisabled(true);
+
 
     m_undoAct = new QAction(QIcon(":/icons/icons/tools/undo.png"), tr("Отменить"), this);
     m_undoAct->setShortcut(QKeySequence::Undo);

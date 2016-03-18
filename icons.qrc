@@ -13,5 +13,6 @@
         <file>icons/tools/stop.png</file>
         <file>icons/tools/undo.png</file>
         <file>icons/tools/upload.png</file>
+        <file>icons/tools/try-me-icon.png</file>
     </qresource>
 </RCC>
