@@ -17,6 +17,8 @@ public:
     static const QString defaultHeader;
     static const QString defaultProjectPrefix;
     static const QString multiFileSeparator;
+    static const QString sourceFileExtension;
+    static const QString headerFileExtension;
     static const QHash<QString, QString> defaultFilePrefixes;
 
     QString m_projectsRoot;

@@ -16,11 +16,15 @@ const QString Project::defaultHeaderName = "main.h";
 const QString Project::defaultHeader = "#define HELLO \"Hello World!\" ";
 const QString Project::defaultProjectPrefix = "Project_";
 const QString Project::multiFileSeparator = " + ";
+const QString Project::sourceFileExtension = ".cpp";
+const QString Project::headerFileExtension = ".h";
 const QHash<QString, QString> Project::defaultFilePrefixes({
-                            {QString(".cpp"), QString("source_")},
-                            {QString(".h"), QString("header_")},
-                            {QString(".cpp" + Project::multiFileSeparator + ".h"), QString("module_")}
-                           });
+        {Project::sourceFileExtension, QString("source_")},
+        {Project::headerFileExtension, QString("header_")},
+        {Project::sourceFileExtension + Project::multiFileSeparator + Project::headerFileExtension,
+            QString("module_")
+        }
+    });
 
 Project::Project(QObject *parent) : QObject(parent)
 {
@@ -132,10 +136,8 @@ int Project::getFileNameAutoIncrement(QStringList &fileList,
         QRegularExpression re(prefix + "(\\d+)" + postfix);
         QRegularExpressionMatch reMatch;
         int lastProjectIndex = fileList.lastIndexOf(re);
-//TODO: check file creation on existent project with different indexes
         if (lastProjectIndex != -1) {
-            reMatch = re.match(fileList.at(lastProjectIndex));
-            maxNumber = reMatch.captured(1).toInt();
+            maxNumber = re.match(fileList.at(lastProjectIndex)).captured(1).toInt();
         }
     }
     return maxNumber + 1;
