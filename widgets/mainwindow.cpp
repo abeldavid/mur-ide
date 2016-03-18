@@ -173,12 +173,12 @@ void MainWindow::openHelp()
     this->m_toggleHelpVisibilityAct->trigger();
 }
 
-void MainWindow::openDefaultFile(QString projectDir)
+void MainWindow::onProjectCreated(QString projectDir)
 {
+    m_createFileAct->setEnabled(true);
     m_roboIdeTextEdit->openFile(projectDir +
                                 QDir::separator() +
                                 ProjectManager::instance().defaultOpenFileName());
-
 }
 
 void MainWindow::switchCompilationTargetToEdison()
@@ -207,8 +207,6 @@ void MainWindow::processOutReceived()
     }
 }
 
-
-
 void MainWindow::createActions()
 {
     //!Edit file actions
@@ -232,6 +230,7 @@ void MainWindow::createActions()
     m_createFileAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый файл"), this);
     m_createFileAct->setShortcut(QKeySequence::New);
     m_createFileAct->setIconVisibleInMenu(false);
+    m_createFileAct->setDisabled(true);
 
     m_createProjectAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый проект"), this);
 //    m_createProjectAct->setShortcut(QKeySequence::New);
@@ -411,7 +410,7 @@ void MainWindow::connectActionsToSlots()
     //    QObject::connect(m_openFileAct, SIGNAL(triggered(bool)), this, SLOT(openFileOrProject()));
     QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectCreateDialog()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), m_projectTree, SLOT(loadProject(QString)));
-    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(openDefaultFile(QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(onProjectCreated(QString)));
     QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileCreateDialog()));
     //    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
     //    QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));

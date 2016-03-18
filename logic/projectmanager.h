@@ -12,10 +12,9 @@ class ProjectManager : public QObject
 {
     Q_OBJECT
 public:
-
-
     static ProjectManager& instance();
 
+    bool projectOpened() const;
     QString projectsRoot() const;
     QString defaultNewProjectName() const;
     QString defaultOpenFileName() const;

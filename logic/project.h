@@ -25,6 +25,7 @@ public:
     QDir m_projectDir;
     explicit Project(QObject *parent = 0);
     ~Project();
+    bool getIsOpened();
     bool create(const QString &name, const QString &path);
     bool createFile(const QString &name);
     QString getDefaultProjectName();
@@ -34,6 +35,7 @@ signals:
 public slots:
 
 private:
+    bool isOpened = false;
     bool addDefaultFile(const QString &pathName, const QString &content = "");
     bool addEmptyFile(const QString &name);
     int getFileNameAutoIncrement(QStringList &fileList,

@@ -39,6 +39,11 @@ QString ProjectManager::defaultNewProjectName() const
     return m_project->getDefaultProjectName();
 }
 
+bool ProjectManager::projectOpened() const
+{
+    return m_project->getIsOpened();
+}
+
 void ProjectManager::createProject(const QString &name, const QString &path)
 {
     if (m_project->create(name, path)) {

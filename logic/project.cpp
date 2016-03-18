@@ -5,7 +5,6 @@
 #include <QTextStream>
 #include <QStandardPaths>
 #include <QRegularExpression>
-#include <QRegularExpressionMatch>
 #include <QCollator>
 #include <algorithm>
 
@@ -45,7 +44,7 @@ Project::~Project()
 
 bool Project::create(const QString &path, const QString &name)
 {
-    bool result;
+    bool result = false;
     QDir projectDir(path); //here it is project parent dir, later it cds to project dir
     if (projectDir.exists() and
             projectDir.mkdir(name) and
@@ -56,9 +55,7 @@ bool Project::create(const QString &path, const QString &name)
                                  Project::defaultHeader)) {
         m_projectDir = projectDir;
         result = true;
-    }
-    else {
-        result = false;
+        this->isOpened = true;
     }
     return result;
 }
@@ -134,11 +131,15 @@ int Project::getFileNameAutoIncrement(QStringList &fileList,
                       return collator.compare(fileName1, fileName2) < 0;
                   });
         QRegularExpression re(prefix + "(\\d+)" + postfix);
-        QRegularExpressionMatch reMatch;
         int lastProjectIndex = fileList.lastIndexOf(re);
         if (lastProjectIndex != -1) {
             maxNumber = re.match(fileList.at(lastProjectIndex)).captured(1).toInt();
         }
     }
     return maxNumber + 1;
+}
+
+bool Project::getIsOpened()
+{
+    return this->isOpened;
 }

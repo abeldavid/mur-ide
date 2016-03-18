@@ -34,7 +34,7 @@ private slots:
     void fileCreateDialog();
 //    void projectOpenDialog();
     void fileAddDialog();
-    void openDefaultFile(QString projectDir);
+    void onProjectCreated(QString projectDir);
 
 private:
     void createMenus();
