@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QHash>
 #include <QStringList>
+#include <QStringListModel>
+#include <QSortFilterProxyModel>
 
 FileCreateDialog::FileCreateDialog(QWidget *parent) :
     QDialog(parent),
@@ -27,7 +29,13 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
     layout->addWidget(buttonBox);
 
     QComboBox *comboBox = new QComboBox(this);
-    comboBox->addItems(QStringList(Project::defaultFilePrefixes.keys()));
+
+    QStringListModel *model = new QStringListModel(Project::defaultFilePrefixes.keys(), this);
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    proxy->setSourceModel(model);
+    proxy->sort(0);
+    comboBox->setModel(proxy);
+
     layout->addWidget(comboBox);
 
     this->setDefaultFileName(comboBox->currentText());
