@@ -73,3 +73,12 @@ void ProjectManager::addExistingFile(const QString &path)
     }
 }
 
+void ProjectManager::openProject(const QString &path)
+{
+    qDebug() << path;
+    if (m_project->open(path)) {
+        qDebug() << m_project->m_projectDir.absolutePath();
+        emit projectOpened(m_project->m_projectDir.absolutePath());
+    }
+}
+

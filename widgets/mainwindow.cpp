@@ -174,18 +174,36 @@ void MainWindow::fileAddDialog() {
                         ProjectManager::instance().projectsRoot(),
                         "C++ (*" + Project::sourceFileExtension +  " *" + Project::headerFileExtension + ")"
                         );
-    qDebug() << filePath;
     if (!filePath.isNull()) {
         ProjectManager::instance().addExistingFile(filePath);
     }
 }
+
+void MainWindow::projectOpenDialog() {
+    QString filePath = QFileDialog::getOpenFileName(
+                        this,
+                        tr("Открыть проект"),
+                        ProjectManager::instance().projectsRoot(),
+                        "MUR Projects (" + Project::projectFileName + ")"
+                        );
+    if (!filePath.isNull()) {
+        ProjectManager::instance().openProject(filePath);
+    }
+}
+
 
 void MainWindow::openHelp()
 {
     this->m_toggleHelpVisibilityAct->trigger();
 }
 
-void MainWindow::onProjectCreated(QString projectDir)
+void MainWindow::onProjectOpened()
+{
+    m_addFileAct->setEnabled(true);
+    m_createFileAct->setEnabled(true);
+}
+
+void MainWindow::onProjectCreated()
 {
     m_addFileAct->setEnabled(true);
     m_createFileAct->setEnabled(true);
@@ -425,10 +443,12 @@ void MainWindow::connectActionsToSlots()
     //    QObject::connect(m_openFileAct, SIGNAL(triggered(bool)), this, SLOT(openFileOrProject()));
     QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectCreateDialog()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), m_projectTree, SLOT(loadProject(QString)));
-    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(onProjectCreated(QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(onProjectCreated()));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), m_projectTree, SLOT(loadProject(QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), this, SLOT(onProjectOpened()));
     QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileCreateDialog()));
     QObject::connect(m_addFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
-    //    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
+    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
     QObject::connect(m_saveAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFile()));
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFileAs()));

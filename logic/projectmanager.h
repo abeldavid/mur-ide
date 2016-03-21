@@ -24,6 +24,7 @@ public:
 
 signals:
     void projectCreated(QString path);
+    void projectOpened(QString path);
 //    void projectCreateFailed();
     void fileCreated(QString name);
     void fileAdded();
@@ -32,6 +33,7 @@ public slots:
     void createProject(const QString &path, const QString &name);
     void createFile(const QString &name);
     void addExistingFile(const QString &path);
+    void openProject(const QString &path);
 
 private:
     explicit ProjectManager(QObject *parent = 0);

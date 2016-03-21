@@ -32,6 +32,8 @@ public:
     ~Project();
     bool getIsOpened();
     bool create(const QString &name, const QString &path);
+    bool open(const QString &path);
+    bool close();
     bool createFile(const QString &name);
     bool addExistingFile(const QString &path);
     QString getDefaultProjectName();
@@ -46,7 +48,7 @@ private:
                                  const QString &prefix,
                                  const QString &postfix = "");
     bool createProjectFile(const QString &name);
-    void addFile(const QString &name);
+    bool addFile(const QString &name);
 };
 
 #endif // PROJECT_H

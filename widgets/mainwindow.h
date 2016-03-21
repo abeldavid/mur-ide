@@ -32,9 +32,10 @@ private slots:
     void processOutReceived();
     void projectCreateDialog();
     void fileCreateDialog();
-//    void projectOpenDialog();
+    void projectOpenDialog();
     void fileAddDialog();
-    void onProjectCreated(QString projectDir);
+    void onProjectCreated();
+    void onProjectOpened();
 
 private:
     void createMenus();

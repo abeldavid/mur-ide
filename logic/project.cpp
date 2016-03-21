@@ -67,13 +67,37 @@ bool Project::create(const QString &path, const QString &name)
     return result;
 }
 
+bool Project::open(const QString &path)
+{
+    if (m_isOpened) {
+        close();
+    }
+    bool result = false;
+    QFile projectFile(path);
+    if (projectFile.open(QIODevice::ReadOnly)) {
+        result = true;
+        QByteArray projectStructure = projectFile.readAll();
+        projectFile.close();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(projectStructure);
+        m_projectJson = jsonDoc.object();
+        QFileInfo projectFileInfo(path);
+        m_projectDir = projectFileInfo.dir();
+        m_isOpened = true;
+    }
+    return result;
+}
+
+bool Project::close()
+{
+    m_isOpened = false;
+    return true;
+}
+
 bool Project::createFile(const QString &name)
 {
     bool result = m_projectDir.exists() and writeFile(name);
     if (result) {
-        addFile(name);
-        QJsonDocument jsonDoc(m_projectJson);
-        result = writeFile(Project::projectFileName, jsonDoc.toJson());
+        result = addFile(name);
     }
     return result;
 }
@@ -81,7 +105,6 @@ bool Project::createFile(const QString &name)
 bool Project::addExistingFile(const QString &path)
 {
     QFileInfo sourceFileInfo(path);
-    bool fileCopySuccess = false;
     int fileNameIncrement = 1;
     QString targetFileName = m_projectDir.filePath(sourceFileInfo.fileName());
     QFileInfo initTargetFileInfo(targetFileName);
@@ -96,8 +119,11 @@ bool Project::addExistingFile(const QString &path)
                     );
         targetFileInfo.setFile(targetFileName);
     }
-    fileCopySuccess = QFile::copy(path, targetFileName);
-    return fileCopySuccess;
+    bool success = false;
+    if (QFile::copy(path, targetFileName)) {
+        success = addFile(targetFileInfo.fileName());
+    }
+    return success;
 }
 
 QString Project::getDefaultProjectName()
@@ -127,7 +153,7 @@ QString Project::getDefaultFileName(const QString &extension)
     return filePrefix + QString::number(newFileNumber);
 }
 
-void Project::addFile(const QString &name)
+bool Project::addFile(const QString &name)
 {
     QString fileType = "";
     if (name.endsWith(Project::sourceFileExtension)) {
@@ -140,6 +166,8 @@ void Project::addFile(const QString &name)
         QJsonArray projectSection = m_projectJson[fileType].toArray();
         projectSection.append(name);
         m_projectJson[fileType] = projectSection;
+        QJsonDocument jsonDoc(m_projectJson);
+        return writeFile(Project::projectFileName, jsonDoc.toJson());
     }
 }
 
@@ -180,7 +208,6 @@ int Project::getFileNameAutoIncrement(QStringList &fileList,
 
 bool Project::createProjectFile(const QString &name)
 {
-//    QJsonObject jsonProject;
     m_projectJson["name"] = name;
     QJsonArray sources, headers;
     sources.append(Project::defaultSourceName);
