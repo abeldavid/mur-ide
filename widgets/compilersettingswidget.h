@@ -3,26 +3,30 @@
 
 #include <QWidget>
 #include <QLineEdit>
+#include <QComboBox>
+
+#include "compilationoptionsview.h"
+#include "sourcecompiler.h"
+
 
 class CompilerSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit CompilerSettingsWidget(QWidget *parent = 0);
-    void setCompilationSettings(const QString &ccPath, const QString &sysrootPath, const QString &ccOpt, const QString &makePath);
-    QString sysrootPath();
-    QString compilerOpt();
-    QString compilerPath();
-    QString mingwMakePath();
+    void setCompilationOptions(const QStringList &options);
+    QStringList compilerOptions();
+    SourceCompiler::TARGET currentTarget();
 signals:
-
+    void requireToSave();
+    void requireToUpdateCompilationOptions();
+private slots:
+    void onCompilerChanged(int index);
 public slots:
 private:
-    QLineEdit *m_sysrootEdit;
-    QLineEdit *m_compilerPathEdit;
-    QLineEdit *m_compilerOptEdit;
-    QLineEdit *m_mingwMakePathEdit;
-    bool m_isValid = false;
+    CompilationOptionsView* m_view;
+    QComboBox* m_compilerBox;
+    SourceCompiler::TARGET m_target = SourceCompiler::TARGET::EDISON;
 };
 
 #endif // COMPILERSETTINGSWIDGET_H

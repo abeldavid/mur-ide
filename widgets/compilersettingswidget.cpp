@@ -1,65 +1,63 @@
 #include "compilersettingswidget.h"
+#include "compilationoptionsview.h"
+
 #include <QLabel>
 #include <QGridLayout>
 #include <QDebug>
+#include <QComboBox>
+#include <QMessageBox>
 
-/*
-    QLineEdit *m_ccEdit;
-    QLineEdit *m_sysrootEdit;
-    QLineEdit *m_compilerPathEdit;
-    QLineEdit *m_compilerOptEdit;
-*/
 CompilerSettingsWidget::CompilerSettingsWidget(QWidget *parent) :
     QWidget(parent),
-    m_sysrootEdit(new QLineEdit(this)),
-    m_compilerPathEdit(new QLineEdit(this)),
-    m_compilerOptEdit(new QLineEdit(this)),
-    m_mingwMakePathEdit(new QLineEdit(this))
+    m_view(new CompilationOptionsView(this)),
+    m_compilerBox(new QComboBox(this))
+
 {
     QGridLayout *layout = new QGridLayout(this);
     setLayout(layout);
 
-    QLabel *sysrootLabel = new QLabel("Путь к sysroot: ", this);
-    QLabel *compilerPathLabel = new QLabel("Путь к компилятору: ", this);
-    QLabel *compilerOptLabel = new QLabel("Опции компилятора: ", this);
-    QLabel *mingwMakePathLabel = new QLabel("Путь к программе make: ", this);
+    layout->addWidget(m_compilerBox);
+    layout->addWidget(m_view);
 
-    layout->addWidget(sysrootLabel, 0, 0);
-    layout->addWidget(compilerPathLabel, 1, 0);
-    layout->addWidget(compilerOptLabel, 2, 0);
-    layout->addWidget(mingwMakePathLabel, 3, 0);
+    m_compilerBox->addItem("Intel Edison GCC", "EDISON");
+    m_compilerBox->addItem("Desktop MinGW", "MINGW");
 
-    layout->addWidget(m_sysrootEdit, 0, 1);
-    layout->addWidget(m_compilerPathEdit, 1, 1);
-    layout->addWidget(m_compilerOptEdit, 2, 1);
-    layout->addWidget(m_mingwMakePathEdit, 3, 1);
+    QObject::connect(m_compilerBox, SIGNAL(currentIndexChanged(int)), SLOT(onCompilerChanged(int)));
 }
 
-void CompilerSettingsWidget::setCompilationSettings(const QString &ccPath, const QString &sysrootPath,
-                                                    const QString &ccOpt, const QString &makePath)
+void CompilerSettingsWidget::setCompilationOptions(const QStringList &options)
 {
-    m_sysrootEdit->setText(sysrootPath);
-    m_compilerOptEdit->setText(ccOpt);
-    m_compilerPathEdit->setText(ccPath);
-    m_mingwMakePathEdit->setText(makePath);
+    m_view->setOptions(options);
 }
 
-QString CompilerSettingsWidget::sysrootPath()
+QStringList CompilerSettingsWidget::compilerOptions()
 {
-    return m_sysrootEdit->text();
+    return m_view->getOptions();
 }
 
-QString CompilerSettingsWidget::compilerOpt()
+SourceCompiler::TARGET CompilerSettingsWidget::currentTarget()
 {
-    return m_compilerOptEdit->text();
+    return m_target;
 }
 
-QString CompilerSettingsWidget::compilerPath()
+void CompilerSettingsWidget::onCompilerChanged(int index)
 {
-    return m_compilerPathEdit->text();
-}
+    if (m_view->isModified()) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Сохранить?", "Настройки текущего компилятора не были сохранены. Сохнаить?",
+                                    QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            emit requireToSave();
+        }
+        m_view->setModified(false);
+    }
 
-QString CompilerSettingsWidget::mingwMakePath()
-{
-    return m_mingwMakePathEdit->text();
+    if (index == 0) {
+        m_target = SourceCompiler::TARGET::EDISON;
+    }
+    else if (index == 1) {
+        m_target = SourceCompiler::TARGET::MINGW;
+    }
+
+    emit requireToUpdateCompilationOptions();
 }

@@ -11,11 +11,11 @@
 
 WiFiPasswordWidget::WiFiPasswordWidget(QWidget *parent) :
     QWidget(parent),
-    m_passwordEdit(new QLineEdit),
-    m_loginEdit(new QLineEdit),
-    m_ipEdit(new QLineEdit),
-    m_pscpEdit(new QLineEdit),
-    m_plinkEdit(new QLineEdit)
+    m_passwordEdit(new QLineEdit(this)),
+    m_loginEdit(new QLineEdit(this)),
+    m_ipEdit(new QLineEdit(this)),
+    m_pscpEdit(new QLineEdit(this)),
+    m_plinkEdit(new QLineEdit(this))
 {
     m_passwordEdit->setEchoMode(QLineEdit::Password);
 
