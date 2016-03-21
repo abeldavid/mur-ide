@@ -45,17 +45,19 @@ public:
     void setEdisonCompilerOptions(const QStringList &options) const;
 
     QString mingwCompilerPath() const;
-    void setMingwCompilerPath(const QString &options) const;
+    void setMingwCompilerPath(const QString &option) const;
 
     QStringList mingwCompilerOptions() const;
     void setMingwCompilerOptions(const QStringList &options) const;
 
-    QString mingwLibsPaths() const;
+    QStringList mingwLibsPaths() const;
     void setMingwLibsPaths(const QStringList &options) const;
 
     QStringList mingwIncludesPath() const;
-    void setMingwIncludesPath(const QStringList &options) const;
+    void setMingwIncludesPath(const QStringList &options);
 
+    QString mingwBinarysPath() const;
+    void setMingwBinarysPath(const QString &option);
 
 signals:
 
