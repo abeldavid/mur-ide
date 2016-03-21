@@ -25,7 +25,6 @@ private slots:
     void uploadAndRun();
     void runApp();
     void killApp();
-    void openFileOrProject();
     void openHelp();
     void switchCompilationTargetToEdison();
     void switchCompilationTargetToDesktop();
@@ -33,9 +32,12 @@ private slots:
     void projectCreateDialog();
     void fileCreateDialog();
     void projectOpenDialog();
+    void projectClose();
     void fileAddDialog();
     void onProjectCreated();
     void onProjectOpened();
+    void onProjectClosed();
+
 
 private:
     void createMenus();
@@ -55,6 +57,7 @@ private:
 
     QAction *m_createProjectAct;
     QAction *m_openProjectAct;
+    QAction *m_closeProjectAct;
     QAction *m_createFileAct;
     QAction *m_saveAct;
     QAction *m_saveAsAct;

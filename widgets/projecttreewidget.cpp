@@ -30,6 +30,11 @@ void ProjectTree::loadProject(QString projectDir)
     m_tree->hideColumn(3);
 }
 
+void ProjectTree::closeProject()
+{
+    qDebug()<< "closing project in tree";
+}
+
 void ProjectTree::itemSelected(const QModelIndex & index)
 {
     qDebug()<<index;

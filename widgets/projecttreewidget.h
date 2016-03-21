@@ -15,6 +15,7 @@ public:
     virtual ~ProjectTree();
 public slots:
     void loadProject(QString projectDir);
+    void closeProject();
 private:
     QFileSystemModel *m_fileModel;
     QTreeView *m_tree;
