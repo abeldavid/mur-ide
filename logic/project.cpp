@@ -9,7 +9,8 @@
 #include <algorithm>
 #include <QFile>
 #include <QFileInfo>
-#include <QDir>
+#include <QJsonObject>
+#include <QJsonArray>
 
 const QString Project::projectFileName = ".roboproject";
 const QString Project::projectsRootPath = "MURProjects";
@@ -17,9 +18,9 @@ const QString Project::sourceFileExtension = ".cpp";
 const QString Project::headerFileExtension = ".h";
 const QString Project::defaultSourceName = "main" + Project::sourceFileExtension;
 const QString Project::defaultHeaderName = "main" + Project::headerFileExtension;
-const QString Project::defaultSource = "#include \"" + Project::defaultHeaderName + "\"\n\n"
+const QString Project::defaultSourceContent = "#include \"" + Project::defaultHeaderName + "\"\n\n"
                                         "void main () {\n\n}";
-const QString Project::defaultHeader = "#define HELLO \"Hello World!\" ";
+const QString Project::defaultHeaderContent = "#define HELLO \"Hello World!\" ";
 const QString Project::defaultProjectPrefix = "Project_";
 const QString Project::multiFileSeparator = " + ";
 const QHash<QString, QString> Project::defaultFilePrefixes({
@@ -53,11 +54,11 @@ bool Project::create(const QString &path, const QString &name)
     QDir projectDir(path); //here it is project parent dir, later it cds to project dir
     if (projectDir.exists() and projectDir.mkdir(name) and projectDir.cd(name)) {
         m_projectDir = projectDir;
-        if (this->addFile(Project::defaultSourceName, Project::defaultSource) and
-                this->addFile(Project::defaultHeaderName, Project::defaultHeader) and
-                this->createProjectFile(Project::projectFileName)) {
+        if (this->writeFile(Project::defaultSourceName, Project::defaultSourceContent) and
+                this->writeFile(Project::defaultHeaderName, Project::defaultHeaderContent) and
+                this->createProjectFile(name)) {
             result = true;
-            this->isOpened = true;
+            this->m_isOpened = true;
         }
     }
     return result;
@@ -65,7 +66,7 @@ bool Project::create(const QString &path, const QString &name)
 
 bool Project::createFile(const QString &name)
 {
-    return m_projectDir.exists() and this->addFile(name);
+    return m_projectDir.exists() and this->writeFile(name);
 }
 
 bool Project::addExistingFile(const QString &path)
@@ -117,9 +118,9 @@ QString Project::getDefaultFileName(const QString &extension)
     return filePrefix + QString::number(newFileNumber);
 }
 
-bool Project::addFile(const QString &name, const QString &content)
+bool Project::writeFile(const QString &name, const QString &content)
 {
-    QFile file(m_projectDir.absolutePath() + QDir::separator() + name);
+    QFile file(m_projectDir.filePath(name));
     bool result = file.open(QIODevice::WriteOnly | QIODevice::Text);
     if (!content.isEmpty()) {
         QTextStream out(&file);
@@ -151,13 +152,22 @@ int Project::getFileNameAutoIncrement(QStringList &fileList,
     return maxNumber + 1;
 }
 
-bool Project::createProjectFile(const QString &pathName)
+bool Project::createProjectFile(const QString &name)
 {
-    qDebug() << pathName;
-    return true;
+    QJsonObject jsonProject;
+    jsonProject["name"] = name;
+    jsonProject["sources"] = QJsonArray();
+    QJsonArray sources, headers;
+    sources.append(Project::defaultSourceName);
+    jsonProject["sources"] = sources;
+    headers.append(Project::defaultHeaderName);
+    jsonProject["headers"] = headers;
+    QJsonDocument jsonDoc(jsonProject);
+    m_projectJSONDoc = jsonDoc;
+    return this->writeFile(Project::projectFileName, m_projectJSONDoc.toJson());
 }
 
 bool Project::getIsOpened()
 {
-    return this->isOpened;
+    return this->m_isOpened;
 }

@@ -6,6 +6,7 @@
 #include <QString>
 #include <QStringList>
 #include <QHash>
+#include <QJsonDocument>
 
 class Project : public QObject
 {
@@ -14,9 +15,9 @@ public:
     static const QString projectFileName;
     static const QString projectsRootPath;
     static const QString defaultSourceName;
-    static const QString defaultSource;
+    static const QString defaultSourceContent;
     static const QString defaultHeaderName;
-    static const QString defaultHeader;
+    static const QString defaultHeaderContent;
     static const QString defaultProjectPrefix;
     static const QString multiFileSeparator;
     static const QString sourceFileExtension;
@@ -36,12 +37,13 @@ public:
 signals:
 
 private:
-    bool isOpened = false;
-    bool addFile(const QString &name, const QString &content = "");
+    QJsonDocument m_projectJSONDoc;
+    bool m_isOpened = false;
+    bool writeFile(const QString &name, const QString &content = "");
     int getFileNameAutoIncrement(QStringList &fileList,
                                  const QString &prefix,
                                  const QString &postfix = "");
-    bool createProjectFile(const QString &pathName);
+    bool createProjectFile(const QString &name);
 };
 
 #endif // PROJECT_H
