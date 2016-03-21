@@ -18,20 +18,17 @@ signals:
     void projectFileSaved();
 
 public slots:
-    void showContent(QString content, QString fileName);
-    void openFile(QString fileName);
-    void saveFile();
-    void saveFileAs();
-    void blankFile();
-    QString pathToFile() const;
-    void handleChangedText();
+    void showContent(const QString &content, const QString &fileName);
+    void onFileSaved(QString);
+    QString fileName() const;
+    bool fileExists() const;
 
 private:
     void setupEditor();
     void setupLexer();
     void setupUi();
     bool m_isFileExist;
-    QString m_pathToFile;
+    QString m_fileName;
     QsciLexerCPP* m_lexCpp;
     bool m_skipNullTextChanged = false;
 };

@@ -32,6 +32,9 @@ const QHash<QString, QString> Project::defaultFilePrefixes({
     });
 const QString Project::sourcesSection = "sources";
 const QString Project::headersSection = "headers";
+const QString Project::availableFileExtensions =
+        "C++ (*" + Project::sourceFileExtension +
+        " *" + Project::headerFileExtension + ")";
 
 
 Project::Project(QObject *parent) : QObject(parent)
@@ -153,6 +156,27 @@ QString Project::getDefaultFileName(const QString &extension)
     return filePrefix + QString::number(newFileNumber);
 }
 
+// content is non-const reference, because it is return value
+bool Project::openFile(const QString &fileName, QString &content)
+{
+    QFile file(fileName);
+    bool result = false;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        in.setCodec("UTF-8");
+        content = in.readAll();
+        file.close();
+        result = true;
+    }
+    return result;
+}
+
+// acessor to writeFile, for possible future modification
+bool Project::saveFile(const QString &name, const QString &content)
+{
+    return writeFile(name, content);
+}
+
 bool Project::addFile(const QString &name)
 {
     QString fileType = "";
@@ -220,6 +244,8 @@ bool Project::createProjectFile(const QString &name)
     QJsonDocument jsonDoc(m_projectJson);
     return writeFile(Project::projectFileName, jsonDoc.toJson());
 }
+
+
 
 bool Project::getIsOpened()
 {

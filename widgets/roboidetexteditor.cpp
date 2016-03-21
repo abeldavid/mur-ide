@@ -12,132 +12,37 @@
 RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
     : QsciScintilla(parent),
       m_isFileExist(false),
-      m_pathToFile(QString(""))
+      m_fileName(QString(""))
 {
     setupEditor();
     setupUi();
-    QObject::connect(this, SIGNAL(textChanged()), this, SLOT(handleChangedText()));
 }
 
-void RoboIdeTextEditor::showContent(QString content, QString fileName)
+void RoboIdeTextEditor::showContent(const QString &fileName, const QString &content)
 {
     if (content.size()) {
         m_skipNullTextChanged = true;
     }
     setText(content);
-
-    m_isFileExist = true;
-    m_pathToFile = fileName;
-}
-
-void RoboIdeTextEditor::openFile(QString fileName)
-{
-    if (isModified()) {
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Сохранить?", "Данный файл не был сохранен. Сохнаить?",
-                                    QMessageBox::Yes|QMessageBox::No);
-        if (reply == QMessageBox::Yes) {
-            saveFile();
-        } else {
-        }
-    }
-
-    QFile fileToOpen(fileName);
-    if (!fileToOpen.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qWarning() << "Something goes wrong at: RoboIdeTextEditor::openFile() [fileToOpen.open(...)]";
-        return;
-    }
-
-
-    QString text;
-    QTextStream in(&fileToOpen);
-    in.setCodec("UTF-8");
-    text = in.readAll();
-    fileToOpen.close();
-    if (text.size()) {
-        m_skipNullTextChanged = true;
-    }
-    setText(text);
     setModified(false);
+
     m_isFileExist = true;
-    m_pathToFile = fileName;
+    m_fileName = fileName;
 }
 
-void RoboIdeTextEditor::saveFile()
+void RoboIdeTextEditor::onFileSaved(QString)
 {
-    if (m_isFileExist)
-    {
-        QFile fileToSave(m_pathToFile);
-        if (!fileToSave.open(QIODevice::WriteOnly | QFile::Truncate | QIODevice::Text))
-        {
-            qWarning() << "Something goes wrong at: RoboIdeTextEditor::saveFile() [fileToOpen.open(...) / file exist]";
-            return;
-        }
-        QTextStream out(&fileToSave);
-        out.setCodec("UTF-8");
-        QString writtenText = text();
-        out << writtenText;
-        fileToSave.close();
-        setModified(false);
-        return;
-    }
-    qDebug() << "Is exist: " << m_isFileExist;
-    //! if file not exist
-    saveFileAs();
-}
-
-void RoboIdeTextEditor::saveFileAs()
-{
-    QString fileName;
-    fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-            "",
-            tr("Source (*.cpp)"));
-
-    if (fileName.isEmpty())
-    {
-        qDebug() << "No file name specified at RoboIdeTextEditor::saveFileAs()";
-        return;
-    }
-
-    QFile fileToSave(fileName);
-    if (!fileToSave.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qWarning() << "Something goes wrong at: RoboIdeTextEditor::saveFileAs() [fileToOpen.open(...)]";
-        return;
-    }
-    QTextStream out(&fileToSave);
-    out.setCodec("UTF-8");
-    out << text();
-    fileToSave.close();
     setModified(false);
-    m_isFileExist = true;
-    m_pathToFile = fileName;
 }
 
-void RoboIdeTextEditor::blankFile()
+QString RoboIdeTextEditor::fileName() const
 {
-    if (isModified()) {
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Сохранить?", "Данный файл не был сохранен. Сохранить?",
-                                    QMessageBox::Yes|QMessageBox::No);
-        if (reply == QMessageBox::Yes) {
-            saveFile();
-        }
-    }
-
-    clear();
-    m_pathToFile = "";
-    m_isFileExist = false;
+    return m_fileName;
 }
 
-QString RoboIdeTextEditor::pathToFile() const
+bool RoboIdeTextEditor::fileExists() const
 {
-    return m_pathToFile;
-}
-void RoboIdeTextEditor::handleChangedText()
-{
-
+    return m_isFileExist;
 }
 
 void RoboIdeTextEditor::setupEditor()

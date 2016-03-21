@@ -37,7 +37,10 @@ private slots:
     void onProjectCreated();
     void onProjectOpened();
     void onProjectClosed();
-
+    void openFile(const QString &fileName);
+    void saveFile();
+    void saveFileAs();
+    void saveFilePromt();
 
 private:
     void createMenus();
@@ -45,6 +48,8 @@ private:
     void createToolBars();
     void createDockWindows();
     void connectActionsToSlots();
+
+    QString saveFileAsDialog();
 
     QMenu *m_fileMenu;
     QMenu *m_editMenu;

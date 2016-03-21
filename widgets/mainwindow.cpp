@@ -68,12 +68,7 @@ void MainWindow::runCompilation()
 {
     m_buildAct->setEnabled(false);
     if (m_roboIdeTextEdit->isModified()) {
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Сохранить?", "Данный файл не был сохранен. Сохнаить?",
-                                    QMessageBox::Yes|QMessageBox::No);
-        if (reply == QMessageBox::Yes) {
-            m_roboIdeTextEdit->saveFile();
-        }
+        saveFilePromt();
     }
     if (m_edisonCompileAct->isChecked())
     {
@@ -83,7 +78,7 @@ void MainWindow::runCompilation()
     {
         m_sourceCompiller->setTarget(SourceCompiler::TARGET::MINGW);
     }
-    m_sourceCompiller->onRunCompilation(m_roboIdeTextEdit->pathToFile());
+    m_sourceCompiller->onRunCompilation(ProjectManager::instance().ProjectManager::pathToFile(m_roboIdeTextEdit->fileName()));
 }
 
 void MainWindow::compilationFinished()
@@ -151,7 +146,7 @@ void MainWindow::fileAddDialog() {
                         this,
                         tr("Добавить существующий файл"),
                         ProjectManager::instance().projectsRoot(),
-                        "C++ (*" + Project::sourceFileExtension +  " *" + Project::headerFileExtension + ")"
+                        Project::availableFileExtensions
                         );
     if (!filePath.isNull()) {
         ProjectManager::instance().addExistingFile(filePath);
@@ -197,12 +192,54 @@ void MainWindow::onProjectClosed()
 
 }
 
+void MainWindow::openFile(const QString &fileName)
+{
+    if (m_roboIdeTextEdit->isModified()) {
+        saveFilePromt();
+    }
+    ProjectManager::instance().openFile(fileName);
+}
+
+void MainWindow::saveFile()
+{
+    QString fileName = m_roboIdeTextEdit->fileName();
+    if (fileName.isEmpty() or !m_roboIdeTextEdit->fileExists()) {
+        fileName = saveFileAsDialog();
+    }
+    ProjectManager::instance().saveFile(fileName, m_roboIdeTextEdit->text());
+}
+
+void MainWindow::saveFileAs()
+{
+    ProjectManager::instance().saveFile(saveFileAsDialog(), m_roboIdeTextEdit->text());
+}
+
+QString MainWindow::saveFileAsDialog()
+{
+    return QFileDialog::getSaveFileName(this,
+                                        tr("Сохранить файл как"),
+                                        ProjectManager::instance().getProjectPath(),
+                                        Project::availableFileExtensions
+                                        );
+}
+
+void MainWindow::saveFilePromt()
+{
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this,
+                                  "Сохранить?", "Данный файл не был сохранен. Сохранить?",
+                                  QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+        saveFile();
+    }
+}
+
 void MainWindow::onProjectCreated()
 {
     m_addFileAct->setEnabled(true);
     m_createFileAct->setEnabled(true);
     m_closeProjectAct->setEnabled(true);
-    m_roboIdeTextEdit->openFile(ProjectManager::instance().defaultOpenFilePath());
+    openFile(ProjectManager::instance().defaultOpenFilePath());
 }
 
 void MainWindow::switchCompilationTargetToEdison()
@@ -449,11 +486,15 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_closeProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectClose()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectClosed()), m_projectTree, SLOT(closeProject()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectClosed()), this, SLOT(onProjectClosed()));
+
     QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileCreateDialog()));
     QObject::connect(m_addFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
+    QObject::connect(m_saveAct, SIGNAL(triggered(bool)), this, SLOT(saveFile()));
+    QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), this, SLOT(saveFileAs()));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_roboIdeTextEdit, SLOT(onFileSaved(QString)));
+
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
-    QObject::connect(m_saveAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFile()));
-    QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(saveFileAs()));
     QObject::connect(m_redoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(redo()));
     QObject::connect(m_undoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(undo()));
     QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(copy()));

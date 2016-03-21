@@ -24,6 +24,11 @@ QString ProjectManager::projectsRoot() const
     return m_project->m_projectsRoot;
 }
 
+QString ProjectManager::pathToFile(const QString &fileName) const
+{
+    return m_project->m_projectDir.filePath(fileName);
+}
+
 QString ProjectManager::defaultNewFileName(const QString &extension) const
 {
     return m_project->getDefaultFileName(extension);
@@ -84,6 +89,21 @@ void ProjectManager::closeProject()
 {
     if (m_project->close()) {
         emit projectClosed();
+    }
+}
+
+void ProjectManager::openFile(const QString &name)
+{
+    QString content;
+    if (m_project->openFile(name, content)) {
+        emit fileOpened(name, content);
+    }
+}
+
+void ProjectManager::saveFile(const QString &name, const QString &content)
+{
+    if (m_project->saveFile(name, content)) {
+        emit fileSaved(name);
     }
 }
 

@@ -51,8 +51,8 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
 void FileCreateDialog::createFile()
 {
     QStringList fileNames = m_nameEdit->text().split(Project::multiFileSeparator);
-    for (int i = 0; i < fileNames.size(); ++i) {
-        ProjectManager::instance().createFile(fileNames[i]);
+    for (QString fileName: fileNames) {
+        ProjectManager::instance().createFile(fileName);
     }
 }
 

@@ -17,10 +17,10 @@ public:
     bool projectOpened() const;
     QString getProjectPath() const;
     QString projectsRoot() const;
+    QString pathToFile(const QString &fileName) const;
     QString defaultNewProjectName() const;
     QString defaultOpenFilePath() const;
     QString defaultNewFileName(const QString &extension) const;
-//    Project* project() const;
 
 signals:
     void projectCreated(QString path);
@@ -29,6 +29,8 @@ signals:
 //    void projectCreateFailed();
     void fileCreated(QString name);
     void fileAdded();
+    void fileOpened(QString name, QString content);
+    void fileSaved(QString name);
 
 public slots:
     void createProject(const QString &path, const QString &name);
@@ -36,6 +38,8 @@ public slots:
     void addExistingFile(const QString &path);
     void openProject(const QString &path);
     void closeProject();
+    void openFile(const QString &name);
+    void saveFile(const QString &name, const QString &content);
 
 private:
     explicit ProjectManager(QObject *parent = 0);

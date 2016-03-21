@@ -25,6 +25,7 @@ public:
     static const QHash<QString, QString> defaultFilePrefixes;
     static const QString sourcesSection;
     static const QString headersSection;
+    static const QString availableFileExtensions;
 
     QString m_projectsRoot;
     QDir m_projectDir;
@@ -38,6 +39,9 @@ public:
     bool addExistingFile(const QString &path);
     QString getDefaultProjectName();
     QString getDefaultFileName(const QString &extension);
+    bool openFile(const QString &fileName, QString &content);
+    bool saveFile(const QString &name, const QString &content);
+
 signals:
 
 private:
