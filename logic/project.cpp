@@ -9,8 +9,10 @@
 #include <algorithm>
 #include <QFile>
 #include <QFileInfo>
+#include <QDir>
 
 const QString Project::projectFileName = ".roboproject";
+const QString Project::projectsRootPath = "MURProjects";
 const QString Project::sourceFileExtension = ".cpp";
 const QString Project::headerFileExtension = ".h";
 const QString Project::defaultSourceName = "main" + Project::sourceFileExtension;
@@ -31,11 +33,11 @@ const QHash<QString, QString> Project::defaultFilePrefixes({
 Project::Project(QObject *parent) : QObject(parent)
 {
     m_projectsRoot = QStandardPaths::locate(QStandardPaths::DocumentsLocation,
-                                                  "MURProjects",
-                                                  QStandardPaths::LocateDirectory);
+                                            Project::projectsRootPath,
+                                            QStandardPaths::LocateDirectory);
     if (m_projectsRoot.isEmpty()) {
-        m_projectsRoot = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
-                + QDir::separator() + QString("MURProjects");
+        m_projectsRoot = QDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).
+                filePath(Project::projectsRootPath);
         QDir().mkdir(m_projectsRoot);
     }
 }
@@ -49,32 +51,21 @@ bool Project::create(const QString &path, const QString &name)
 {
     bool result = false;
     QDir projectDir(path); //here it is project parent dir, later it cds to project dir
-    if (projectDir.exists() and
-            projectDir.mkdir(name) and
-            projectDir.cd(name) and
-            this->addDefaultFile(projectDir.filePath(Project::defaultSourceName),
-                                 Project::defaultSource) and
-            this->addDefaultFile(projectDir.filePath(Project::defaultHeaderName),
-                                 Project::defaultHeader) and
-            this->createProjectFile(projectDir.filePath(Project::projectFileName))
-            ) {
+    if (projectDir.exists() and projectDir.mkdir(name) and projectDir.cd(name)) {
         m_projectDir = projectDir;
-        result = true;
-        this->isOpened = true;
+        if (this->addFile(Project::defaultSourceName, Project::defaultSource) and
+                this->addFile(Project::defaultHeaderName, Project::defaultHeader) and
+                this->createProjectFile(Project::projectFileName)) {
+            result = true;
+            this->isOpened = true;
+        }
     }
     return result;
 }
 
 bool Project::createFile(const QString &name)
 {
-    bool result;
-    if (m_projectDir.exists() and this->addEmptyFile(name)) {
-        result = true;
-    }
-    else {
-        result = false;
-    }
-    return result;
+    return m_projectDir.exists() and this->addFile(name);
 }
 
 bool Project::addExistingFile(const QString &path)
@@ -126,20 +117,14 @@ QString Project::getDefaultFileName(const QString &extension)
     return filePrefix + QString::number(newFileNumber);
 }
 
-bool Project::addDefaultFile(const QString &pathName, const QString &content)
-{
-    QFile file(pathName);
-    bool result = file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&file);
-    out << content;
-    file.close();
-    return result;
-}
-
-bool Project::addEmptyFile(const QString &name)
+bool Project::addFile(const QString &name, const QString &content)
 {
     QFile file(m_projectDir.absolutePath() + QDir::separator() + name);
     bool result = file.open(QIODevice::WriteOnly | QIODevice::Text);
+    if (!content.isEmpty()) {
+        QTextStream out(&file);
+        out << content;
+    }
     file.close();
     return result;
 }

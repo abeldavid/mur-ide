@@ -12,6 +12,7 @@ class Project : public QObject
     Q_OBJECT
 public:
     static const QString projectFileName;
+    static const QString projectsRootPath;
     static const QString defaultSourceName;
     static const QString defaultSource;
     static const QString defaultHeaderName;
@@ -36,8 +37,7 @@ signals:
 
 private:
     bool isOpened = false;
-    bool addDefaultFile(const QString &pathName, const QString &content = "");
-    bool addEmptyFile(const QString &name);
+    bool addFile(const QString &name, const QString &content = "");
     int getFileNameAutoIncrement(QStringList &fileList,
                                  const QString &prefix,
                                  const QString &postfix = "");
