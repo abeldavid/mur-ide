@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <QFile>
 #include <QFileInfo>
-#include <QJsonObject>
+#include <QJsonDocument>
 #include <QJsonArray>
 
 const QString Project::projectFileName = ".roboproject";
@@ -30,6 +30,9 @@ const QHash<QString, QString> Project::defaultFilePrefixes({
             QString("module_")
         }
     });
+const QString Project::sourcesSection = "sources";
+const QString Project::headersSection = "headers";
+
 
 Project::Project(QObject *parent) : QObject(parent)
 {
@@ -66,7 +69,13 @@ bool Project::create(const QString &path, const QString &name)
 
 bool Project::createFile(const QString &name)
 {
-    return m_projectDir.exists() and writeFile(name);
+    bool result = m_projectDir.exists() and writeFile(name);
+    if (result) {
+        addFile(name);
+        QJsonDocument jsonDoc(m_projectJson);
+        result = writeFile(Project::projectFileName, jsonDoc.toJson());
+    }
+    return result;
 }
 
 bool Project::addExistingFile(const QString &path)
@@ -118,10 +127,27 @@ QString Project::getDefaultFileName(const QString &extension)
     return filePrefix + QString::number(newFileNumber);
 }
 
+void Project::addFile(const QString &name)
+{
+    QString fileType = "";
+    if (name.endsWith(Project::sourceFileExtension)) {
+        fileType = Project::sourcesSection;
+    }
+    else if(name.endsWith(Project::headerFileExtension)){
+        fileType = Project::headersSection;
+    }
+    if(!fileType.isEmpty()) {
+        QJsonArray projectSection = m_projectJson[fileType].toArray();
+        projectSection.append(name);
+        m_projectJson[fileType] = projectSection;
+    }
+}
+
+
 bool Project::writeFile(const QString &name, const QString &content)
 {
     QFile file(m_projectDir.filePath(name));
-    bool result = file.open(QIODevice::WriteOnly | QIODevice::Text);
+    bool result = file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
     if (!content.isEmpty()) {
         QTextStream out(&file);
         out << content;
@@ -154,17 +180,15 @@ int Project::getFileNameAutoIncrement(QStringList &fileList,
 
 bool Project::createProjectFile(const QString &name)
 {
-    QJsonObject jsonProject;
-    jsonProject["name"] = name;
-    jsonProject["sources"] = QJsonArray();
+//    QJsonObject jsonProject;
+    m_projectJson["name"] = name;
     QJsonArray sources, headers;
     sources.append(Project::defaultSourceName);
-    jsonProject["sources"] = sources;
+    m_projectJson[Project::sourcesSection] = sources;
     headers.append(Project::defaultHeaderName);
-    jsonProject["headers"] = headers;
-    QJsonDocument jsonDoc(jsonProject);
-    m_projectJSONDoc = jsonDoc;
-    return writeFile(Project::projectFileName, m_projectJSONDoc.toJson());
+    m_projectJson[Project::headersSection] = headers;
+    QJsonDocument jsonDoc(m_projectJson);
+    return writeFile(Project::projectFileName, jsonDoc.toJson());
 }
 
 bool Project::getIsOpened()
