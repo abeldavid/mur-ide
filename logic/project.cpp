@@ -54,11 +54,11 @@ bool Project::create(const QString &path, const QString &name)
     QDir projectDir(path); //here it is project parent dir, later it cds to project dir
     if (projectDir.exists() and projectDir.mkdir(name) and projectDir.cd(name)) {
         m_projectDir = projectDir;
-        if (this->writeFile(Project::defaultSourceName, Project::defaultSourceContent) and
-                this->writeFile(Project::defaultHeaderName, Project::defaultHeaderContent) and
-                this->createProjectFile(name)) {
+        if (writeFile(Project::defaultSourceName, Project::defaultSourceContent) and
+                writeFile(Project::defaultHeaderName, Project::defaultHeaderContent) and
+                createProjectFile(name)) {
             result = true;
-            this->m_isOpened = true;
+            m_isOpened = true;
         }
     }
     return result;
@@ -66,7 +66,7 @@ bool Project::create(const QString &path, const QString &name)
 
 bool Project::createFile(const QString &name)
 {
-    return m_projectDir.exists() and this->writeFile(name);
+    return m_projectDir.exists() and writeFile(name);
 }
 
 bool Project::addExistingFile(const QString &path)
@@ -98,7 +98,7 @@ QString Project::getDefaultProjectName()
     QStringList filters;
     filters << projectPrefix + QString("*");
     QStringList dirsInRoot = dir.entryList(filters, QDir::Dirs, QDir::NoSort);
-    int newProjectNumber = this->getFileNameAutoIncrement(dirsInRoot, projectPrefix);
+    int newProjectNumber = getFileNameAutoIncrement(dirsInRoot, projectPrefix);
     return projectPrefix + QString::number(newProjectNumber);
 }
 
@@ -164,10 +164,10 @@ bool Project::createProjectFile(const QString &name)
     jsonProject["headers"] = headers;
     QJsonDocument jsonDoc(jsonProject);
     m_projectJSONDoc = jsonDoc;
-    return this->writeFile(Project::projectFileName, m_projectJSONDoc.toJson());
+    return writeFile(Project::projectFileName, m_projectJSONDoc.toJson());
 }
 
 bool Project::getIsOpened()
 {
-    return this->m_isOpened;
+    return m_isOpened;
 }

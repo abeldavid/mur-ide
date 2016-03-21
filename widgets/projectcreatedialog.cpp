@@ -12,7 +12,7 @@ ProjectCreateDialog::ProjectCreateDialog(QWidget *parent) :
     m_dirLocationEdit(new QLineEdit(this)),
     m_nameEdit(new QLineEdit(this))
 {
-    this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);
