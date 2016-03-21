@@ -119,8 +119,8 @@ QString Project::getDefaultFileName(const QString &extension)
     QStringList filesInProject = dir.entryList(filters, QDir::Files, QDir::NoSort);
     QStringList extensionList = extension.split(Project::multiFileSeparator);
     int newFileNumber = 0;
-    for(int i = 0; i < extensionList.size(); ++i) {
-        int currFileNumber = getFileNameAutoIncrement(filesInProject, filePrefix, extensionList[i]);
+    for (QString fileExtension: extensionList) {
+        int currFileNumber = getFileNameAutoIncrement(filesInProject, filePrefix, fileExtension);
         newFileNumber = std::max(newFileNumber, currFileNumber);
     }
     return filePrefix + QString::number(newFileNumber);
