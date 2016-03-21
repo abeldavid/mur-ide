@@ -51,13 +51,10 @@ void SourceCompiler::onRunCompilation(QString src)
         QString pathToSysRoot = SettingsManager::instance().edisonSysrootPath();
         QString pathToCC = SettingsManager::instance().edisonCompilerPath();
         QStringList options = SettingsManager::instance().edisonCompilerOptions();
-
-        QString processPath;
-        QStringList processArgs;
-
         QString binaryName = src + ".bin ";
 
-        processPath = pathToCC;
+        QStringList processArgs;
+
         processArgs << "--sysroot=" + pathToSysRoot;
         processArgs << src;
         processArgs << "-o" + binaryName;
@@ -66,32 +63,28 @@ void SourceCompiler::onRunCompilation(QString src)
         m_pathToBinary = src + ".bin";
         qDebug() << processArgs;
         m_processRunner->setArguments(processArgs);
-        m_processRunner->setPath(processPath);
+        m_processRunner->setPath(pathToCC);
     }
 
     if (m_target == TARGET::MINGW) {
-        QString pathToIncludes = "-ID:\\Projects\\RoboIDE\\build-RoboIDE-Desktop_Qt_5_5_1_MinGW_32bit-Debug\\debug\\mingw492_32\\murlibs";
-        QString pathToLibs = "-LD:\\Projects\\RoboIDE\\build-RoboIDE-Desktop_Qt_5_5_1_MinGW_32bit-Debug\\debug\\mingw492_32\\murlibs";
+        QStringList pathToIncludes = SettingsManager::instance().mingwIncludesPath();
+        QStringList pathToLibs = SettingsManager::instance().mingwLibsPaths();
+        QString pathToCC = SettingsManager::instance().mingwCompilerPath();
+        QStringList options = SettingsManager::instance().mingwCompilerOptions();
+        QString binaryName = src + ".exe";
 
-        QString pathToCC = "D:\\Projects\\RoboIDE\\build-RoboIDE-Desktop_Qt_5_5_1_MinGW_32bit-Debug\\debug\\mingw492_32\\bin\\g++.exe";
-        QString options = "-lopencv_core2412 -lopencv_highgui2412 -std=c++11";
-
-        QString processPath;
         QStringList processArgs;
 
-        QString binaryName = src + ".bin";
-
-        processPath = pathToCC;
         processArgs << pathToIncludes;
         processArgs << pathToLibs;
         processArgs << src;
         processArgs << "-o" + binaryName;
-        processArgs << options.split(" ", QString::SkipEmptyParts);
+        processArgs << options;
 
-        m_pathToBinary = src + ".bin";
+        m_pathToBinary = src + ".exe";
         qDebug() << processArgs;
         m_processRunner->setArguments(processArgs);
-        m_processRunner->setPath(processPath);
+        m_processRunner->setPath(pathToCC);
     }
 
     emit run();
