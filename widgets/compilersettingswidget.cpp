@@ -49,6 +49,7 @@ void CompilerSettingsWidget::onCompilerChanged(int index)
         if (reply == QMessageBox::Yes) {
             emit requireToSave();
         }
+        m_view->setModified(false);
     }
 
     if (index == 0) {
