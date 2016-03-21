@@ -119,7 +119,7 @@ void RoboIdeTextEditor::blankFile()
 {
     if (isModified()) {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Сохранить?", "Данный файл не был сохранен. Сохнаить?",
+        reply = QMessageBox::question(this, "Сохранить?", "Данный файл не был сохранен. Сохранить?",
                                     QMessageBox::Yes|QMessageBox::No);
         if (reply == QMessageBox::Yes) {
             saveFile();

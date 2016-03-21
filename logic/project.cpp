@@ -162,13 +162,15 @@ bool Project::addFile(const QString &name)
     else if(name.endsWith(Project::headerFileExtension)){
         fileType = Project::headersSection;
     }
+    bool result = false;
     if(!fileType.isEmpty()) {
         QJsonArray projectSection = m_projectJson[fileType].toArray();
         projectSection.append(name);
         m_projectJson[fileType] = projectSection;
         QJsonDocument jsonDoc(m_projectJson);
-        return writeFile(Project::projectFileName, jsonDoc.toJson());
+        result = writeFile(Project::projectFileName, jsonDoc.toJson());
     }
+    return result;
 }
 
 
@@ -178,6 +180,7 @@ bool Project::writeFile(const QString &name, const QString &content)
     bool result = file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
     if (!content.isEmpty()) {
         QTextStream out(&file);
+        out.setCodec("UTF-8");
         out << content;
     }
     file.close();
