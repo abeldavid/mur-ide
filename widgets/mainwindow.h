@@ -12,6 +12,7 @@
 #include "widgets/cameraswidget.h"
 #include "filetransfer/wificonnection.h"
 #include "widgets/helpwidget.h"
+#include "ftpwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -83,6 +84,7 @@ private:
     QAction *m_edisonCompileAct;
     QAction *m_mingwCompileAct;
     QAction *m_toggleHelpVisibilityAct;
+    QAction *m_showFtpAct;
 
     RoboIdeTextEditor *m_roboIdeTextEdit;
     RoboIdeConsole *m_roboIdeConsole;
@@ -93,6 +95,7 @@ private:
     QProcess *m_localApp;
     HelpWidget *m_helpWidget;
     ProjectTree *m_projectTree;
+    FtpWidget *m_ftpWidget;
 };
 
 #endif // MAINWINDOW_H

@@ -13,5 +13,8 @@
         <file>icons/tools/stop.png</file>
         <file>icons/tools/undo.png</file>
         <file>icons/tools/upload.png</file>
+        <file>icons/filetypes/dir.png</file>
+        <file>icons/filetypes/file.png</file>
+        <file>icons/filetypes/cdtoparent.png</file>
     </qresource>
 </RCC>
