@@ -21,6 +21,7 @@ public:
     ~MainWindow();
 private slots:
     void runCompilation();
+    void generateMakeFile();
     void compilationFinished();
     void uploadAndRun();
     void runApp();

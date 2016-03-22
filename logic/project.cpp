@@ -251,3 +251,25 @@ bool Project::getIsOpened()
 {
     return m_isOpened;
 }
+
+bool Project::generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options)
+{
+    QFile makeFile(m_projectDir.filePath("makefile"));
+    bool result = false;
+    if (makeFile.open(QIODevice::WriteOnly)) {
+        QTextStream makefile(&makeFile);
+        makefile << QString("CC=%1\n").arg(compilerPath);
+        makefile << QString("%1:\n").arg(m_projectJson["name"].toString());
+        makefile << QString("\t$(CC) --sysroot=%1 ").arg(sysrootPath);
+        QVariantList sourceFiles = m_projectJson["name"].toArray().toVariantList();
+        for (auto source : sourceFiles) {
+            makefile << source.toString() << " ";
+        }
+        makefile << QString("-o %1.bin ").arg(m_projectJson["name"].toString());
+        makefile << options;
+
+        makeFile.close();
+        result = true;
+    }
+    return result;
+}

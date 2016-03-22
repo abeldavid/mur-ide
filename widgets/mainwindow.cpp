@@ -66,10 +66,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::runCompilation()
 {
-    m_buildAct->setEnabled(false);
-    if (m_roboIdeTextEdit->isModified()) {
-        saveFilePromt();
-    }
     if (m_edisonCompileAct->isChecked())
     {
         m_sourceCompiller->setTarget(SourceCompiler::TARGET::EDISON);
@@ -78,7 +74,16 @@ void MainWindow::runCompilation()
     {
         m_sourceCompiller->setTarget(SourceCompiler::TARGET::MINGW);
     }
-    m_sourceCompiller->onRunCompilation(ProjectManager::instance().ProjectManager::pathToFile(m_roboIdeTextEdit->fileName()));
+    m_sourceCompiller->onRunCompilation(ProjectManager::instance().pathToFile(m_roboIdeTextEdit->fileName()));
+}
+
+void MainWindow::generateMakeFile()
+{
+    m_buildAct->setEnabled(false);
+    if (m_roboIdeTextEdit->isModified()) {
+        saveFilePromt();
+    }
+    ProjectManager::instance().generateMakeFile("compiler_path", "sysroot", "");
 }
 
 void MainWindow::compilationFinished()
@@ -323,7 +328,7 @@ void MainWindow::createActions()
     m_findAct->setIconVisibleInMenu(false);
 
     //!Compilation actions
-    m_buildAct = new QAction(QIcon(":/icons/icons/tools/compile.png"), tr("Проверить"), this);
+    m_buildAct = new QAction(QIcon(":/icons/icons/tools/compile.png"), tr("Скомпилировать"), this);
     m_buildAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B));
     m_buildAct->setIconVisibleInMenu(false);
 
@@ -331,7 +336,7 @@ void MainWindow::createActions()
     m_uploadAndRunAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
     m_uploadAndRunAct->setIconVisibleInMenu(false);
 
-    m_stopAppAct = new QAction(QIcon(":/icons/icons/tools/stop.png"), tr("Остановаить программу"), this);
+    m_stopAppAct = new QAction(QIcon(":/icons/icons/tools/stop.png"), tr("Остановить программу"), this);
     m_stopAppAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S));
     m_stopAppAct->setIconVisibleInMenu(false);
 
@@ -504,7 +509,8 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(copy()));
     QObject::connect(m_pasteAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(paste()));
      //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
-    QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
+    QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(generateMakeFile()));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
     QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
     QObject::connect(m_uploadAndRunAct, SIGNAL(triggered(bool)), this, SLOT(uploadAndRun()));

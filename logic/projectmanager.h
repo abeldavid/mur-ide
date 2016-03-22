@@ -31,6 +31,7 @@ signals:
     void fileAdded();
     void fileOpened(QString name, QString content);
     void fileSaved(QString name);
+    void makeFileGenerated();
 
 public slots:
     void createProject(const QString &path, const QString &name);
@@ -40,6 +41,7 @@ public slots:
     void closeProject();
     void openFile(const QString &name);
     void saveFile(const QString &name, const QString &content);
+    void generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options);
 
 private:
     explicit ProjectManager(QObject *parent = 0);
