@@ -239,7 +239,6 @@ void MainWindow::saveFile()
     if (fileName.isEmpty() or !m_roboIdeTextEdit->fileExists()) {
         fileName = saveFileAsDialog();
     }
-    qDebug() << fileName;
     if (!fileName.isEmpty()) {
         ProjectManager::instance().saveFile(fileName, m_roboIdeTextEdit->text());
     }

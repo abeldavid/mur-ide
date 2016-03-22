@@ -36,7 +36,7 @@ QString ProjectManager::defaultNewFileName(const QString &extension) const
 
 QString ProjectManager::defaultOpenFilePath() const
 {
-    return m_project->m_projectDir.filePath(Project::defaultSourceName);
+    return m_project->Project::defaultSourceName;
 }
 
 QString ProjectManager::defaultNewProjectName() const

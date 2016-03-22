@@ -162,7 +162,7 @@ QString Project::getDefaultFileName(const QString &extension)
 // content is non-const reference, because it is return value
 bool Project::openFile(const QString &fileName, QString &content)
 {
-    QFile file(fileName);
+    QFile file(m_projectDir.filePath(fileName));
     bool result = false;
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);

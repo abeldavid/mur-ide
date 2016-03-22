@@ -19,6 +19,7 @@ public slots:
 private:
     QFileSystemModel *m_fileModel;
     QTreeView *m_tree;
+    void prepareTreeView();
 private slots:
     void itemSelected(const QModelIndex & index);
 };
