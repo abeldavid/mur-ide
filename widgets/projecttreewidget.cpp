@@ -1,4 +1,5 @@
 #include "projecttreewidget.h"
+#include "projectmanager.h"
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QDir>
@@ -41,8 +42,7 @@ void ProjectTree::prepareTreeView()
 
 void ProjectTree::itemSelected(const QModelIndex & index)
 {
-    qDebug()<<index;
-
+    ProjectManager::instance().openFile(m_fileModel->fileName(index));
 }
 
 ProjectTree::~ProjectTree()
