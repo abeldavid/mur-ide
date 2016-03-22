@@ -31,12 +31,12 @@ QString ProjectManager::pathToFile(const QString &fileName) const
 
 QString ProjectManager::defaultNewFileName(const QString &extension) const
 {
-    return m_project->getDefaultFileName(extension);
+    return m_project->getDefaultNewFileName(extension);
 }
 
 QString ProjectManager::defaultOpenFilePath() const
 {
-    return m_project->Project::defaultSourceName;
+    return m_project->getDefaultFileName();
 }
 
 QString ProjectManager::defaultNewProjectName() const

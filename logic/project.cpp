@@ -143,7 +143,7 @@ QString Project::getDefaultProjectName()
     return projectPrefix + QString::number(newProjectNumber);
 }
 
-QString Project::getDefaultFileName(const QString &extension)
+QString Project::getDefaultNewFileName(const QString &extension)
 {
     QDir dir(m_projectDir);
     QString filePrefix = Project::defaultFilePrefixes[extension];
@@ -157,6 +157,25 @@ QString Project::getDefaultFileName(const QString &extension)
         newFileNumber = std::max(newFileNumber, currFileNumber);
     }
     return filePrefix + QString::number(newFileNumber);
+}
+
+QString Project::getDefaultFileName()
+{
+    QString fileName = "";
+    QJsonArray sourceFiles = m_projectJson[Project::sourcesSection].toArray();
+    if (sourceFiles.size() > 0) {
+        if (sourceFiles.contains(Project::defaultSourceName)) {
+            fileName = Project::defaultSourceName;
+        }
+        else {
+            fileName = sourceFiles.at(0).toString();
+            if (!m_projectDir.exists(fileName)) {
+                // error in project file
+                fileName = "";
+            }
+        }
+    }
+    return fileName;
 }
 
 // content is non-const reference, because it is return value

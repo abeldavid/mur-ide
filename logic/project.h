@@ -38,7 +38,8 @@ public:
     bool createFile(const QString &name);
     bool addExistingFile(const QString &path);
     QString getDefaultProjectName();
-    QString getDefaultFileName(const QString &extension);
+    QString getDefaultNewFileName(const QString &extension);
+    QString getDefaultFileName();
     bool openFile(const QString &fileName, QString &content);
     bool saveFile(const QString &name, const QString &content);
     bool generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options);

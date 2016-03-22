@@ -212,6 +212,7 @@ void MainWindow::onProjectOpened()
     m_addFileAct->setEnabled(true);
     m_createFileAct->setEnabled(true);
     m_closeProjectAct->setEnabled(true);
+    openFile(ProjectManager::instance().defaultOpenFilePath());
 }
 
 void MainWindow::onProjectClosed()
@@ -530,6 +531,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_saveAct, SIGNAL(triggered(bool)), this, SLOT(saveFile()));
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), this, SLOT(saveFileAs()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString,QString)), m_projectTree, SLOT(selectOpenedFile(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_roboIdeTextEdit, SLOT(onFileSaved(QString)));
 
 //    QObject::connect(m_roboIdeTextEdit, SIGNAL(fileModified()), this);
