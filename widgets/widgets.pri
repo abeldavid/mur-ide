@@ -12,12 +12,10 @@ HEADERS += \
     $$PWD/helpbrowserwidget.h \
     $$PWD/projecttreewidget.h \
     $$PWD/compilersettingswidget.h \
-<<<<<<< HEAD
-    $$PWD/compilationoptionsview.h
-=======
+    $$PWD/compilationoptionsview.h \
     $$PWD/projectcreatedialog.h \
     $$PWD/filecreatedialog.h
->>>>>>> refs/remotes/origin/project-manager
+
 
 SOURCES += \
     $$PWD/mainwindow.cpp \
@@ -30,9 +28,7 @@ SOURCES += \
     $$PWD/helpbrowserwidget.cpp \
     $$PWD/projecttreewidget.cpp \
     $$PWD/compilersettingswidget.cpp \
-<<<<<<< HEAD
-    $$PWD/compilationoptionsview.cpp
-=======
+    $$PWD/compilationoptionsview.cpp \
     $$PWD/projectcreatedialog.cpp \
     $$PWD/filecreatedialog.cpp
->>>>>>> refs/remotes/origin/project-manager
+
