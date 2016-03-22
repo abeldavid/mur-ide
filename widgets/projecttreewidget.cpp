@@ -42,7 +42,7 @@ void ProjectTree::prepareTreeView()
 
 void ProjectTree::itemSelected(const QModelIndex & index)
 {
-    ProjectManager::instance().openFile(m_fileModel->fileName(index));
+    emit fileSelected(m_fileModel->fileName(index));
 }
 
 ProjectTree::~ProjectTree()

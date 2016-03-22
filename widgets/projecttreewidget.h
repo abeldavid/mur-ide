@@ -13,6 +13,10 @@ class ProjectTree : public QWidget
 public:
     explicit ProjectTree(QWidget *parent = 0);
     virtual ~ProjectTree();
+
+signals:
+    void fileSelected(QString fileName);
+
 public slots:
     void loadProject(QString projectDir);
     void closeProject();

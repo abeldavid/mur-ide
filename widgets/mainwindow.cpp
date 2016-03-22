@@ -539,6 +539,8 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), this, SLOT(saveFileAs()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_roboIdeTextEdit, SLOT(onFileSaved(QString)));
+    QObject::connect(m_projectTree, SIGNAL(fileSelected(QString)), this, SLOT(openFile(QString)));
+
 
 //    QObject::connect(m_roboIdeTextEdit, SIGNAL(fileModified()), this);
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));

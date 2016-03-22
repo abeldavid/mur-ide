@@ -150,7 +150,9 @@ void RoboIdeTextEditor::setupUi()
 
 void RoboIdeTextEditor::handleChangedText()
 {
-   setModified(true);
-   emit fileModified();
+   if (!isModified()) {
+       setModified(true);
+       emit fileModified();
+   }
 }
 
