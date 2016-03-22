@@ -7,6 +7,7 @@ It is a singleton which manages project.h and emits signals for interface widget
 
 #include "project.h"
 #include <QString>
+#include <QStringList>
 
 class ProjectManager : public QObject
 {
@@ -17,10 +18,13 @@ public:
     bool projectOpened() const;
     QString getProjectPath() const;
     QString projectsRoot() const;
+    QString getProjectName() const;
     QString pathToFile(const QString &fileName) const;
     QString defaultNewProjectName() const;
     QString defaultOpenFilePath() const;
     QString defaultNewFileName(const QString &extension) const;
+    QStringList getSourceFiles() const;
+    QStringList getHeaderFiles() const;
 
 signals:
     void projectCreated(QString path);

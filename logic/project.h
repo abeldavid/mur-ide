@@ -42,6 +42,9 @@ public:
     bool openFile(const QString &fileName, QString &content);
     bool saveFile(const QString &name, const QString &content);
     bool generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options);
+    QString getName();
+    QStringList getSources();
+    QStringList getHeaders();
 
 signals:
 

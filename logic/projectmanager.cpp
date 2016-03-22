@@ -24,6 +24,11 @@ QString ProjectManager::projectsRoot() const
     return m_project->m_projectsRoot;
 }
 
+QString ProjectManager::getProjectName() const
+{
+    return m_project->getName();
+}
+
 QString ProjectManager::pathToFile(const QString &fileName) const
 {
     return m_project->m_projectDir.filePath(fileName);
@@ -32,6 +37,16 @@ QString ProjectManager::pathToFile(const QString &fileName) const
 QString ProjectManager::defaultNewFileName(const QString &extension) const
 {
     return m_project->getDefaultFileName(extension);
+}
+
+QStringList ProjectManager::getSourceFiles() const
+{
+    return m_project->getSources();
+}
+
+QStringList ProjectManager::getHeaderFiles() const
+{
+    return m_project->getHeaders();
 }
 
 QString ProjectManager::defaultOpenFilePath() const
