@@ -17,12 +17,12 @@ signals:
 public slots:
 private slots:
     void applySettings();
+    void setupCompilationOptions();
 private:
     void setupTabs();
     QTabWidget *m_tabWidget;
     WiFiPasswordWidget *m_wifiPasswordWidget;
     CompilerSettingsWidget *m_compilerSettingsWidget;
-
 };
 
 #endif // SETTINGSWIDGET_H

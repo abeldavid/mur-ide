@@ -102,38 +102,61 @@ void MainWindow::uploadAndRun()
 
 void MainWindow::runApp()
 {
+    bool isOkay = false;
     if (m_edisonCompileAct->isChecked()) {
         m_runAppAct->setDisabled(true);
         m_wifiConnection->runApp();
         m_runAppAct->setEnabled(true);
+        isOkay = true;
     }
     if (m_mingwCompileAct->isChecked()) {
         if (m_localApp->isOpen()) {
             m_localApp->kill();
         }
         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-        env.insert("PATH", env.value("Path") + ";D:\\Projects\\RoboIDE\\build-RoboIDE-Desktop_Qt_5_5_1_MinGW_32bit-Debug\\debug\\mingw492_32\\murlibs");
+        env.insert("PATH", SettingsManager::instance().mingwBinarysPath());
         m_localApp->setProcessEnvironment(env);
         m_localApp->start(m_sourceCompiller->pathToBinary());
-        qDebug() << m_localApp->environment();
 
+        if (m_localApp->state() != QProcess::NotRunning) {
+            isOkay = true;
+        }
     }
-    m_roboIdeConsole->append("Программа запущена!");
+
+    if (isOkay) {
+        m_roboIdeConsole->append("Программа запущена!");
+    }
+    else {
+        m_roboIdeConsole->append("Во время запуска программы произошла ошибка.");
+        if (m_mingwCompileAct->isChecked()) {
+            m_roboIdeConsole->append(m_localApp->errorString());
+        }
+    }
 }
 
 void MainWindow::killApp()
 {
+    bool isOk = false;
     if (m_edisonCompileAct->isChecked()) {
         m_stopAppAct->setDisabled(true);
         m_wifiConnection->killApp();
         m_stopAppAct->setEnabled(true);
     }
     if (m_mingwCompileAct->isChecked()) {
-        m_localApp->kill();
+        if (m_localApp->isOpen()) {
+            m_localApp->kill();
+            isOk = true;
+        }
+
     }
-    m_roboIdeConsole->append("Программа остановлена!");
-
-
+    if (isOk) {
+        m_roboIdeConsole->append("Программа остановлена!");
+    }
+    else {
+        if (m_mingwCompileAct->isChecked()) {
+            m_roboIdeConsole->append("Программа не была запущена. Нечего остонавливать.");
+        }
+    }
 }
 
 void MainWindow::projectCreateDialog() {
@@ -212,12 +235,18 @@ void MainWindow::saveFile()
     if (fileName.isEmpty() or !m_roboIdeTextEdit->fileExists()) {
         fileName = saveFileAsDialog();
     }
-    ProjectManager::instance().saveFile(fileName, m_roboIdeTextEdit->text());
+    qDebug() << fileName;
+    if (!fileName.isEmpty()) {
+        ProjectManager::instance().saveFile(fileName, m_roboIdeTextEdit->text());
+    }
 }
 
 void MainWindow::saveFileAs()
 {
-    ProjectManager::instance().saveFile(saveFileAsDialog(), m_roboIdeTextEdit->text());
+    QString fileName = saveFileAsDialog();
+    if (!fileName.isEmpty()) {
+        ProjectManager::instance().saveFile(fileName, m_roboIdeTextEdit->text());
+    }
 }
 
 QString MainWindow::saveFileAsDialog()
@@ -251,11 +280,13 @@ void MainWindow::onProjectCreated()
 void MainWindow::switchCompilationTargetToEdison()
 {
     m_mingwCompileAct->setChecked(false);
+    m_edisonCompileAct->setChecked(true);
 }
 
 void MainWindow::switchCompilationTargetToDesktop()
 {
     m_edisonCompileAct->setChecked(false);
+    m_mingwCompileAct->setChecked(true);
 }
 
 void MainWindow::processOutReceived()
@@ -350,10 +381,10 @@ void MainWindow::createActions()
     m_openHelpAct = new QAction(tr("Справка"), this);
     m_openHelpAct->setShortcut(QKeySequence(Qt::Key_F1));
 
-    m_edisonCompileAct = new QAction(tr("MUR Robot"), this);
+    m_edisonCompileAct = new QAction(tr("Робот"), this);
     m_edisonCompileAct->setCheckable(true);
     m_edisonCompileAct->setChecked(true);
-    m_mingwCompileAct = new QAction(tr("Desktop"), this);
+    m_mingwCompileAct = new QAction(tr("Компьютер"), this);
     m_mingwCompileAct->setCheckable(true);
 }
 

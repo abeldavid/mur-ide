@@ -2,7 +2,7 @@
 #define HELPWIDGET_H
 #include <QWidget>
 #include <QTabWidget>
-#include <helpbrowserwidget.h>
+#include "helpbrowserwidget.h"
 #include <QtHelp/QHelpEngine>
 
 class HelpWidget : public QWidget

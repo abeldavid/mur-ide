@@ -12,10 +12,12 @@ HEADERS += \
     $$PWD/helpbrowserwidget.h \
     $$PWD/projecttreewidget.h \
     $$PWD/compilersettingswidget.h \
-    $$PWD/compilationoptionsview.h \
+<<<<<<< HEAD
     $$PWD/projectcreatedialog.h \
     $$PWD/filecreatedialog.h
-
+=======
+    $$PWD/compilationoptionsview.h
+>>>>>>> a285763b369119aa931cc09b54b2d01bf3079965
 
 SOURCES += \
     $$PWD/mainwindow.cpp \
@@ -28,7 +30,9 @@ SOURCES += \
     $$PWD/helpbrowserwidget.cpp \
     $$PWD/projecttreewidget.cpp \
     $$PWD/compilersettingswidget.cpp \
-    $$PWD/compilationoptionsview.cpp \
+<<<<<<< HEAD
     $$PWD/projectcreatedialog.cpp \
     $$PWD/filecreatedialog.cpp
-
+=======
+    $$PWD/compilationoptionsview.cpp
+>>>>>>> a285763b369119aa931cc09b54b2d01bf3079965

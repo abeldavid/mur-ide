@@ -6,28 +6,17 @@
         <filterAttribute>RoboIDE</filterAttribute>
         <filterAttribute>MUR</filterAttribute>
         <toc>
-            <section title="MUR RoboIDE" ref="doc.html">
-                <section title="Камера" ref="doc.html#Camera"/>
-                <section title="Движители" ref="doc.html#Engines"/>
-                <section title="Инерциальный сенсор" ref="doc.html#Sensors"/>
-				<section title="IDE" ref="doc.html#IDE"/>
-            </section>
-			<section title="IDE MUR Robot" ref="doc.html">
-                <section title="Камера" ref="doc.html#Camera"/>
-                <section title="Движители" ref="doc.html#Engines"/>
-                <section title="Инерциальный сенсор" ref="doc.html#Sensors"/>
-				<section title="IDE" ref="doc.html#IDE"/>
-            </section>
-			<section title="MUR IDE Robot" ref="doc.html">
-                <section title="Камера" ref="doc.html#Camera"/>
-                <section title="Движители" ref="doc.html#Engines"/>
-                <section title="Инерциальный сенсор" ref="doc.html#Sensors"/>
-				<section title="IDE" ref="doc.html#IDE"/>
+            <section title="MUR RoboIDE документация" ref="doc.html">
+                <section title="Распознавание объектов" ref="doc.html#user-content-Camera"/>
+                <section title="Функции инициализации" ref="doc.html#user-content-Engines"/>
+                <section title="Получение данных" ref="doc.html#user-content-Sensors"/>
+                <section title="Основные типы данных" ref="doc.html#user-content-DataTypes"/>
+				<section title="Примеры" ref="doc.html#user-content-Examples"/>
             </section>
         </toc>
         <keywords>
-            <keyword name="IDE" id="MyApplication::foo" ref="doc.html#IDE"/>
-            <keyword name="Camera" ref="doc.html#Camera"/>
+            <keyword name="IDE" id="MyApplication::foo" ref="doc.html"/>
+            <keyword name="Camera" ref="doc.html#user-content-Camera"/>
         </keywords>
         <files>
             <file>*.html</file>

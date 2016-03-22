@@ -37,7 +37,9 @@ const QString Project::availableFileExtensions =
         " *" + Project::headerFileExtension + ")";
 
 
-Project::Project(QObject *parent) : QObject(parent)
+Project::Project(QObject *parent) :
+    QObject(parent),
+    m_isOpened(false)
 {
     m_projectsRoot = QStandardPaths::locate(QStandardPaths::DocumentsLocation,
                                             Project::projectsRootPath,
@@ -92,8 +94,9 @@ bool Project::open(const QString &path)
 
 bool Project::close()
 {
+    bool result = m_isOpened;
     m_isOpened = false;
-    return true;
+    return result;
 }
 
 bool Project::createFile(const QString &name)
