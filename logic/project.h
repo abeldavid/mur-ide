@@ -1,58 +1,59 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include <QMap>
-#include <QWidget>
-#include <QJsonArray>
+#include <QObject>
+#include <QDir>
+#include <QString>
+#include <QStringList>
+#include <QHash>
 #include <QJsonObject>
-#include <QJsonDocument>
 
-class Project : public QWidget
+class Project : public QObject
 {
     Q_OBJECT
-
 public:
-    Project(QWidget* parent = 0);
-    virtual ~Project();
+    static const QString projectFileName;
+    static const QString projectsRootPath;
+    static const QString defaultSourceName;
+    static const QString defaultSourceContent;
+    static const QString defaultHeaderName;
+    static const QString defaultHeaderContent;
+    static const QString defaultProjectPrefix;
+    static const QString multiFileSeparator;
+    static const QString sourceFileExtension;
+    static const QString headerFileExtension;
+    static const QHash<QString, QString> defaultFilePrefixes;
+    static const QString sourcesSection;
+    static const QString headersSection;
+    static const QString availableFileExtensions;
 
-    void addFile(QString name);
-    void deleteFile(QString name);
-    void generateMakeFile(QString compilatorPath, QString sysrootPath, QString options);
-    void closeProject();
-    bool isOpened() const;
-
-    QString getValueByName(QString name) const;
-    QString getProjectName() const;
-    QString getProjectLocation() const;
-    QVariantList getHeaderFiles() const;
-    QVariantList getSourceFiles() const;
-
-    void saveChanges();
-    void resetChanges();
-    bool hasUnsavedChanges() const;
-    void contentSaved(QString fileName);
-    void contentUnsaved(QString fileName, QString content);
+    QString m_projectsRoot;
+    QDir m_projectDir;
+    explicit Project(QObject *parent = 0);
+    ~Project();
+    bool getIsOpened();
+    bool create(const QString &name, const QString &path);
+    bool open(const QString &path);
+    bool close();
+    bool createFile(const QString &name);
+    bool addExistingFile(const QString &path);
+    QString getDefaultProjectName();
+    QString getDefaultFileName(const QString &extension);
+    bool openFile(const QString &fileName, QString &content);
+    bool saveFile(const QString &name, const QString &content);
+    bool generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options);
 
 signals:
-    void projectOpened(bool);
-    void projectClosed();
-    void projectChanged();
-
-public slots:
-    void openProject(QString fileName);
-
-private slots:
-    void create(QString name, QString location);
 
 private:
+    QJsonObject m_projectJson;
     bool m_isOpened = false;
-    QString m_name;
-    QString m_location;
-    QJsonDocument m_proFile;
-    QMap<QString, QString> m_unsavedChanges;
-
-    void saveProFile(QString location);
-    void deleteJsonArrayItem(QJsonObject &object, QString arrayName, QString itemName);
+    bool writeFile(const QString &name, const QString &content = "");
+    int getFileNameAutoIncrement(QStringList &fileList,
+                                 const QString &prefix,
+                                 const QString &postfix = "");
+    bool createProjectFile(const QString &name);
+    bool addFile(const QString &name);
 };
 
 #endif // PROJECT_H

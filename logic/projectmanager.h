@@ -1,36 +1,55 @@
+/*
+It is a singleton which manages project.h and emits signals for interface widgets (it has slots also)
+*/
+
 #ifndef PROJECTMANAGER_H
 #define PROJECTMANAGER_H
 
 #include "project.h"
-#include "widgets/projectmanagerwindow.h"
+#include <QString>
 
-#include <QObject>
-
-class ProjectManager : public QWidget
+class ProjectManager : public QObject
 {
     Q_OBJECT
 public:
     static ProjectManager& instance();
 
-    Project* getProject() const;
+    bool projectOpened() const;
+    QString getProjectPath() const;
+    QString projectsRoot() const;
+    QString pathToFile(const QString &fileName) const;
+    QString defaultNewProjectName() const;
+    QString defaultOpenFilePath() const;
+    QString defaultNewFileName(const QString &extension) const;
 
 signals:
-    void fileCreated();
-    void onProjectCreated();
+    void projectCreated(QString path);
+    void projectOpened(QString path);
+    void projectClosed();
+//    void projectCreateFailed();
+    void fileCreated(QString name);
+    void fileAdded();
+    void fileOpened(QString name, QString content);
+    void fileSaved(QString name);
+    void makeFileGenerated();
+
 public slots:
-    void newFileOrProject();
-    void createFile(QString name, QString path);
-    void openProject(QString fileName);
-    void closeProject(bool isOpening);
-    void projectCreated();
+    void createProject(const QString &path, const QString &name);
+    void createFile(const QString &name);
+    void addExistingFile(const QString &path);
+    void openProject(const QString &path);
+    void closeProject();
+    void openFile(const QString &name);
+    void saveFile(const QString &name, const QString &content);
+    void generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options);
+
 private:
-    explicit ProjectManager(QWidget *parent = 0);
+    explicit ProjectManager(QObject *parent = 0);
     virtual ~ProjectManager();
     ProjectManager(ProjectManager const&) = delete;
     void operator= (ProjectManager const&) = delete;
 
     Project *m_project;
-    ProjectManagerWindow *m_projectManagerWindow;
 };
 
 #endif // PROJECTMANAGER_H

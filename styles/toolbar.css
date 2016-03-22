@@ -7,10 +7,6 @@ QToolBar {
     border-bottom: 2px solid #464646;
 }
 
-QToolBar::item {
-   	
-}
-
 QToolBar  QToolButton {
     padding: 3px 3px;
     background: transparent;

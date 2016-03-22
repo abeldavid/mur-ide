@@ -1,235 +1,275 @@
 #include "project.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QTextStream>
+#include <QStandardPaths>
+#include <QRegularExpression>
+#include <QCollator>
+#include <algorithm>
+#include <QFile>
 #include <QFileInfo>
-#include <QFileDialog>
+#include <QJsonDocument>
+#include <QJsonArray>
 
-Project::Project(QWidget *parent) :
-    QWidget(parent)
+const QString Project::projectFileName = ".roboproject";
+const QString Project::projectsRootPath = "MURProjects";
+const QString Project::sourceFileExtension = ".cpp";
+const QString Project::headerFileExtension = ".h";
+const QString Project::defaultSourceName = "main" + Project::sourceFileExtension;
+const QString Project::defaultHeaderName = "main" + Project::headerFileExtension;
+const QString Project::defaultSourceContent = "#include \"" + Project::defaultHeaderName + "\"\n\n"
+                                        "void main () {\n\n}";
+const QString Project::defaultHeaderContent = "#define HELLO \"Hello World!\" ";
+const QString Project::defaultProjectPrefix = "Project_";
+const QString Project::multiFileSeparator = " + ";
+const QHash<QString, QString> Project::defaultFilePrefixes({
+        {Project::sourceFileExtension, QString("source_")},
+        {Project::headerFileExtension, QString("header_")},
+        {Project::sourceFileExtension + Project::multiFileSeparator + Project::headerFileExtension,
+            QString("module_")
+        }
+    });
+const QString Project::sourcesSection = "sources";
+const QString Project::headersSection = "headers";
+const QString Project::availableFileExtensions =
+        "C++ (*" + Project::sourceFileExtension +
+        " *" + Project::headerFileExtension + ")";
+
+
+Project::Project(QObject *parent) : QObject(parent)
 {
-
+    m_projectsRoot = QStandardPaths::locate(QStandardPaths::DocumentsLocation,
+                                            Project::projectsRootPath,
+                                            QStandardPaths::LocateDirectory);
+    if (m_projectsRoot.isEmpty()) {
+        m_projectsRoot = QDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).
+                filePath(Project::projectsRootPath);
+        QDir().mkdir(m_projectsRoot);
+    }
 }
 
 Project::~Project()
 {
-
+//    delete *m_projectDir;
 }
 
-void Project::addFile(QString name)
+bool Project::create(const QString &path, const QString &name)
 {
-    QJsonObject newProFile = m_proFile.object();
-    if (name.endsWith(".h")) {
-        QJsonArray headers = m_proFile.object()["headers"].toArray();
-        headers.append(name);
-        newProFile["headers"] = headers;
-    }
-    else if (name.endsWith(".cpp")) {
-        QJsonArray sources = m_proFile.object()["sources"].toArray();
-        sources.append(name);
-        newProFile["sources"] = sources;
-    }
-    m_proFile = QJsonDocument(newProFile);
-    saveProFile(m_location);
-    emit projectChanged();
-}
-
-void Project::deleteJsonArrayItem(QJsonObject &object, QString arrayName, QString itemName)
-{
-    QJsonArray array = object[arrayName].toArray();
-    for (int i = 0; i < array.size(); ++i) {
-        if (array.at(i) == itemName) {
-            array.removeAt(i);
-            object[arrayName] = array;
-            break;
+    bool result = false;
+    QDir projectDir(path); //here it is project parent dir, later it cds to project dir
+    if (projectDir.exists() and projectDir.mkdir(name) and projectDir.cd(name)) {
+        m_projectDir = projectDir;
+        if (writeFile(Project::defaultSourceName, Project::defaultSourceContent) and
+                writeFile(Project::defaultHeaderName, Project::defaultHeaderContent) and
+                createProjectFile(name)) {
+            result = true;
+            m_isOpened = true;
         }
     }
+    return result;
 }
 
-void Project::deleteFile(QString name)
+bool Project::open(const QString &path)
 {
-    QJsonObject proFile = m_proFile.object();
-    if (name.endsWith(".h")) {
-        deleteJsonArrayItem(proFile, "headers", name);
+    if (m_isOpened) {
+        close();
     }
-    else if (name.endsWith(".cpp")) {
-        deleteJsonArrayItem(proFile, "sources", name);
+    bool result = false;
+    QFile projectFile(path);
+    if (projectFile.open(QIODevice::ReadOnly)) {
+        result = true;
+        QByteArray projectStructure = projectFile.readAll();
+        projectFile.close();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(projectStructure);
+        m_projectJson = jsonDoc.object();
+        QFileInfo projectFileInfo(path);
+        m_projectDir = projectFileInfo.dir();
+        m_isOpened = true;
     }
-
-    m_proFile = QJsonDocument(proFile);
-    saveProFile(m_location);
+    return result;
 }
 
-void Project::generateMakeFile(QString compilatorPath, QString sysrootPath, QString options)
-{
-    QString makefilePath = m_location + "/makefile";
-    QFile makeFile(makefilePath);
-    if (!makeFile.open(QIODevice::WriteOnly)) {
-        qWarning("Could not open makefile");
-        return;
-    }
-
-    QTextStream makefile(&makeFile);
-    makefile << QString("CC=%1\n").arg(compilatorPath);
-    makefile << QString("%1:\n").arg(getProjectName());
-    makefile << QString("\t$(CC) --sysroot=%1 ").arg(sysrootPath);
-    QVariantList sourceFiles = getSourceFiles();
-    for (auto source : sourceFiles) {
-        makefile << source.toString() << " ";
-    }
-    makefile << QString("-o %1.bin ").arg(getProjectName());
-    makefile << options;
-
-    makeFile.close();
-}
-
-void Project::closeProject()
+bool Project::close()
 {
     m_isOpened = false;
-    emit projectClosed();
+    return true;
 }
 
-void Project::saveProFile(QString location)
+bool Project::createFile(const QString &name)
 {
-    QString fullPath = location + "/" + m_name + ".robopro";
-    QFile proFile(fullPath);
-    if (!proFile.open(QIODevice::WriteOnly)) {
-        qWarning("Could not open pro file");
-        return;
+    bool result = m_projectDir.exists() and writeFile(name);
+    if (result) {
+        result = addFile(name);
     }
-
-    proFile.write(m_proFile.toJson());
-    proFile.close();
+    return result;
 }
 
-bool Project::isOpened() const
+bool Project::addExistingFile(const QString &path)
+{
+    QFileInfo sourceFileInfo(path);
+    int fileNameIncrement = 1;
+    QString targetFileName = m_projectDir.filePath(sourceFileInfo.fileName());
+    QFileInfo initTargetFileInfo(targetFileName);
+    QFileInfo targetFileInfo = initTargetFileInfo;
+    while (targetFileInfo.exists() and targetFileInfo.isFile()) {
+        targetFileName = m_projectDir.filePath(
+                    initTargetFileInfo.completeBaseName() +
+                    QString("_") +
+                    QString::number(fileNameIncrement++) +
+                    QString(".") +
+                    initTargetFileInfo.suffix()
+                    );
+        targetFileInfo.setFile(targetFileName);
+    }
+    bool success = false;
+    if (QFile::copy(path, targetFileName)) {
+        success = addFile(targetFileInfo.fileName());
+    }
+    return success;
+}
+
+QString Project::getDefaultProjectName()
+{
+    QDir dir(m_projectsRoot);
+    QString projectPrefix = Project::defaultProjectPrefix;
+    QStringList filters;
+    filters << projectPrefix + QString("*");
+    QStringList dirsInRoot = dir.entryList(filters, QDir::Dirs, QDir::NoSort);
+    int newProjectNumber = getFileNameAutoIncrement(dirsInRoot, projectPrefix);
+    return projectPrefix + QString::number(newProjectNumber);
+}
+
+QString Project::getDefaultFileName(const QString &extension)
+{
+    QDir dir(m_projectDir);
+    QString filePrefix = Project::defaultFilePrefixes[extension];
+    QStringList filters;
+    filters << filePrefix + QString("*");
+    QStringList filesInProject = dir.entryList(filters, QDir::Files, QDir::NoSort);
+    QStringList extensionList = extension.split(Project::multiFileSeparator);
+    int newFileNumber = 0;
+    for (QString fileExtension: extensionList) {
+        int currFileNumber = getFileNameAutoIncrement(filesInProject, filePrefix, fileExtension);
+        newFileNumber = std::max(newFileNumber, currFileNumber);
+    }
+    return filePrefix + QString::number(newFileNumber);
+}
+
+// content is non-const reference, because it is return value
+bool Project::openFile(const QString &fileName, QString &content)
+{
+    QFile file(fileName);
+    bool result = false;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        in.setCodec("UTF-8");
+        content = in.readAll();
+        file.close();
+        result = true;
+    }
+    return result;
+}
+
+// acessor to writeFile, for possible future modification
+bool Project::saveFile(const QString &name, const QString &content)
+{
+    return writeFile(name, content);
+}
+
+bool Project::addFile(const QString &name)
+{
+    QString fileType = "";
+    if (name.endsWith(Project::sourceFileExtension)) {
+        fileType = Project::sourcesSection;
+    }
+    else if(name.endsWith(Project::headerFileExtension)){
+        fileType = Project::headersSection;
+    }
+    bool result = false;
+    if(!fileType.isEmpty()) {
+        QJsonArray projectSection = m_projectJson[fileType].toArray();
+        projectSection.append(name);
+        m_projectJson[fileType] = projectSection;
+        QJsonDocument jsonDoc(m_projectJson);
+        result = writeFile(Project::projectFileName, jsonDoc.toJson());
+    }
+    return result;
+}
+
+
+bool Project::writeFile(const QString &name, const QString &content)
+{
+    QFile file(m_projectDir.filePath(name));
+    bool result = file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+    if (!content.isEmpty()) {
+        QTextStream out(&file);
+        out.setCodec("UTF-8");
+        out << content;
+    }
+    file.close();
+    return result;
+}
+
+int Project::getFileNameAutoIncrement(QStringList &fileList,
+                                      const QString &prefix,
+                                      const QString &postfix)
+{
+    int maxNumber = 0;
+    if (fileList.size() > 0) {
+        QCollator collator;
+        collator.setNumericMode(true);
+        std::sort(fileList.begin(),
+                  fileList.end(),
+                  [&collator](const QString &fileName1, const QString &fileName2) {
+                      return collator.compare(fileName1, fileName2) < 0;
+                  });
+        QRegularExpression re(prefix + "(\\d+)" + postfix);
+        int lastProjectIndex = fileList.lastIndexOf(re);
+        if (lastProjectIndex != -1) {
+            maxNumber = re.match(fileList.at(lastProjectIndex)).captured(1).toInt();
+        }
+    }
+    return maxNumber + 1;
+}
+
+bool Project::createProjectFile(const QString &name)
+{
+    m_projectJson["name"] = name;
+    QJsonArray sources, headers;
+    sources.append(Project::defaultSourceName);
+    m_projectJson[Project::sourcesSection] = sources;
+    headers.append(Project::defaultHeaderName);
+    m_projectJson[Project::headersSection] = headers;
+    QJsonDocument jsonDoc(m_projectJson);
+    return writeFile(Project::projectFileName, jsonDoc.toJson());
+}
+
+
+
+bool Project::getIsOpened()
 {
     return m_isOpened;
 }
 
-QString Project::getValueByName(QString name) const
+bool Project::generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options)
 {
-    QJsonObject jsonObject = m_proFile.object();
-    QJsonValue value = jsonObject.take(name);
-    if (value == QJsonValue::Undefined) {
-        qWarning() <<  name << " is not set";
-        return QString();
-    }
-
-    return value.toString();
-}
-
-QString Project::getProjectLocation() const
-{
-    return getValueByName("location");
-}
-
-QString Project::getProjectName() const
-{
-    return getValueByName("name");
-}
-
-QVariantList Project::getHeaderFiles() const
-{
-    QJsonObject jsonObject = m_proFile.object();
-    QJsonArray headerFiles = jsonObject["headers"].toArray();
-    return headerFiles.toVariantList();
-}
-
-QVariantList Project::getSourceFiles() const
-{
-    QJsonObject jsonObject = m_proFile.object();
-    QJsonArray sourceFiles = jsonObject["sources"].toArray();
-    return sourceFiles.toVariantList();
-}
-
-void Project::saveChanges()
-{
-    for (auto file : m_unsavedChanges.keys()) {
-        QFile fileToSave(m_location + "/" + file);
-        if (!fileToSave.open(QIODevice::WriteOnly | QFile::Truncate | QIODevice::Text)) {
-            qWarning() << "Something goes wrong at: Project::saveChanges() [fileToSave.open(...)]";
-            return;
+    QFile makeFile(m_projectDir.filePath("makefile"));
+    bool result = false;
+    if (makeFile.open(QIODevice::WriteOnly)) {
+        QTextStream makefile(&makeFile);
+        makefile << QString("CC=%1\n").arg(compilerPath);
+        makefile << QString("%1:\n").arg(m_projectJson["name"].toString());
+        makefile << QString("\t$(CC) --sysroot=%1 ").arg(sysrootPath);
+        QVariantList sourceFiles = m_projectJson["name"].toArray().toVariantList();
+        for (auto source : sourceFiles) {
+            makefile << source.toString() << " ";
         }
+        makefile << QString("-o %1.bin ").arg(m_projectJson["name"].toString());
+        makefile << options;
 
-        QTextStream out(&fileToSave);
-        out.setCodec("UTF-8");
-        out << m_unsavedChanges.value(file);
-        fileToSave.close();
+        makeFile.close();
+        result = true;
     }
-
-    resetChanges();
-}
-
-void Project::resetChanges()
-{
-    m_unsavedChanges.clear();
-}
-
-bool Project::hasUnsavedChanges() const
-{
-    return m_unsavedChanges.size() ? true : false;
-}
-
-void Project::contentSaved(QString fileName)
-{
-    if (m_unsavedChanges.count(fileName)) {
-        m_unsavedChanges.remove(fileName);
-    }
-}
-
-void Project::contentUnsaved(QString fileName, QString content)
-{
-    m_unsavedChanges[fileName] = content;
-}
-
-void Project::create(QString name, QString location)
-{
-    m_name = name;
-    m_location = location;
-
-    QJsonObject proFileTemplate;
-    proFileTemplate["name"] = name;
-    proFileTemplate["location"] = location;
-    proFileTemplate["headers"] = QJsonArray();
-    proFileTemplate["sources"] = QJsonArray();
-
-    QJsonDocument saveInfo(proFileTemplate);
-    m_proFile = saveInfo;
-    saveProFile(m_location);
-    m_isOpened = true;
-
-    emit projectChanged();
-    emit projectOpened(true);
-}
-
-void Project::openProject(QString fileName)
-{
-    if (m_isOpened) {
-        closeProject();
-    }
-    QFile proFile(fileName);
-    if (!proFile.open(QIODevice::ReadOnly)) {
-        qWarning("Could not open pro file");
-        return;
-    }
-    QByteArray projectStructure = proFile.readAll();
-    proFile.close();
-
-    m_proFile = QJsonDocument::fromJson(projectStructure);
-
-    QFileInfo fileInfo(proFile);
-    QString currentLocation = fileInfo.absolutePath();
-    if (currentLocation != getProjectLocation()) {
-        QJsonObject proFileObject = m_proFile.object();
-        proFileObject["location"] = currentLocation;
-        m_proFile = QJsonDocument(proFileObject);
-        saveProFile(currentLocation);
-    }
-
-    m_isOpened = true;
-    m_name = getProjectName();
-    m_location = getProjectLocation();
-
-    emit projectChanged();
-    emit projectOpened(true);
+    return result;
 }

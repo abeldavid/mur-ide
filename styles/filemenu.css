@@ -52,3 +52,7 @@ QMenu::item:selected {
   background-color: #363636;
   color: #FFFFFF;
 }
+
+QMenu::item:!enabled {
+  color: #666666;
+}

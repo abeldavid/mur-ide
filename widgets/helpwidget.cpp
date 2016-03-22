@@ -7,9 +7,9 @@
 #include "helpwidget.h"
 
 HelpWidget::HelpWidget(QWidget *parent) :
-    QWidget(parent),
-    m_tabWidget(new QTabWidget(this)) {
-
+        QWidget(parent),
+        m_tabWidget(new QTabWidget(this))
+{
     QString helpLocation = "roboHelp.qhc";
     m_helpEngine = new QHelpEngine(helpLocation);
     m_helpEngine->contentWidget()->setExpandsOnDoubleClick(false);
@@ -33,11 +33,13 @@ HelpWidget::HelpWidget(QWidget *parent) :
     mainLayout->addWidget(m_tabWidget);
 }
 
-void HelpWidget::goToHelpUrl(QUrl url) {
+void HelpWidget::goToHelpUrl(QUrl url)
+{
     m_helpViewer->setSource(url);
     m_tabWidget->setCurrentWidget(m_helpViewer);
 }
 
-HelpWidget::~HelpWidget() {
+HelpWidget::~HelpWidget()
+{
     m_helpEngine->deleteLater();
 }
