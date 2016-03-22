@@ -34,7 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_wifiConnection(new WiFiConnection(this)),
       m_localApp(new QProcess(this)),
       m_helpWidget(new HelpWidget(this)),
-      m_projectTree(new ProjectTree(this))
+      m_projectTree(new ProjectTree(this)),
+      m_ftpWidget(new FtpWidget(this))
 {
     setCentralWidget(m_roboIdeTextEdit);
     createActions();
@@ -54,6 +55,9 @@ MainWindow::MainWindow(QWidget *parent)
         background-color: #464646;\
         width: 1px;\
         border: none;\
+    } \
+    QMainWindow { \
+    background-color: #464646;\
     }");
     m_connectedDevicesList->setVisible(false);
 }
@@ -375,6 +379,8 @@ void MainWindow::createActions()
     m_openHelpAct = new QAction(tr("Справка"), this);
     m_openHelpAct->setShortcut(QKeySequence(Qt::Key_F1));
 
+    m_showFtpAct = new QAction(tr("FTP подключение"), this);
+
     m_edisonCompileAct = new QAction(tr("Робот"), this);
     m_edisonCompileAct->setCheckable(true);
     m_edisonCompileAct->setChecked(true);
@@ -451,6 +457,8 @@ void MainWindow::createMenus()
     m_settingsMenu->addAction(m_showSettingsAct);
 
     m_viewMenu = menuBar()->addMenu(tr("Окно"));
+    m_viewMenu->addAction(m_showFtpAct);
+    m_viewMenu->addSeparator();
 
     m_helpMenu = menuBar()->addMenu(tr("Справка"));
     m_helpMenu->addAction(m_openHelpAct);
@@ -549,5 +557,8 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_localApp, SIGNAL(readyReadStandardError()), SLOT(processOutReceived()));
     QObject::connect(m_localApp, SIGNAL(readyReadStandardOutput()), SLOT(processOutReceived()));
     QObject::connect(m_localApp, SIGNAL(readyRead()), SLOT(processOutReceived()));
+
+    QObject::connect(m_showFtpAct, SIGNAL(triggered(bool)), m_ftpWidget, SLOT(exec()));
+
 }
 

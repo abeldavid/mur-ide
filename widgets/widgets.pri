@@ -14,7 +14,8 @@ HEADERS += \
     $$PWD/compilersettingswidget.h \
     $$PWD/compilationoptionsview.h \
     $$PWD/projectcreatedialog.h \
-    $$PWD/filecreatedialog.h
+    $$PWD/filecreatedialog.h \
+    $$PWD/ftpwidget.h
 
 
 SOURCES += \
@@ -30,5 +31,6 @@ SOURCES += \
     $$PWD/compilersettingswidget.cpp \
     $$PWD/compilationoptionsview.cpp \
     $$PWD/projectcreatedialog.cpp \
-    $$PWD/filecreatedialog.cpp
+    $$PWD/filecreatedialog.cpp \
+    $$PWD/ftpwidget.cpp
 
