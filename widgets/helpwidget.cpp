@@ -31,6 +31,13 @@ HelpWidget::HelpWidget(QWidget *parent) :
             this, SLOT(goToHelpUrl(QUrl)));
 
     mainLayout->addWidget(m_tabWidget);
+
+    QFile helpStyle(":/dark/styles/helpwidget.css");
+    helpStyle.open(QFile::ReadOnly);
+
+    QString styleSheet = helpStyle.readAll();\
+    setStyleSheet(styleSheet);
+    helpStyle.close();
 }
 
 void HelpWidget::goToHelpUrl(QUrl url)

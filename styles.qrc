@@ -4,5 +4,6 @@
         <file>styles/filemenu.css</file>
         <file>styles/texteditscrollbar.css</file>
         <file>styles/toolbar.css</file>
+        <file>styles/helpwidget.css</file>
     </qresource>
 </RCC>
