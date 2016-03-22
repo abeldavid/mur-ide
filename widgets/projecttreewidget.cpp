@@ -10,9 +10,7 @@ ProjectTree::ProjectTree(QWidget *parent) :
     m_tree(new QTreeView(this))
 {
     m_tree->setModel(m_fileModel);
-    m_tree->hideColumn(1);
-    m_tree->hideColumn(2);
-    m_tree->hideColumn(3);
+    prepareTreeView();
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     setLayout(mainLayout);
@@ -25,14 +23,20 @@ void ProjectTree::loadProject(QString projectDir)
 {
     m_fileModel->setRootPath(projectDir);
     m_tree->setRootIndex(m_fileModel->index(projectDir));
-    m_tree->hideColumn(1);
-    m_tree->hideColumn(2);
-    m_tree->hideColumn(3);
+    prepareTreeView();
 }
 
 void ProjectTree::closeProject()
 {
     qDebug()<< "closing project in tree";
+}
+
+void ProjectTree::prepareTreeView()
+{
+    m_tree->hideColumn(1);
+    m_tree->hideColumn(2);
+    m_tree->hideColumn(3);
+    m_tree->setHeaderHidden(true);
 }
 
 void ProjectTree::itemSelected(const QModelIndex & index)
