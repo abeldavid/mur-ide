@@ -2,8 +2,9 @@
 #define PROJECTTREE_H
 
 #include <QWidget>
-#include <QFileSystemModel>
-#include <QTreeView>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QFileIconProvider>
 //#include <QAction>
 
 
@@ -21,8 +22,9 @@ public slots:
     void loadProject(QString projectDir);
     void closeProject();
 private:
-    QFileSystemModel *m_fileModel;
-    QTreeView *m_tree;
+    QTreeWidget *m_tree;
+    QTreeWidgetItem *m_sources, *m_headers;
+    QFileIconProvider m_iconPovider;
     void prepareTreeView();
 private slots:
     void itemSelected(const QModelIndex & index);
