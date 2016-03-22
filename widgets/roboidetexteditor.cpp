@@ -16,6 +16,7 @@ RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
 {
     setupEditor();
     setupUi();
+    QObject::connect(this, SIGNAL(textChanged()), this, SLOT(handleChangedText()));
 }
 
 void RoboIdeTextEditor::showContent(const QString &fileName, const QString &content)
@@ -43,6 +44,12 @@ QString RoboIdeTextEditor::fileName() const
 bool RoboIdeTextEditor::fileExists() const
 {
     return m_isFileExist;
+}
+
+void RoboIdeTextEditor::clearText()
+{
+    clear();
+    setModified(false);
 }
 
 void RoboIdeTextEditor::setupEditor()
@@ -139,5 +146,11 @@ void RoboIdeTextEditor::setupUi()
     editStyle.close();
 
     setStyleSheet(styleSheet);
+}
+
+void RoboIdeTextEditor::handleChangedText()
+{
+   setModified(true);
+   emit fileModified();
 }
 

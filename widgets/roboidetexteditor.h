@@ -14,14 +14,14 @@ public:
     explicit RoboIdeTextEditor(QWidget *parent = 0);
 
 signals:
-    void textChanged(QString);
-    void projectFileSaved();
+    void fileModified();
 
 public slots:
     void showContent(const QString &content, const QString &fileName);
     void onFileSaved(QString);
     QString fileName() const;
     bool fileExists() const;
+    void clearText();
 
 private:
     void setupEditor();
@@ -31,6 +31,9 @@ private:
     QString m_fileName;
     QsciLexerCPP* m_lexCpp;
     bool m_skipNullTextChanged = false;
+
+private slots:
+    void handleChangedText();
 };
 
 #endif // ROBOIDETEXTEDITOR_H

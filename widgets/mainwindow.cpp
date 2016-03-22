@@ -168,7 +168,6 @@ void MainWindow::projectOpenDialog() {
 void MainWindow::projectClose()
 {
     ProjectManager::instance().closeProject();
-    qDebug() << "close in main";
     m_addFileAct->setEnabled(false);
     m_createFileAct->setEnabled(false);
     m_closeProjectAct->setEnabled(false);
@@ -189,7 +188,9 @@ void MainWindow::onProjectOpened()
 
 void MainWindow::onProjectClosed()
 {
-
+    if (m_roboIdeTextEdit->isModified()) {
+        saveFilePromt();
+    }
 }
 
 void MainWindow::openFile(const QString &fileName)
@@ -477,9 +478,11 @@ void MainWindow::createDockWindows()
 
 void MainWindow::connectActionsToSlots()
 {
+    QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectClose()));
     QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectCreateDialog()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), m_projectTree, SLOT(loadProject(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(onProjectCreated()));
+    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectClose()));
     QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), m_projectTree, SLOT(loadProject(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), this, SLOT(onProjectOpened()));
@@ -494,6 +497,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_roboIdeTextEdit, SLOT(onFileSaved(QString)));
 
+//    QObject::connect(m_roboIdeTextEdit, SIGNAL(fileModified()), this);
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
     QObject::connect(m_redoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(redo()));
     QObject::connect(m_undoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(undo()));
