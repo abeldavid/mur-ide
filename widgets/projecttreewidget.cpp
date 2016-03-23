@@ -17,12 +17,14 @@ ProjectTree::ProjectTree(QWidget *parent) :
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     setLayout(mainLayout);
-    mainLayout->addWidget(m_tree);  
+    mainLayout->addWidget(m_tree);
+    m_tree->setContextMenuPolicy(Qt::CustomContextMenu);
 
     m_tree->setColumnCount(1);
     m_tree->setHeaderHidden(true);
 
     connect(m_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(onItemClicked(QTreeWidgetItem*)));
+    connect(m_tree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onCustomContextMenu(QPoint)));
 }
 
 void ProjectTree::loadProject()
@@ -84,6 +86,19 @@ void ProjectTree::prepareTreeView()
     m_headers = new QTreeWidgetItem(m_tree, QStringList(QString(tr("Заголовочные"))));
     m_headers->setIcon(0, folderIcon);
     m_tree->insertTopLevelItem(3, m_headers);
+}
+
+void ProjectTree::onCustomContextMenu(QPoint point)
+{
+    QTreeWidgetItem *item = m_tree->itemAt(point);
+    QString itemText = "";
+    if (item != 0) {
+        itemText = item->data(0, Qt::DisplayRole).toString();
+        if (!(item->parent() or itemText == Project::projectFileName or itemText == Project::buildFileName)) {
+            itemText = "";
+        }
+    }
+    emit projectContextMenu(m_tree->mapToGlobal(point), itemText);
 }
 
 ProjectTree::~ProjectTree()

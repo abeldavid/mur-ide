@@ -43,6 +43,8 @@ private slots:
     void saveFile();
     void saveFileAs();
     void saveFilePromt();
+    void projectContextMenu(const QPoint &point, const QString &fileName);
+    void treeContextMenuTriggered(QAction*);
 
 private:
     void createMenus();
@@ -68,6 +70,8 @@ private:
     QAction *m_createFileAct;
     QAction *m_saveAct;
     QAction *m_saveAsAct;
+    QAction *m_deleteFileAct;
+    QAction *m_renameFileAct;
     QAction *m_undoAct;
     QAction *m_redoAct;
     QAction *m_copyAct;
@@ -96,6 +100,7 @@ private:
     HelpWidget *m_helpWidget;
     ProjectTree *m_projectTree;
     FtpWidget *m_ftpWidget;
+    QMenu *m_projectTreeContextMenu;
 };
 
 #endif // MAINWINDOW_H

@@ -35,7 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_localApp(new QProcess(this)),
       m_helpWidget(new HelpWidget(this)),
       m_projectTree(new ProjectTree(this)),
-      m_ftpWidget(new FtpWidget(this))
+      m_ftpWidget(new FtpWidget(this)),
+      m_projectTreeContextMenu(new QMenu(this))
 {
     setCentralWidget(m_roboIdeTextEdit);
     createActions();
@@ -203,6 +204,8 @@ void MainWindow::projectClose()
     m_addFileAct->setEnabled(false);
     m_createFileAct->setEnabled(false);
     m_closeProjectAct->setEnabled(false);
+    m_deleteFileAct->setEnabled(false);
+    m_renameFileAct->setEnabled(false);
 }
 
 
@@ -216,6 +219,8 @@ void MainWindow::onProjectOpened()
     m_addFileAct->setEnabled(true);
     m_createFileAct->setEnabled(true);
     m_closeProjectAct->setEnabled(true);
+    m_deleteFileAct->setEnabled(true);
+    m_renameFileAct->setEnabled(true);
 }
 
 void MainWindow::onProjectClosed()
@@ -272,11 +277,38 @@ void MainWindow::saveFilePromt()
     }
 }
 
+void MainWindow::projectContextMenu(const QPoint &point, const QString &fileName)
+{
+//    qDebug() << point << fileName << fileName.isEmpty();
+    if (!fileName.isEmpty()) {
+        m_deleteFileAct->setEnabled(true);
+        m_renameFileAct->setEnabled(true);
+        m_deleteFileAct->setData(fileName);
+        m_renameFileAct->setData(fileName);
+    } else {
+        m_deleteFileAct->setEnabled(false);
+        m_renameFileAct->setEnabled(false);
+    }
+    m_projectTreeContextMenu->exec(point);
+}
+
+void MainWindow::treeContextMenuTriggered(QAction *action)
+{
+    if (action == m_deleteFileAct) {
+        qDebug()<< "delete" << action->data().toString();
+    }
+    else if(action == m_renameFileAct) {
+        qDebug()<< "rename" << action->data().toString();
+    }
+}
+
 void MainWindow::onProjectCreated()
 {
     m_addFileAct->setEnabled(true);
     m_createFileAct->setEnabled(true);
     m_closeProjectAct->setEnabled(true);
+    m_deleteFileAct->setEnabled(true);
+    m_renameFileAct->setEnabled(true);
 //    openFile(ProjectManager::instance().defaultOpenFilePath());
 }
 
@@ -348,6 +380,14 @@ void MainWindow::createActions()
     m_addFileAct = new QAction(tr("Добавить файл"), this);
     m_addFileAct->setIconVisibleInMenu(false);
     m_addFileAct->setEnabled(false);
+
+    m_deleteFileAct = new QAction(tr("Удалить файл"), this);
+    m_deleteFileAct->setIconVisibleInMenu(false);
+    m_deleteFileAct->setEnabled(false);
+
+    m_renameFileAct = new QAction(tr("Переименовать файл"), this);
+    m_renameFileAct->setIconVisibleInMenu(false);
+    m_renameFileAct->setEnabled(false);
 
     m_pasteAct = new QAction(QIcon(":/icons/icons/tools/paste.png"), tr("Вставить"), this);
     m_pasteAct->setShortcut(QKeySequence::Paste);
@@ -452,6 +492,11 @@ void MainWindow::createMenus()
     m_editMenu->addAction(m_pasteAct);
     m_editMenu->addAction(m_findAct);
 
+    m_projectTreeContextMenu->addAction(m_createFileAct);
+    m_projectTreeContextMenu->addAction(m_addFileAct);
+    m_projectTreeContextMenu->addAction(m_deleteFileAct);
+    m_projectTreeContextMenu->addAction(m_renameFileAct);
+
     m_compilationMenu = menuBar()->addMenu(tr("&Компиляция"));
     m_compilationMenu->addAction(m_buildAct);
     m_compilationMenu->addAction(m_uploadAndRunAct);
@@ -536,15 +581,17 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectClosed()), this, SLOT(onProjectClosed()));
 
     QObject::connect(m_createFileAct, SIGNAL(triggered(bool)), this, SLOT(fileCreateDialog()));
-    QObject::connect(m_addFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileCreated(QString)), m_projectTree, SLOT(loadProject()));
+    QObject::connect(m_addFileAct, SIGNAL(triggered(bool)), this, SLOT(fileAddDialog()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileAdded()), m_projectTree, SLOT(loadProject()));
     QObject::connect(m_saveAct, SIGNAL(triggered(bool)), this, SLOT(saveFile()));
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), this, SLOT(saveFileAs()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_roboIdeTextEdit, SLOT(onFileSaved(QString)));
+    QObject::connect(m_projectTreeContextMenu, SIGNAL(triggered(QAction*)), this, SLOT(treeContextMenuTriggered(QAction*)));
+
     QObject::connect(m_projectTree, SIGNAL(fileSelected(QString)), this, SLOT(openFile(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
-
+    QObject::connect(m_projectTree, SIGNAL(projectContextMenu(QPoint, QString)), this, SLOT(projectContextMenu(QPoint,QString)));
 
 //    QObject::connect(m_roboIdeTextEdit, SIGNAL(fileModified()), this);
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
