@@ -35,7 +35,7 @@ const QString Project::headersSection = "headers";
 const QString Project::availableFileExtensions =
         "C++ (*" + Project::sourceFileExtension +
         " *" + Project::headerFileExtension + ")";
-
+const QString Project::buildFileName = "makefile";
 
 Project::Project(QObject *parent) :
     QObject(parent),
@@ -80,14 +80,17 @@ bool Project::open(const QString &path)
     bool result = false;
     QFile projectFile(path);
     if (projectFile.open(QIODevice::ReadOnly)) {
-        result = true;
         QByteArray projectStructure = projectFile.readAll();
         projectFile.close();
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(projectStructure);
-        m_projectJson = jsonDoc.object();
-        QFileInfo projectFileInfo(path);
-        m_projectDir = projectFileInfo.dir();
-        m_isOpened = true;
+        QJsonParseError err;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(projectStructure, &err);
+        if (err.error == QJsonParseError::NoError) {
+            m_projectJson = jsonDoc.object();
+            QFileInfo projectFileInfo(path);
+            m_projectDir = projectFileInfo.dir();
+            m_isOpened = true;
+            result = true;
+        }
     }
     return result;
 }
@@ -248,8 +251,6 @@ bool Project::createProjectFile(const QString &name)
     return writeFile(Project::projectFileName, jsonDoc.toJson());
 }
 
-
-
 bool Project::getIsOpened()
 {
     return m_isOpened;
@@ -257,22 +258,44 @@ bool Project::getIsOpened()
 
 bool Project::generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options)
 {
-    QFile makeFile(m_projectDir.filePath("makefile"));
+    QFile makeFile(m_projectDir.filePath(Project::buildFileName));
     bool result = false;
     if (makeFile.open(QIODevice::WriteOnly)) {
         QTextStream makefile(&makeFile);
         makefile << QString("CC=%1\n").arg(compilerPath);
-        makefile << QString("%1:\n").arg(m_projectJson["name"].toString());
+        makefile << QString("%1:\n").arg(getName());
         makefile << QString("\t$(CC) --sysroot=%1 ").arg(sysrootPath);
-        QVariantList sourceFiles = m_projectJson["name"].toArray().toVariantList();
-        for (auto source : sourceFiles) {
-            makefile << source.toString() << " ";
+        for (auto source : getSources()) {
+            makefile << source << " ";
         }
-        makefile << QString("-o %1.bin ").arg(m_projectJson["name"].toString());
+        makefile << QString("-o %1.bin ").arg(getName());
         makefile << options;
 
         makeFile.close();
         result = true;
     }
     return result;
+}
+
+QString Project::getName()
+{
+    return m_projectJson["name"].toString();
+}
+
+QStringList Project::getSources()
+{
+    QStringList sourceList;
+    for (auto fileName : m_projectJson[Project::sourcesSection].toArray().toVariantList()) {
+        sourceList << fileName.toString();
+    }
+    return sourceList;
+}
+
+QStringList Project::getHeaders()
+{
+    QStringList headerList;
+    for (auto fileName : m_projectJson[Project::headersSection].toArray().toVariantList()) {
+        headerList << fileName.toString();
+    }
+    return headerList;
 }

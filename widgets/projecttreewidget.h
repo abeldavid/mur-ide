@@ -2,8 +2,9 @@
 #define PROJECTTREE_H
 
 #include <QWidget>
-#include <QFileSystemModel>
-#include <QTreeView>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QFileIconProvider>
 //#include <QAction>
 
 
@@ -16,16 +17,19 @@ public:
 
 signals:
     void fileSelected(QString fileName);
+    void projectLoaded();
 
 public slots:
-    void loadProject(QString projectDir);
+    void loadProject();
     void closeProject();
+    void onItemClicked(QTreeWidgetItem* item);
+
 private:
-    QFileSystemModel *m_fileModel;
-    QTreeView *m_tree;
+    QTreeWidget *m_tree;
+    QTreeWidgetItem *m_sources, *m_headers;
+    QFileIconProvider m_iconPovider;
     void prepareTreeView();
-private slots:
-    void itemSelected(const QModelIndex & index);
+
 };
 
 #endif // PROJECTTREE_H
