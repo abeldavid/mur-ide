@@ -34,11 +34,6 @@ void ProjectTree::loadProject()
     m_tree->setHeaderHidden(false);
     m_tree->setHeaderLabel(ProjectManager::instance().getProjectName());
 
-    if (ProjectManager::instance().fileExists(Project::buildFileName)) {
-        QTreeWidgetItem *buildFile = new QTreeWidgetItem(m_tree, QStringList(Project::buildFileName));
-        m_tree->insertTopLevelItem(1, buildFile);
-    }
-
     for (auto fileName : ProjectManager::instance().getSourceFiles()) {
         QTreeWidgetItem *sourceItem = new QTreeWidgetItem(m_sources, QStringList(fileName));
         QFileInfo sourceInfo(ProjectManager::instance().pathToFile(fileName));
@@ -65,19 +60,14 @@ void ProjectTree::closeProject()
 void ProjectTree::onItemClicked(QTreeWidgetItem* item)
 {
     QString itemText = item->data(0, Qt::DisplayRole).toString();
-    if (item->parent() or itemText == Project::projectFileName or itemText == Project::buildFileName) {
-        emit fileSelected(item->data(0, Qt::DisplayRole).toString());
+    if (item->parent()) {
+        emit fileSelected(itemText);
     }
 }
 
 void ProjectTree::prepareTreeView()
 {
     QIcon folderIcon = m_iconPovider.icon(QFileIconProvider::Folder);
-    QIcon blankIcon = m_iconPovider.icon(QFileIconProvider::File);
-
-    QTreeWidgetItem *project = new QTreeWidgetItem(m_tree, QStringList(Project::projectFileName));
-    project->setIcon(0, blankIcon);
-    m_tree->insertTopLevelItem(0, project);
 
     m_sources = new QTreeWidgetItem(m_tree, QStringList(QString(tr("Исходники"))));
     m_sources->setIcon(0, folderIcon);
@@ -94,7 +84,7 @@ void ProjectTree::onCustomContextMenu(QPoint point)
     QString itemText = "";
     if (item != 0) {
         itemText = item->data(0, Qt::DisplayRole).toString();
-        if (!(item->parent() or itemText == Project::projectFileName or itemText == Project::buildFileName)) {
+        if (!(item->parent())) {
             itemText = "";
         }
     }
