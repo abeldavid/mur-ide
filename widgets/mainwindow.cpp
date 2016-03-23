@@ -312,7 +312,7 @@ void MainWindow::treeContextMenuTriggered(QAction *action)
         QString newFileName = QInputDialog::getText(this, "Переименовать",
                                                 "Новое имя", QLineEdit::Normal,
                                                 fileName, &ok,
-                                                windowFlags() & ~Qt::WindowContextHelpButtonHint);
+                                                Qt::Popup);
         if (ok && !newFileName.isEmpty()) {
             ProjectManager::instance().renameFile(fileName, newFileName);
         }
