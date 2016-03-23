@@ -59,7 +59,7 @@ QString ProjectManager::defaultNewProjectName() const
     return m_project->getDefaultProjectName();
 }
 
-bool ProjectManager::projectOpened() const
+bool ProjectManager::isProjectOpened() const
 {
     return m_project->getIsOpened();
 }

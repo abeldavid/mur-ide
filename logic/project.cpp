@@ -1,4 +1,5 @@
 #include "project.h"
+#include "settingsmanager.h"
 
 #include <QDebug>
 #include <QFile>
@@ -262,14 +263,49 @@ bool Project::generateMakeFile(const QString &compilerPath, const QString sysroo
     bool result = false;
     if (makeFile.open(QIODevice::WriteOnly)) {
         QTextStream makefile(&makeFile);
-        makefile << QString("CC=%1\n").arg(compilerPath);
-        makefile << QString("%1:\n").arg(getName());
-        makefile << QString("\t$(CC) --sysroot=%1 ").arg(sysrootPath);
-        for (auto source : getSources()) {
+        if (SETTINGS.currentTarget() == SettingsManager::TARGET::EDISON) {
+            makefile << QString("CC=%1\n").arg(SETTINGS.edisonCompilerPath());
+            makefile << QString("%1:\n").arg(getName());
+            makefile << QString("\t$(CC) --sysroot=%1 ").arg(SETTINGS.edisonSysrootPath());
+        }
+
+        if (SETTINGS.currentTarget() == SettingsManager::TARGET::MINGW) {
+            makefile << QString("CC=%1\n").arg(SETTINGS.mingwCompilerPath());
+            makefile << QString("%1:\n").arg(getName());
+            makefile << QString("\t$(CC) ");
+        }
+
+        for (const auto &source : getSources()) {
             makefile << source << " ";
         }
-        makefile << QString("-o %1.bin ").arg(getName());
-        makefile << options;
+
+        for (const auto &source : getHeaders()) {
+            makefile << source << " ";        }
+
+
+        if (SETTINGS.currentTarget() == SettingsManager::TARGET::MINGW) {
+            makefile << QString("-o %1.exe ").arg(getName());
+
+            for (const auto &option : SETTINGS.mingwCompilerOptions()) {
+                makefile << option << " ";
+            }
+
+            for (const auto &includes : SETTINGS.mingwIncludesPath()) {
+                makefile << includes << " ";
+            }
+
+            for (const auto &libs : SETTINGS.mingwLibsPaths()) {
+                makefile << libs << " ";
+            }
+        }
+
+        if (SETTINGS.currentTarget() == SettingsManager::TARGET::EDISON) {
+            makefile << QString("-o %1.bin ").arg(getName());
+
+            for (const auto &options : SETTINGS.edisonCompilerOptions()) {
+                makefile << options << " ";
+            }
+        }
 
         makeFile.close();
         result = true;

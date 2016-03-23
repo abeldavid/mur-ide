@@ -15,7 +15,7 @@ class ProjectManager : public QObject
 public:
     static ProjectManager& instance();
 
-    bool projectOpened() const;
+    bool isProjectOpened() const;
     bool fileExists(const QString &fileName) const;
     QString getProjectPath() const;
     QString projectsRoot() const;

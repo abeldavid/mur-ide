@@ -299,6 +299,8 @@ void FtpWidget::cdToParent()
 void FtpWidget::updateDataTransferProgress(qint64 readBytes,
                                            qint64 totalBytes)
 {
+    Q_UNUSED(readBytes)
+    Q_UNUSED(totalBytes)
     //progressDialog->setMaximum(totalBytes);
     //progressDialog->setValue(readBytes);
 }
