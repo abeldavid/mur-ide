@@ -42,7 +42,10 @@ public:
     QString getDefaultFileName(const QString &extension);
     bool openFile(const QString &fileName, QString &content);
     bool saveFile(const QString &name, const QString &content);
+    bool renameFile(const QString &oldName, const QString &newName);
+    bool deleteFile(const QString &name);
     bool generateMakeFile();
+
     QString getName();
     QStringList getSources();
     QStringList getHeaders();
@@ -58,6 +61,7 @@ private:
                                  const QString &postfix = "");
     bool createProjectFile(const QString &name);
     bool addFile(const QString &name);
+    QString getSectionName(const QString &fileName);
 };
 
 #endif // PROJECT_H

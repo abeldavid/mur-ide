@@ -36,6 +36,8 @@ signals:
     void fileAdded();
     void fileOpened(QString name, QString content);
     void fileSaved(QString name);
+    void fileDeleted(QString name);
+    void fileRenamed();
     void makeFileGenerated();
 
 public slots:
@@ -46,6 +48,8 @@ public slots:
     void closeProject();
     void openFile(const QString &name);
     void saveFile(const QString &name, const QString &content);
+    void renameFile(const QString &oldName, const QString &newName);
+    void deleteFile(const QString &name);
     void generateMakeFile();
 
 private:

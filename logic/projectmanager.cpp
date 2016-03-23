@@ -127,6 +127,20 @@ void ProjectManager::saveFile(const QString &name, const QString &content)
     }
 }
 
+void ProjectManager::renameFile(const QString &oldName, const QString &newName)
+{
+    if (m_project->renameFile(oldName, newName)) {
+        emit fileRenamed();
+    }
+}
+
+void ProjectManager::deleteFile(const QString &name)
+{
+    if (m_project->deleteFile(name)) {
+        emit fileDeleted(name);
+    }
+}
+
 void ProjectManager::generateMakeFile()
 {
     if (m_project->generateMakeFile()) {

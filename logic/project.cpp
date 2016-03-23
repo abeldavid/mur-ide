@@ -184,15 +184,55 @@ bool Project::saveFile(const QString &name, const QString &content)
     return writeFile(name, content);
 }
 
+bool Project::renameFile(const QString &oldName, const QString &newName)
+{
+    bool result = false;
+    QString fileType = getSectionName(oldName);
+    if(!fileType.isEmpty()) {
+        QJsonArray projectSection = m_projectJson[fileType].toArray();
+        if (projectSection.contains(oldName)) {
+            int i;
+            for (i = 0; i < projectSection.size(); i++) {
+                if (projectSection.at(i) == oldName) {
+                    break;
+                }
+            }
+            projectSection.replace(i, newName);
+            m_projectJson[fileType] = projectSection;
+            QJsonDocument jsonDoc(m_projectJson);
+            result = m_projectDir.rename(oldName, newName) and
+                    writeFile(Project::projectFileName, jsonDoc.toJson());
+        }
+    }
+    return result;
+}
+
+bool Project::deleteFile(const QString &name)
+{
+    bool result = false;
+    QString fileType = getSectionName(name);
+    if(!fileType.isEmpty()) {
+        QJsonArray projectSection = m_projectJson[fileType].toArray();
+        if (projectSection.contains(name)) {
+            int i;
+            for (i = 0; i < projectSection.size(); i++) {
+                if (projectSection.at(i) == name) {
+                    break;
+                }
+            }
+            projectSection.removeAt(i);
+            m_projectJson[fileType] = projectSection;
+            QJsonDocument jsonDoc(m_projectJson);
+            result = m_projectDir.remove(name) and
+                    writeFile(Project::projectFileName, jsonDoc.toJson());
+        }
+    }
+    return result;
+}
+
 bool Project::addFile(const QString &name)
 {
-    QString fileType = "";
-    if (name.endsWith(Project::sourceFileExtension)) {
-        fileType = Project::sourcesSection;
-    }
-    else if(name.endsWith(Project::headerFileExtension)){
-        fileType = Project::headersSection;
-    }
+    QString fileType = getSectionName(name);
     bool result = false;
     if(!fileType.isEmpty()) {
         QJsonArray projectSection = m_projectJson[fileType].toArray();
@@ -202,6 +242,18 @@ bool Project::addFile(const QString &name)
         result = writeFile(Project::projectFileName, jsonDoc.toJson());
     }
     return result;
+}
+
+QString Project::getSectionName(const QString &fileName)
+{
+    QString fileType = "";
+    if (fileName.endsWith(Project::sourceFileExtension)) {
+        fileType = Project::sourcesSection;
+    }
+    else if(fileName.endsWith(Project::headerFileExtension)){
+        fileType = Project::headersSection;
+    }
+    return fileType;
 }
 
 

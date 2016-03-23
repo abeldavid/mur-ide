@@ -18,6 +18,7 @@ public:
 signals:
     void fileSelected(QString fileName);
     void projectLoaded();
+    void projectContextMenu(QPoint point, QString fileName);
 
 public slots:
     void loadProject();
@@ -29,6 +30,9 @@ private:
     QTreeWidgetItem *m_sources, *m_headers;
     QFileIconProvider m_iconPovider;
     void prepareTreeView();
+
+private slots:
+    void onCustomContextMenu(QPoint point);
 
 };
 
