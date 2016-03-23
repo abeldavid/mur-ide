@@ -257,7 +257,7 @@ bool Project::getIsOpened()
     return m_isOpened;
 }
 
-bool Project::generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options)
+bool Project::generateMakeFile()
 {
     QFile makeFile(m_projectDir.filePath(Project::buildFileName));
     bool result = false;

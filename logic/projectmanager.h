@@ -46,7 +46,7 @@ public slots:
     void closeProject();
     void openFile(const QString &name);
     void saveFile(const QString &name, const QString &content);
-    void generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options);
+    void generateMakeFile();
 
 private:
     explicit ProjectManager(QObject *parent = 0);

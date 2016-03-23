@@ -50,15 +50,12 @@ MainWindow::MainWindow(QWidget *parent)
         restoreState(state);
     }
 
-    setStyleSheet("QMainWindow::separator \
-    { \
-        background-color: #464646;\
-        width: 1px;\
-        border: none;\
-    } \
-    QMainWindow { \
-    background-color: #464646;\
-    }");
+    QFile mainWindowSheet(":/dark/styles/mainwindow.css");
+    mainWindowSheet.open(QFile::ReadOnly);
+    QString styleSheet = mainWindowSheet.readAll();
+    setStyleSheet(styleSheet);
+    mainWindowSheet.close();
+
     m_connectedDevicesList->setVisible(false);
 }
 
@@ -89,7 +86,7 @@ void MainWindow::generateMakeFile()
     }
 
     if (ProjectManager::instance().isProjectOpened()) {
-        ProjectManager::instance().generateMakeFile("compiler_path", "sysroot", "");
+        ProjectManager::instance().generateMakeFile();
     }
     m_sourceCompiller->onRunCompilation(QString());
     m_buildAct->setEnabled(true);
@@ -98,7 +95,6 @@ void MainWindow::generateMakeFile()
 
 void MainWindow::compilationFinished()
 {
-    qDebug() << "Compilation finished";
     m_buildAct->setEnabled(true);
 }
 
@@ -488,6 +484,7 @@ void MainWindow::createDockWindows()
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea
                           | Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
     dock->setWidget(m_roboIdeConsole);
+    dock->setFeatures(QDockWidget::DockWidgetClosable);
     addDockWidget(Qt::BottomDockWidgetArea, dock);
     m_viewMenu->addAction(dock->toggleViewAction());
     dock->setStyleSheet(styleSheet);
@@ -498,6 +495,7 @@ void MainWindow::createDockWindows()
                           | Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
 
     dock->setWidget(m_connectedDevicesList);
+    dock->setFeatures(QDockWidget::DockWidgetClosable);
     addDockWidget(Qt::RightDockWidgetArea, dock);
     m_viewMenu->addAction(dock->toggleViewAction());
     dock->setStyleSheet(styleSheet);
@@ -509,6 +507,8 @@ void MainWindow::createDockWindows()
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea
                           | Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
     dock->setWidget(m_helpWidget);
+    dock->setFeatures(QDockWidget::DockWidgetClosable);
+
     addDockWidget(Qt::RightDockWidgetArea, dock);
     m_toggleHelpVisibilityAct = dock->toggleViewAction();
     m_viewMenu->addAction(m_toggleHelpVisibilityAct);
@@ -520,6 +520,8 @@ void MainWindow::createDockWindows()
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea
                           | Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
     dock->setWidget(m_projectTree);
+    dock->setFeatures(QDockWidget::DockWidgetClosable);
+
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     m_viewMenu->addAction(dock->toggleViewAction());
     dock->setStyleSheet(styleSheet);

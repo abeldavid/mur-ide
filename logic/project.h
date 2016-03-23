@@ -42,7 +42,7 @@ public:
     QString getDefaultFileName(const QString &extension);
     bool openFile(const QString &fileName, QString &content);
     bool saveFile(const QString &name, const QString &content);
-    bool generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options);
+    bool generateMakeFile();
     QString getName();
     QStringList getSources();
     QStringList getHeaders();

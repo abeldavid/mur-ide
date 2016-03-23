@@ -127,9 +127,9 @@ void ProjectManager::saveFile(const QString &name, const QString &content)
     }
 }
 
-void ProjectManager::generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options)
+void ProjectManager::generateMakeFile()
 {
-    if (m_project->generateMakeFile(compilerPath, sysrootPath, options)) {
+    if (m_project->generateMakeFile()) {
         emit fileAdded();
     }
 }
