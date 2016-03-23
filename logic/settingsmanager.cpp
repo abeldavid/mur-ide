@@ -96,7 +96,7 @@ void SettingsManager::setCompilerPath(const QString &path)
 QString SettingsManager::mingwMakePath() const
 {
     m_settings->beginGroup("i586-poky-linux");
-    QString make = m_settings->value("mingwMake", QCoreApplication::applicationDirPath() + "//tools//mingw32-make.exe").toString();
+    QString make = m_settings->value("mingwMake", QCoreApplication::applicationDirPath() + "//devkit-x86//mingw492_32//bin//mingw32-make.exe").toString();
     m_settings->endGroup();
     return make;
 }
@@ -276,6 +276,16 @@ void SettingsManager::setMingwBinarysPath(const QString &option)
     m_settings->beginGroup("mingw-windows");
     m_settings->setValue("MINGWCCBINS", option);
     m_settings->endGroup();
+}
+
+void SettingsManager::setCurrentTarget(SettingsManager::TARGET target)
+{
+    m_target = target;
+}
+
+SettingsManager::TARGET SettingsManager::currentTarget()
+{
+    return m_target;
 }
 
 SettingsManager::SettingsManager(QObject *parent) :

@@ -45,9 +45,9 @@ void SettingsWidget::applySettings()
     SettingsManager::instance().setUserLogin(m_wifiPasswordWidget->login());
     SettingsManager::instance().setUserPassword(m_wifiPasswordWidget->password());
 
-    if (m_compilerSettingsWidget->currentTarget() == SourceCompiler::TARGET::EDISON) {
+    if (m_compilerSettingsWidget->currentTarget() == SettingsManager::TARGET::EDISON) {
         SettingsManager::instance().setEdisonCompilerOptions(m_compilerSettingsWidget->compilerOptions());
-    } else if (m_compilerSettingsWidget->currentTarget() == SourceCompiler::TARGET::MINGW) {
+    } else if (m_compilerSettingsWidget->currentTarget() == SettingsManager::TARGET::MINGW) {
         SettingsManager::instance().setMingwCompilerOptions(m_compilerSettingsWidget->compilerOptions());
     }
 }
@@ -55,9 +55,9 @@ void SettingsWidget::applySettings()
 void SettingsWidget::setupCompilationOptions()
 {
     QStringList compilerOptions;
-    if (m_compilerSettingsWidget->currentTarget() == SourceCompiler::TARGET::EDISON) {
+    if (m_compilerSettingsWidget->currentTarget() == SettingsManager::TARGET::EDISON) {
         compilerOptions = SettingsManager::instance().edisonCompilerOptions();
-    } else if (m_compilerSettingsWidget->currentTarget() == SourceCompiler::TARGET::MINGW) {
+    } else if (m_compilerSettingsWidget->currentTarget() == SettingsManager::TARGET::MINGW) {
         compilerOptions = SettingsManager::instance().mingwCompilerOptions();
     }
     m_compilerSettingsWidget->setCompilationOptions(compilerOptions);

@@ -72,11 +72,11 @@ void MainWindow::runCompilation()
 {
     if (m_edisonCompileAct->isChecked())
     {
-        m_sourceCompiller->setTarget(SourceCompiler::TARGET::EDISON);
+        SETTINGS.setCurrentTarget(SettingsManager::TARGET::EDISON);
     }
     if (m_mingwCompileAct->isChecked())
     {
-        m_sourceCompiller->setTarget(SourceCompiler::TARGET::MINGW);
+        SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     }
     m_sourceCompiller->onRunCompilation(ProjectManager::instance().pathToFile(m_roboIdeTextEdit->fileName()));
 }
@@ -87,7 +87,13 @@ void MainWindow::generateMakeFile()
     if (m_roboIdeTextEdit->isModified()) {
         saveFilePromt();
     }
-    ProjectManager::instance().generateMakeFile("compiler_path", "sysroot", "");
+
+    if (ProjectManager::instance().isProjectOpened()) {
+        ProjectManager::instance().generateMakeFile("compiler_path", "sysroot", "");
+    }
+    m_sourceCompiller->onRunCompilation(QString());
+    m_buildAct->setEnabled(true);
+
 }
 
 void MainWindow::compilationFinished()
@@ -121,7 +127,6 @@ void MainWindow::runApp()
         env.insert("PATH", SettingsManager::instance().mingwBinarysPath());
         m_localApp->setProcessEnvironment(env);
         m_localApp->start(m_sourceCompiller->pathToBinary());
-
         if (m_localApp->state() != QProcess::NotRunning) {
             isOkay = true;
         }
@@ -284,12 +289,14 @@ void MainWindow::switchCompilationTargetToEdison()
 {
     m_mingwCompileAct->setChecked(false);
     m_edisonCompileAct->setChecked(true);
+    SETTINGS.setCurrentTarget(SettingsManager::TARGET::EDISON);
 }
 
 void MainWindow::switchCompilationTargetToDesktop()
 {
     m_edisonCompileAct->setChecked(false);
     m_mingwCompileAct->setChecked(true);
+    SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
 }
 
 void MainWindow::processOutReceived()

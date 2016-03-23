@@ -35,7 +35,7 @@ QStringList CompilerSettingsWidget::compilerOptions()
     return m_view->getOptions();
 }
 
-SourceCompiler::TARGET CompilerSettingsWidget::currentTarget()
+SettingsManager::TARGET CompilerSettingsWidget::currentTarget()
 {
     return m_target;
 }
@@ -53,10 +53,10 @@ void CompilerSettingsWidget::onCompilerChanged(int index)
     }
 
     if (index == 0) {
-        m_target = SourceCompiler::TARGET::EDISON;
+        m_target = SettingsManager::TARGET::EDISON;
     }
     else if (index == 1) {
-        m_target = SourceCompiler::TARGET::MINGW;
+        m_target = SettingsManager::TARGET::MINGW;
     }
 
     emit requireToUpdateCompilationOptions();

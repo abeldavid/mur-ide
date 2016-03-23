@@ -12,15 +12,11 @@ class SourceCompiler : public QObject
 {
     Q_OBJECT
 public:
-    enum  class TARGET : int {
-        MINGW = 10,
-        EDISON = 20
-    };
+
     explicit SourceCompiler(QObject *parent = 0);
     virtual ~SourceCompiler();
     QString pathToBinary() const;
     bool isCompiled() const;
-    void setTarget(TARGET target);
 signals:
     void onCompilationOutput(QString output);
     void finished();
@@ -34,7 +30,6 @@ private:
     ProcessRunner *m_processRunner;
     QString m_pathToBinary;
     bool m_isCompiled;
-    TARGET m_target;
 };
 
 #endif // SOURCECOMPILER_H

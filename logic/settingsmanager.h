@@ -7,10 +7,17 @@
 #include <QSize>
 #include <QByteArray>
 
+
 class SettingsManager : public QObject
 {
     Q_OBJECT
 public:
+
+    enum  class TARGET : int {
+        MINGW = 10,
+        EDISON = 20
+    };
+
     static SettingsManager& instance();
     ~SettingsManager();
 
@@ -59,6 +66,9 @@ public:
     QString mingwBinarysPath() const;
     void setMingwBinarysPath(const QString &option);
 
+    void setCurrentTarget(TARGET target);
+    TARGET currentTarget();
+
 signals:
 
 public slots:
@@ -67,6 +77,9 @@ private:
     SettingsManager(SettingsManager const&) = delete;
     void operator = (SettingsManager const&) = delete;
     QSettings *m_settings;
+    TARGET m_target = TARGET::EDISON;
 };
+
+#define SETTINGS SettingsManager::instance()
 
 #endif // SETTINGSMANAGER_H

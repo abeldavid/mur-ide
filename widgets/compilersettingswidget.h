@@ -7,7 +7,7 @@
 
 #include "compilationoptionsview.h"
 #include "sourcecompiler.h"
-
+#include "settingsmanager.h"
 
 class CompilerSettingsWidget : public QWidget
 {
@@ -16,7 +16,7 @@ public:
     explicit CompilerSettingsWidget(QWidget *parent = 0);
     void setCompilationOptions(const QStringList &options);
     QStringList compilerOptions();
-    SourceCompiler::TARGET currentTarget();
+    SettingsManager::TARGET currentTarget();
 signals:
     void requireToSave();
     void requireToUpdateCompilationOptions();
@@ -26,7 +26,7 @@ public slots:
 private:
     CompilationOptionsView* m_view;
     QComboBox* m_compilerBox;
-    SourceCompiler::TARGET m_target = SourceCompiler::TARGET::EDISON;
+    SettingsManager::TARGET m_target = SettingsManager::TARGET::EDISON;
 };
 
 #endif // COMPILERSETTINGSWIDGET_H
