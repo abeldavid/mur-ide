@@ -300,7 +300,14 @@ void MainWindow::projectContextMenu(const QPoint &point, const QString &fileName
 void MainWindow::treeContextMenuTriggered(QAction *action)
 {
     if (action == m_deleteFileAct) {
-        qDebug()<< "delete" << action->data().toString();
+        QMessageBox::StandardButton reply;
+        QString fileName = action->data().toString();
+        reply = QMessageBox::question(this,
+                                      "Удалить?", "Вы уверены, что хотите удалить " + fileName + " ?",
+                                      QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            ProjectManager::instance().deleteFile(fileName);
+        }
     }
     else if(action == m_renameFileAct) {
         qDebug()<< "rename" << action->data().toString();
@@ -595,6 +602,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), this, SLOT(saveFileAs()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_roboIdeTextEdit, SLOT(onFileSaved(QString)));
     QObject::connect(m_projectTreeContextMenu, SIGNAL(triggered(QAction*)), this, SLOT(treeContextMenuTriggered(QAction*)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(fileDeleted(QString)), m_projectTree, SLOT(loadProject()));
 
     QObject::connect(m_projectTree, SIGNAL(fileSelected(QString)), this, SLOT(openFile(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));

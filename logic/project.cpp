@@ -184,6 +184,35 @@ bool Project::saveFile(const QString &name, const QString &content)
     return writeFile(name, content);
 }
 
+bool Project::deleteFile(const QString &name)
+{
+    bool result = false;
+    QString fileType = "";
+    if (name.endsWith(Project::sourceFileExtension)) {
+        fileType = Project::sourcesSection;
+    }
+    else if(name.endsWith(Project::headerFileExtension)){
+        fileType = Project::headersSection;
+    }
+    if(!fileType.isEmpty()) {
+        QJsonArray projectSection = m_projectJson[fileType].toArray();
+        if (projectSection.contains(name)) {
+            int i;
+            for (i = 0; i < projectSection.size(); i++) {
+                if (projectSection.at(i) == name) {
+                    break;
+                }
+            }
+            projectSection.removeAt(i);
+            m_projectJson[fileType] = projectSection;
+            QJsonDocument jsonDoc(m_projectJson);
+            result = m_projectDir.remove(name) and
+                    writeFile(Project::projectFileName, jsonDoc.toJson());
+        }
+    }
+    return result;
+}
+
 bool Project::addFile(const QString &name)
 {
     QString fileType = "";

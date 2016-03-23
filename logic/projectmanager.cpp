@@ -127,6 +127,13 @@ void ProjectManager::saveFile(const QString &name, const QString &content)
     }
 }
 
+void ProjectManager::deleteFile(const QString &name)
+{
+    if (m_project->deleteFile(name)) {
+        emit fileDeleted(name);
+    }
+}
+
 void ProjectManager::generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options)
 {
     if (m_project->generateMakeFile(compilerPath, sysrootPath, options)) {
