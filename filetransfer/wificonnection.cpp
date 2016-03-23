@@ -173,6 +173,6 @@ void WiFiConnection::send(QString file)
 
 void WiFiConnection::onExecFinished(int retCode)
 {
-
+    Q_UNUSED(retCode)
 }
 
