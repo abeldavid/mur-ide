@@ -22,8 +22,7 @@ ProjectTree::ProjectTree(QWidget *parent) :
     m_tree->setColumnCount(1);
     m_tree->setHeaderHidden(true);
 
-    QObject::connect(m_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(onItemClicked(QTreeWidgetItem*)));
-//    connect(m_tree, SIGNAL(clicked(QModelIndex)), this, SLOT(itemSelected(QModelIndex)));
+    connect(m_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(onItemClicked(QTreeWidgetItem*)));
 }
 
 void ProjectTree::loadProject()
@@ -87,12 +86,7 @@ void ProjectTree::prepareTreeView()
     m_tree->insertTopLevelItem(3, m_headers);
 }
 
-void ProjectTree::itemSelected(const QModelIndex & index)
-{
-//    emit fileSelected(m_fileModel->fileName(index));
-}
-
 ProjectTree::~ProjectTree()
 {
-//    delete m_iconPovider;
+
 }
