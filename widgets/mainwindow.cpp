@@ -15,6 +15,7 @@
 #include <QClipboard>
 #include <QDockWidget>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QDebug>
 #include <QDir>
 #include <QJsonDocument>
@@ -310,7 +311,15 @@ void MainWindow::treeContextMenuTriggered(QAction *action)
         }
     }
     else if(action == m_renameFileAct) {
-        qDebug()<< "rename" << action->data().toString();
+        bool ok;
+        QString fileName = action->data().toString();
+        QString newFileName = QInputDialog::getText(this, "Переименовать",
+                                                "Новое имя", QLineEdit::Normal,
+                                                fileName, &ok,
+                                                windowFlags() & ~Qt::WindowContextHelpButtonHint);
+        if (ok && !newFileName.isEmpty()) {
+            ProjectManager::instance().renameFile(fileName, newFileName);
+        }
     }
 }
 
@@ -603,6 +612,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_roboIdeTextEdit, SLOT(onFileSaved(QString)));
     QObject::connect(m_projectTreeContextMenu, SIGNAL(triggered(QAction*)), this, SLOT(treeContextMenuTriggered(QAction*)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileDeleted(QString)), m_projectTree, SLOT(loadProject()));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(fileRenamed()), m_projectTree, SLOT(loadProject()));
 
     QObject::connect(m_projectTree, SIGNAL(fileSelected(QString)), this, SLOT(openFile(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
