@@ -334,6 +334,9 @@ void MainWindow::switchCompilationTargetToEdison()
     m_mingwCompileAct->setChecked(false);
     m_edisonCompileAct->setChecked(true);
     SETTINGS.setCurrentTarget(SettingsManager::TARGET::EDISON);
+    if (ProjectManager::instance().isProjectOpened()) {
+        runCompilation();
+    }
 }
 
 void MainWindow::switchCompilationTargetToDesktop()
@@ -341,6 +344,9 @@ void MainWindow::switchCompilationTargetToDesktop()
     m_edisonCompileAct->setChecked(false);
     m_mingwCompileAct->setChecked(true);
     SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
+    if (ProjectManager::instance().isProjectOpened()) {
+        runCompilation();
+    }
 }
 
 void MainWindow::processOutReceived()
