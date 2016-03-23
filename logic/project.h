@@ -26,6 +26,7 @@ public:
     static const QString sourcesSection;
     static const QString headersSection;
     static const QString availableFileExtensions;
+    static const QString buildFileName;
 
     QString m_projectsRoot;
     QDir m_projectDir;

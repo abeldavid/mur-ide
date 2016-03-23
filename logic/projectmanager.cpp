@@ -64,6 +64,11 @@ bool ProjectManager::projectOpened() const
     return m_project->getIsOpened();
 }
 
+bool ProjectManager::fileExists(const QString &fileName) const
+{
+    return m_project->m_projectDir.exists(fileName);
+}
+
 QString ProjectManager::getProjectPath() const
 {
     return m_project->m_projectDir.absolutePath();
@@ -125,7 +130,7 @@ void ProjectManager::saveFile(const QString &name, const QString &content)
 void ProjectManager::generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options)
 {
     if (m_project->generateMakeFile(compilerPath, sysrootPath, options)) {
-        emit makeFileGenerated();
+        emit fileAdded();
     }
 }
 

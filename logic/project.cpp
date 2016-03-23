@@ -35,7 +35,7 @@ const QString Project::headersSection = "headers";
 const QString Project::availableFileExtensions =
         "C++ (*" + Project::sourceFileExtension +
         " *" + Project::headerFileExtension + ")";
-
+const QString Project::buildFileName = "makefile";
 
 Project::Project(QObject *parent) :
     QObject(parent),
@@ -80,14 +80,17 @@ bool Project::open(const QString &path)
     bool result = false;
     QFile projectFile(path);
     if (projectFile.open(QIODevice::ReadOnly)) {
-        result = true;
         QByteArray projectStructure = projectFile.readAll();
         projectFile.close();
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(projectStructure);
-        m_projectJson = jsonDoc.object();
-        QFileInfo projectFileInfo(path);
-        m_projectDir = projectFileInfo.dir();
-        m_isOpened = true;
+        QJsonParseError err;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(projectStructure, &err);
+        if (err.error == QJsonParseError::NoError) {
+            m_projectJson = jsonDoc.object();
+            QFileInfo projectFileInfo(path);
+            m_projectDir = projectFileInfo.dir();
+            m_isOpened = true;
+            result = true;
+        }
     }
     return result;
 }
@@ -248,8 +251,6 @@ bool Project::createProjectFile(const QString &name)
     return writeFile(Project::projectFileName, jsonDoc.toJson());
 }
 
-
-
 bool Project::getIsOpened()
 {
     return m_isOpened;
@@ -257,7 +258,7 @@ bool Project::getIsOpened()
 
 bool Project::generateMakeFile(const QString &compilerPath, const QString sysrootPath, const QString options)
 {
-    QFile makeFile(m_projectDir.filePath("makefile"));
+    QFile makeFile(m_projectDir.filePath(Project::buildFileName));
     bool result = false;
     if (makeFile.open(QIODevice::WriteOnly)) {
         QTextStream makefile(&makeFile);

@@ -16,6 +16,7 @@ public:
     static ProjectManager& instance();
 
     bool projectOpened() const;
+    bool fileExists(const QString &fileName) const;
     QString getProjectPath() const;
     QString projectsRoot() const;
     QString getProjectName() const;

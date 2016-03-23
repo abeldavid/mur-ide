@@ -17,17 +17,19 @@ public:
 
 signals:
     void fileSelected(QString fileName);
+    void projectLoaded();
 
 public slots:
-    void loadProject(QString projectDir);
+    void loadProject();
     void closeProject();
+    void onItemClicked(QTreeWidgetItem* item);
+
 private:
     QTreeWidget *m_tree;
     QTreeWidgetItem *m_sources, *m_headers;
     QFileIconProvider m_iconPovider;
     void prepareTreeView();
-private slots:
-    void itemSelected(const QModelIndex & index);
+
 };
 
 #endif // PROJECTTREE_H
