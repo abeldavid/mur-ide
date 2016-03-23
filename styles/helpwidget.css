@@ -4,6 +4,7 @@ QTabWodget {
 
 QTabWidget::tab-bar {
 	border: none;
+	margin-bottom: 2px;
 }
 
 QTabBar::tab {

@@ -1,0 +1,10 @@
+QMainWindow::separator 
+{ 
+    background-color: #464646;
+    width: 1px;
+    border: none;
+} 
+
+QMainWindow { 
+    background-color: #464646;
+}
