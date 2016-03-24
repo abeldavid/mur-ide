@@ -77,11 +77,6 @@ void MainWindow::runCompilation()
     {
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     }
-    m_sourceCompiller->onRunCompilation(ProjectManager::instance().pathToFile(m_roboIdeTextEdit->fileName()));
-}
-
-void MainWindow::generateMakeFile()
-{
     m_buildAct->setEnabled(false);
     if (m_roboIdeTextEdit->isModified()) {
         saveFilePromt();
@@ -91,8 +86,6 @@ void MainWindow::generateMakeFile()
         ProjectManager::instance().generateMakeFile();
     }
     m_sourceCompiller->onRunCompilation(QString());
-    m_buildAct->setEnabled(true);
-
 }
 
 void MainWindow::compilationFinished()
@@ -336,7 +329,7 @@ void MainWindow::switchCompilationTargetToEdison()
     m_edisonCompileAct->setChecked(true);
     SETTINGS.setCurrentTarget(SettingsManager::TARGET::EDISON);
     if (ProjectManager::instance().isProjectOpened()) {
-        runCompilation();
+        ProjectManager::instance().generateMakeFile();
     }
 }
 
@@ -346,7 +339,7 @@ void MainWindow::switchCompilationTargetToDesktop()
     m_mingwCompileAct->setChecked(true);
     SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     if (ProjectManager::instance().isProjectOpened()) {
-        runCompilation();
+        ProjectManager::instance().generateMakeFile();
     }
 }
 
@@ -634,7 +627,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(copy()));
     QObject::connect(m_pasteAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(paste()));
      //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
-    QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(generateMakeFile()));
+    QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
     QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
