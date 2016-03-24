@@ -21,7 +21,11 @@ const QString Project::defaultSourceName = "main" + Project::sourceFileExtension
 const QString Project::defaultHeaderName = "main" + Project::headerFileExtension;
 const QString Project::defaultSourceContent = "#include \"" + Project::defaultHeaderName + "\"\n"
                                               "#include <iostream>\n\n"
+<<<<<<< HEAD
                                               "int main () {\n    std::cout << \"Hello world\" << std::endl;\n}";
+=======
+                                              "int main () {\n    std::cout << \"Hello world\" << std::end;\n}";
+>>>>>>> f064550e440cdad97c4fb1145af9974b57e71705
 const QString Project::defaultHeaderContent = "#pragma once";
 const QString Project::defaultProjectPrefix = "Project_";
 const QString Project::multiFileSeparator = " + ";
