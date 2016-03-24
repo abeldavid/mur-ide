@@ -315,16 +315,6 @@ void MainWindow::treeContextMenuTriggered(QAction *action)
     }
 }
 
-void MainWindow::onProjectCreated()
-{
-    m_addFileAct->setEnabled(true);
-    m_createFileAct->setEnabled(true);
-    m_closeProjectAct->setEnabled(true);
-    m_deleteFileAct->setEnabled(true);
-    m_renameFileAct->setEnabled(true);
-//    openFile(ProjectManager::instance().defaultOpenFilePath());
-}
-
 void MainWindow::switchCompilationTargetToEdison()
 {
     m_mingwCompileAct->setChecked(false);
@@ -593,13 +583,13 @@ void MainWindow::createDockWindows()
 
 void MainWindow::connectActionsToSlots()
 {
-    QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectClose()));
     QObject::connect(m_createProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectCreateDialog()));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(projectClose()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), m_projectTree, SLOT(loadProject()));
-    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(onProjectCreated()));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(onProjectOpened()));
 
-    QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectClose()));
     QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), this, SLOT(projectClose()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), m_projectTree, SLOT(loadProject()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), this, SLOT(onProjectOpened()));
 

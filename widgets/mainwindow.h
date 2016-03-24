@@ -35,7 +35,6 @@ private slots:
     void projectOpenDialog();
     void projectClose();
     void fileAddDialog();
-    void onProjectCreated();
     void onProjectOpened();
     void onProjectClosed();
     void openFile(const QString &fileName);
