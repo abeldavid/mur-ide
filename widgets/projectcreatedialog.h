@@ -7,6 +7,8 @@
 class ProjectCreateDialog : public QDialog
 {
     Q_OBJECT
+signals:
+    void createProjectConfirmed(QString path, QString name);
 public:
     explicit ProjectCreateDialog(QWidget *parent = 0);
 private:

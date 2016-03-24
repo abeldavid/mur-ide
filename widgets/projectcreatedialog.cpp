@@ -55,6 +55,5 @@ void ProjectCreateDialog::selectFolder()
 
 void ProjectCreateDialog::createProject()
 {
-    ProjectManager::instance().createProject(m_dirLocationEdit->text(), m_nameEdit->text());
-
+    emit createProjectConfirmed(m_dirLocationEdit->text(), m_nameEdit->text());
 }

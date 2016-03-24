@@ -99,9 +99,8 @@ bool Project::open(const QString &path)
 
 bool Project::close()
 {
-    bool result = m_isOpened;
     m_isOpened = false;
-    return result;
+    return true;
 }
 
 bool Project::createFile(const QString &name)
