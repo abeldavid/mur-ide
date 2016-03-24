@@ -12,12 +12,12 @@ public:
     explicit WiFiConnection(QObject *parent = 0);
     ~WiFiConnection();
     void prepare();
-    int sendAndRun(QString file);
+    bool sendAndRun(QString file);
     QStringList appList();
-    void runApp();
-    void killApp();
+    bool runApp();
+    bool killApp();
     void stopAppByName(QString bin);
-    void send(QString file);
+    bool send(QString file);
 signals:
     void run();
     void onExecOutput(QString);
@@ -26,6 +26,7 @@ public slots:
 private slots:
     void onExecFinished(int retCode);
 private:
+    void recreateSockets();
     QString m_binaryPath;
 
     void* m_zmqContext;
