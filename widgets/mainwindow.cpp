@@ -164,7 +164,7 @@ void MainWindow::killApp()
     }
     else {
         if (m_mingwCompileAct->isChecked()) {
-            m_roboIdeConsole->append("Программа не была запущена. Нечего остонавливать.");
+            m_roboIdeConsole->append("Программа не была запущена. Нечего останавливать.");
         }
         if (m_edisonCompileAct->isChecked()) {
             m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
