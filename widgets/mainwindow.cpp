@@ -199,6 +199,7 @@ void MainWindow::projectClose()
         saveFilePromt();
     }
     m_roboIdeTextEdit->clear();
+    m_roboIdeTextEdit->setModified(false);
     ProjectManager::instance().closeProject();
 }
 
@@ -255,6 +256,7 @@ void MainWindow::saveFileAs()
 
 QString MainWindow::saveFileAsDialog()
 {
+    // saves as .cpp if no file extension specified
     return QFileDialog::getSaveFileName(this,
                                         tr("Сохранить файл как"),
                                         ProjectManager::instance().getProjectPath(),
@@ -502,7 +504,7 @@ void MainWindow::createMenus()
     m_fileMenu->addAction(m_createFileAct);
     m_fileMenu->addAction(m_addFileAct);
     m_fileMenu->addAction(m_saveAct);
-//    m_fileMenu->addAction(m_saveAsAct);
+    m_fileMenu->addAction(m_saveAsAct);
 
     m_editMenu = menuBar()->addMenu(tr("&Правка"));
     m_editMenu->addAction(m_redoAct);

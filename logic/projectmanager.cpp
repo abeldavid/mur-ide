@@ -71,7 +71,7 @@ bool ProjectManager::fileExists(const QString &fileName) const
 
 QString ProjectManager::getProjectPath() const
 {
-    return m_project->m_projectDir.absolutePath();
+    return m_project->getIsOpened() ? m_project->m_projectDir.absolutePath() : m_project->m_projectsRoot;
 }
 
 void ProjectManager::createProject(const QString &name, const QString &path)
