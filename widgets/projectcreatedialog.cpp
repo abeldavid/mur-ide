@@ -30,9 +30,9 @@ ProjectCreateDialog::ProjectCreateDialog(QWidget *parent) :
     layout->addWidget(m_nameEdit);
     m_nameEdit->setText(ProjectManager::instance().defaultNewProjectName());
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
-                                     | QDialogButtonBox::Cancel);
-
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                                                       Qt::Horizontal,
+                                                       this);
     layout->addWidget(buttonBox);
 
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
