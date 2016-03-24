@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QApplication>
 
 #include "compilationoptionsview.h"
 
@@ -7,6 +8,7 @@ CompilationOptionsView::CompilationOptionsView(QWidget *parent) : QListWidget(pa
     setup();
     setContextMenuPolicy(Qt::CustomContextMenu);
     createMenu();
+    setMouseTracking(true);
 }
 
 void CompilationOptionsView::setOptions(const QStringList &options)
@@ -49,6 +51,20 @@ QStringList CompilationOptionsView::getOptions() const
     return options;
 }
 
+void CompilationOptionsView::mouseMoveEvent(QMouseEvent *e)
+{
+    QListWidget::mouseMoveEvent(e);
+    QPoint globalCursorPos = QCursor::pos();
+
+    QModelIndex index = indexAt(mapFromGlobal(globalCursorPos));
+    if (index.isValid()) {
+        setCursor(Qt::IBeamCursor);
+    }
+    else {
+        QApplication::restoreOverrideCursor();
+    }
+}
+
 void CompilationOptionsView::showContextMenu(const QPoint &pos)
 {
     m_contextMenu->exec(mapToGlobal(pos));
@@ -57,7 +73,7 @@ void CompilationOptionsView::showContextMenu(const QPoint &pos)
 void CompilationOptionsView::createMenu()
 {
     m_addOptionAct = new QAction(tr("Добавить опцию"), this);
-    m_removeOptionAct = new QAction(tr("Удалть опцию"), this);
+    m_removeOptionAct = new QAction(tr("Удалить опцию"), this);
     m_contextMenu = new QMenu(this);
 
     m_contextMenu->addAction(m_removeOptionAct);

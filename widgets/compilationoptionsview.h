@@ -15,6 +15,8 @@ public:
     void setModified(bool modified);
     bool isModified() const;
     QStringList getOptions() const;
+    virtual void mouseMoveEvent(QMouseEvent *e);
+
 signals:
 
 public slots:
