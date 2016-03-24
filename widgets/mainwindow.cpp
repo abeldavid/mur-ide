@@ -202,12 +202,11 @@ void MainWindow::fileAddDialog() {
 
 void MainWindow::projectClose()
 {
+    if (m_roboIdeTextEdit->isModified()) {
+        saveFilePromt();
+    }
+    m_roboIdeTextEdit->clear();
     ProjectManager::instance().closeProject();
-    m_addFileAct->setEnabled(false);
-    m_createFileAct->setEnabled(false);
-    m_closeProjectAct->setEnabled(false);
-    m_deleteFileAct->setEnabled(false);
-    m_renameFileAct->setEnabled(false);
 }
 
 
@@ -227,9 +226,11 @@ void MainWindow::onProjectOpened()
 
 void MainWindow::onProjectClosed()
 {
-    if (m_roboIdeTextEdit->isModified()) {
-        saveFilePromt();
-    }
+    m_addFileAct->setEnabled(false);
+    m_createFileAct->setEnabled(false);
+    m_closeProjectAct->setEnabled(false);
+    m_deleteFileAct->setEnabled(false);
+    m_renameFileAct->setEnabled(false);
 }
 
 void MainWindow::openFile(const QString &fileName)
