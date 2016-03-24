@@ -85,7 +85,6 @@ void MainWindow::runCompilation()
         ProjectManager::instance().generateMakeFile();
     }
     m_sourceCompiller->onRunCompilation(QString());
-    m_buildAct->setEnabled(true);
 }
 
 void MainWindow::compilationFinished()
