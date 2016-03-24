@@ -5,7 +5,6 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QDebug>
-#include <QHash>
 #include <QStringList>
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
@@ -14,7 +13,7 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
     QDialog(parent),
     m_nameEdit(new QLineEdit(this))
 {
-    this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);
@@ -23,10 +22,6 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
 
     layout->addWidget(nameLabel);
     layout->addWidget(m_nameEdit);
-
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
-                                     | QDialogButtonBox::Cancel);
-    layout->addWidget(buttonBox);
 
     QComboBox *comboBox = new QComboBox(this);
 
@@ -37,6 +32,11 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
     comboBox->setModel(proxy);
 
     layout->addWidget(comboBox);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                                                       Qt::Horizontal,
+                                                       this);
+    layout->addWidget(buttonBox);
 
     this->setDefaultFileName(comboBox->currentText());
 

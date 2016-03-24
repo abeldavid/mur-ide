@@ -19,9 +19,10 @@ const QString Project::sourceFileExtension = ".cpp";
 const QString Project::headerFileExtension = ".h";
 const QString Project::defaultSourceName = "main" + Project::sourceFileExtension;
 const QString Project::defaultHeaderName = "main" + Project::headerFileExtension;
-const QString Project::defaultSourceContent = "#include \"" + Project::defaultHeaderName + "\"\n\n"
-                                        "void main () {\n\n}";
-const QString Project::defaultHeaderContent = "#define HELLO \"Hello World!\" ";
+const QString Project::defaultSourceContent = "#include \"" + Project::defaultHeaderName + "\"\n"
+                                              "#include <iostream>\n\n"
+                                              "int main () {\n    std::cout << \"Hello world\" << std::endl;\n}";
+const QString Project::defaultHeaderContent = "#pragma once";
 const QString Project::defaultProjectPrefix = "Project_";
 const QString Project::multiFileSeparator = " + ";
 const QHash<QString, QString> Project::defaultFilePrefixes({
@@ -98,9 +99,8 @@ bool Project::open(const QString &path)
 
 bool Project::close()
 {
-    bool result = m_isOpened;
     m_isOpened = false;
-    return result;
+    return true;
 }
 
 bool Project::createFile(const QString &name)

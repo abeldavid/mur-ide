@@ -30,9 +30,9 @@ ProjectCreateDialog::ProjectCreateDialog(QWidget *parent) :
     layout->addWidget(m_nameEdit);
     m_nameEdit->setText(ProjectManager::instance().defaultNewProjectName());
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
-                                     | QDialogButtonBox::Cancel);
-
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                                                       Qt::Horizontal,
+                                                       this);
     layout->addWidget(buttonBox);
 
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
@@ -55,6 +55,5 @@ void ProjectCreateDialog::selectFolder()
 
 void ProjectCreateDialog::createProject()
 {
-    ProjectManager::instance().createProject(m_dirLocationEdit->text(), m_nameEdit->text());
-
+    emit createProjectConfirmed(m_dirLocationEdit->text(), m_nameEdit->text());
 }

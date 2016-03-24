@@ -13,6 +13,7 @@
 #include "filetransfer/wificonnection.h"
 #include "widgets/helpwidget.h"
 #include "ftpwidget.h"
+#include "projectcreatedialog.h"
 
 class MainWindow : public QMainWindow
 {
@@ -22,7 +23,6 @@ public:
     ~MainWindow();
 private slots:
     void runCompilation();
-    void generateMakeFile();
     void compilationFinished();
     void uploadAndRun();
     void runApp();
@@ -32,11 +32,11 @@ private slots:
     void switchCompilationTargetToDesktop();
     void processOutReceived();
     void projectCreateDialog();
+    void projectCreate(const QString &path, const QString &name);
     void fileCreateDialog();
     void projectOpenDialog();
     void projectClose();
     void fileAddDialog();
-    void onProjectCreated();
     void onProjectOpened();
     void onProjectClosed();
     void openFile(const QString &fileName);
@@ -51,6 +51,8 @@ private:
     void createActions();
     void createToolBars();
     void createDockWindows();
+    void enableProjectActions();
+    void disableProjectActions();
     void connectActionsToSlots();
 
     QString saveFileAsDialog();
@@ -101,6 +103,7 @@ private:
     ProjectTree *m_projectTree;
     FtpWidget *m_ftpWidget;
     QMenu *m_projectTreeContextMenu;
+    ProjectCreateDialog *m_projectCreateDialog;
 };
 
 #endif // MAINWINDOW_H
