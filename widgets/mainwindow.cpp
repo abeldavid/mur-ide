@@ -77,11 +77,7 @@ void MainWindow::runCompilation()
     {
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     }
-    m_sourceCompiller->onRunCompilation(ProjectManager::instance().pathToFile(m_roboIdeTextEdit->fileName()));
-}
 
-void MainWindow::generateMakeFile()
-{
     m_buildAct->setEnabled(false);
     if (m_roboIdeTextEdit->isModified()) {
         saveFilePromt();
@@ -92,6 +88,11 @@ void MainWindow::generateMakeFile()
     }
     m_sourceCompiller->onRunCompilation(QString());
     m_buildAct->setEnabled(true);
+}
+
+void MainWindow::generateMakeFile()
+{
+
 
 }
 
@@ -103,9 +104,14 @@ void MainWindow::compilationFinished()
 void MainWindow::uploadAndRun()
 {
     m_uploadAndRunAct->setDisabled(true);
-    m_wifiConnection->sendAndRun(m_sourceCompiller->pathToBinary());
+
+    if (m_wifiConnection->sendAndRun(m_sourceCompiller->pathToBinary())) {
+        m_roboIdeConsole->append("Программа отправлена.");
+    }
+    else {
+        m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
+    }
     m_uploadAndRunAct->setEnabled(true);
-    m_roboIdeConsole->append("Программа отправлена!");
 }
 
 void MainWindow::runApp()
@@ -113,9 +119,10 @@ void MainWindow::runApp()
     bool isOkay = false;
     if (m_edisonCompileAct->isChecked()) {
         m_runAppAct->setDisabled(true);
-        m_wifiConnection->runApp();
+        if (m_wifiConnection->runApp()) {
+            isOkay = true;
+        }
         m_runAppAct->setEnabled(true);
-        isOkay = true;
     }
     if (m_mingwCompileAct->isChecked()) {
         if (m_localApp->isOpen()) {
@@ -138,6 +145,9 @@ void MainWindow::runApp()
         if (m_mingwCompileAct->isChecked()) {
             m_roboIdeConsole->append(m_localApp->errorString());
         }
+        if (m_edisonCompileAct->isChecked()) {
+            m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
+        }
     }
 }
 
@@ -146,7 +156,9 @@ void MainWindow::killApp()
     bool isOk = false;
     if (m_edisonCompileAct->isChecked()) {
         m_stopAppAct->setDisabled(true);
-        m_wifiConnection->killApp();
+        if (m_wifiConnection->killApp()) {
+            isOk = true;
+        }
         m_stopAppAct->setEnabled(true);
     }
     if (m_mingwCompileAct->isChecked()) {
@@ -162,6 +174,9 @@ void MainWindow::killApp()
     else {
         if (m_mingwCompileAct->isChecked()) {
             m_roboIdeConsole->append("Программа не была запущена. Нечего остонавливать.");
+        }
+        if (m_edisonCompileAct->isChecked()) {
+            m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
         }
     }
 }
@@ -633,7 +648,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(copy()));
     QObject::connect(m_pasteAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(paste()));
      //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
-    QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(generateMakeFile()));
+    QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
     QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
