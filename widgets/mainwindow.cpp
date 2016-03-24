@@ -3,7 +3,6 @@
 #include "wifipasswordwidget.h"
 #include "settingsmanager.h"
 #include "helpwidget.h"
-#include "filecreatedialog.h"
 #include "project.h"
 #include "projectmanager.h"
 
@@ -37,7 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_projectTree(new ProjectTree(this)),
       m_ftpWidget(new FtpWidget(this)),
       m_projectTreeContextMenu(new QMenu(this)),
-      m_projectCreateDialog(new ProjectCreateDialog(this))
+      m_projectCreateDialog(new ProjectCreateDialog(this)),
+      m_fileCreateDialog(new FileCreateDialog(this))
 {
     setCentralWidget(m_roboIdeTextEdit);
     createActions();
@@ -196,8 +196,14 @@ void MainWindow::projectOpenDialog() {
 }
 
 void MainWindow::fileCreateDialog() {
-    FileCreateDialog dialog(this);
-    dialog.exec();
+    m_fileCreateDialog->exec();
+}
+
+void MainWindow::filesCreate(const QStringList &fileNames)
+{
+    for (QString fileName: fileNames) {
+        ProjectManager::instance().createFile(fileName);
+    }
 }
 
 void MainWindow::fileAddDialog() {
@@ -623,6 +629,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectCreated(QString)), this, SLOT(onProjectOpened()));
 
     QObject::connect(m_openProjectAct, SIGNAL(triggered(bool)), this, SLOT(projectOpenDialog()));
+    QObject::connect(m_fileCreateDialog, SIGNAL(createFileConfirmed(QStringList)), this, SLOT(filesCreate(QStringList)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), m_projectTree, SLOT(loadProject()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(projectOpened(QString)), this, SLOT(onProjectOpened()));
 
@@ -645,7 +652,6 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
     QObject::connect(m_projectTree, SIGNAL(projectContextMenu(QPoint, QString)), this, SLOT(projectContextMenu(QPoint,QString)));
 
-//    QObject::connect(m_roboIdeTextEdit, SIGNAL(fileModified()), this);
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
     QObject::connect(m_redoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(redo()));
     QObject::connect(m_undoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(undo()));

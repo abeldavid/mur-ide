@@ -5,7 +5,6 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QDebug>
-#include <QStringList>
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
 
@@ -50,10 +49,7 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
 
 void FileCreateDialog::createFile()
 {
-    QStringList fileNames = m_nameEdit->text().split(Project::multiFileSeparator);
-    for (QString fileName: fileNames) {
-        ProjectManager::instance().createFile(fileName);
-    }
+    emit createFileConfirmed(m_nameEdit->text().split(Project::multiFileSeparator));
 }
 
 void FileCreateDialog::setDefaultFileName(QString extension)

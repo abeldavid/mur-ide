@@ -14,6 +14,7 @@
 #include "widgets/helpwidget.h"
 #include "ftpwidget.h"
 #include "projectcreatedialog.h"
+#include "filecreatedialog.h"
 
 class MainWindow : public QMainWindow
 {
@@ -34,6 +35,7 @@ private slots:
     void projectCreateDialog();
     void projectCreate(const QString &path, const QString &name);
     void fileCreateDialog();
+    void filesCreate(const QStringList &fileNames);
     void projectOpenDialog();
     void projectClose();
     void fileAddDialog();
@@ -104,6 +106,7 @@ private:
     FtpWidget *m_ftpWidget;
     QMenu *m_projectTreeContextMenu;
     ProjectCreateDialog *m_projectCreateDialog;
+    FileCreateDialog *m_fileCreateDialog;
 };
 
 #endif // MAINWINDOW_H

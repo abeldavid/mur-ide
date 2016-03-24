@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QLineEdit>
+#include <QStringList>
 
 class FileCreateDialog : public QDialog
 {
@@ -11,7 +12,7 @@ public:
     explicit FileCreateDialog(QWidget *parent = 0);
 
 signals:
-
+    void createFileConfirmed(QStringList fileNames);
 public slots:
 
 private:
