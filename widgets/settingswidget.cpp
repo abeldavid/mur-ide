@@ -18,7 +18,7 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
 
     mainLayout->addWidget(m_tabWidget);
 
-    QPushButton *applyButton = new QPushButton("Применить", this);
+    QPushButton *applyButton = new QPushButton("Ok", this);
     mainLayout->addWidget(applyButton);
 
     setupTabs();
@@ -33,7 +33,7 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     m_wifiPasswordWidget->setLoginInfo(ip, login, password);
 
     QObject::connect(m_compilerSettingsWidget, SIGNAL(requireToUpdateCompilationOptions()), this, SLOT(setupCompilationOptions()));
-    QObject::connect(applyButton, SIGNAL(pressed()),this, SLOT(applySettings()));
+    QObject::connect(applyButton, SIGNAL(clicked(bool)),this, SLOT(applySettings()));
     QObject::connect(m_compilerSettingsWidget, SIGNAL(requireToSave()), this, SLOT(applySettings()));
 
     setupCompilationOptions();
@@ -50,6 +50,7 @@ void SettingsWidget::applySettings()
     } else if (m_compilerSettingsWidget->currentTarget() == SettingsManager::TARGET::MINGW) {
         SettingsManager::instance().setMingwCompilerOptions(m_compilerSettingsWidget->compilerOptions());
     }
+    close();
 }
 
 void SettingsWidget::setupCompilationOptions()
