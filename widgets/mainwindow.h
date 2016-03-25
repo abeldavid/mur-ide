@@ -56,6 +56,7 @@ private:
     void enableProject();
     void disableProject();
     void connectActionsToSlots();
+    void closeEvent (QCloseEvent *event);
 
     QString saveFileAsDialog();
 

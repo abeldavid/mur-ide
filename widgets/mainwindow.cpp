@@ -69,6 +69,16 @@ MainWindow::~MainWindow()
     SettingsManager::instance().setMainWindowState(state);
 }
 
+
+void MainWindow::closeEvent (QCloseEvent *event)
+{
+    event->ignore();
+    if (m_roboIdeTextEdit->isModified()){
+        saveFilePromt();
+    }
+    event->accept();
+}
+
 void MainWindow::runCompilation()
 {
     if (m_edisonCompileAct->isChecked())
