@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QFileInfo>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -120,10 +121,10 @@ bool MainWindow::uploadApp()
     m_uploadAct->setDisabled(true);
     bool result = m_wifiConnection->send(m_sourceCompiller->pathToBinary());
     if (result) {
-        m_roboIdeConsole->append("Программа отправлена.");
+        m_roboIdeConsole->appendMessage("Программа отправлена.");
     }
     else {
-        m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
+        m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.", true);
     }
     m_uploadAct->setEnabled(true);
     return result;
@@ -153,15 +154,15 @@ bool MainWindow::runApp()
     }
 
     if (isOK) {
-        m_roboIdeConsole->append("Программа запущена!");
+        m_roboIdeConsole->appendMessage("Программа запущена!");
     }
     else {
-        m_roboIdeConsole->append("Во время запуска программы произошла ошибка.");
+        m_roboIdeConsole->appendMessage("Во время запуска программы произошла ошибка.", true);
         if (m_mingwCompileAct->isChecked()) {
-            m_roboIdeConsole->append(m_localApp->errorString());
+            m_roboIdeConsole->appendMessage(m_localApp->errorString(), true);
         }
         else if (m_edisonCompileAct->isChecked()) {
-            m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
+            m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.", true);
         }
     }
     return isOK;
@@ -192,14 +193,14 @@ void MainWindow::killApp()
 
     }
     if (isOk) {
-        m_roboIdeConsole->append("Программа остановлена!");
+        m_roboIdeConsole->appendMessage("Программа остановлена!");
     }
     else {
         if (m_mingwCompileAct->isChecked()) {
-            m_roboIdeConsole->append("Программа не была запущена. Нечего останавливать.");
+            m_roboIdeConsole->appendMessage("Программа не была запущена. Нечего останавливать.");
         }
         else if (m_edisonCompileAct->isChecked()) {
-            m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
+            m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.", true);
         }
     }
     m_stopAppAct->setEnabled(false);
@@ -392,15 +393,15 @@ void MainWindow::processOutReceived()
 {
     QString str = m_localApp->readAllStandardOutput().simplified();
     if (str != "") {
-        m_roboIdeConsole->append(str);
+        m_roboIdeConsole->appendMessage(str);
     }
     str = m_localApp->readAllStandardError().simplified();
     if (str != "") {
-        m_roboIdeConsole->append(str);
+        m_roboIdeConsole->appendMessage(str, true);
     }
     str = m_localApp->readAll().simplified();
     if (str != "") {
-        m_roboIdeConsole->append(str);
+        m_roboIdeConsole->appendMessage(str);
     }
 }
 
@@ -699,11 +700,11 @@ void MainWindow::connectActionsToSlots()
      //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
     QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
-    QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));
+    QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString, bool)), m_roboIdeConsole, SLOT(appendMessage(QString, bool)));
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
     QObject::connect(m_uploadAct, SIGNAL(triggered(bool)), this, SLOT(uploadApp()));
     QObject::connect(m_showSettingsAct, SIGNAL(triggered(bool)), m_settingsWidget, SLOT(show()));
-    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));
+    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_roboIdeConsole, SLOT(appendMessage(QString)));
     QObject::connect(m_runAppAct, SIGNAL(triggered(bool)), this, SLOT(runApp()));
     QObject::connect(m_stopAppAct, SIGNAL(triggered(bool)), this, SLOT(killApp()));
     QObject::connect(m_combinedRunAct, SIGNAL(triggered(bool)), this, SLOT(combinedRunApp()));

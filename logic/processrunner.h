@@ -21,7 +21,7 @@ public slots:
 private slots:
     void processOutReceived();
 signals:
-    void processOutputReady(QString);
+    void processOutputReady(QString, bool);
     void finished(int);
 private:
     QString m_path;

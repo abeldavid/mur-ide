@@ -2,7 +2,9 @@
 #define ROBOIDECONSOLE_H
 
 #include <QWidget>
-#include <QPlainTextEdit>
+#include <QString>
+#include <QTextEdit>
+#include <QColor>
 
 class RoboIdeConsole : public QTextEdit
 {
@@ -13,6 +15,12 @@ public:
 signals:
 
 public slots:
+    void appendMessage(const QString &text, bool isError = false);
+    void appendCompilationResult(const QString &text);
+
+private:
+    QColor m_defaultTxetColor;
+    QColor m_errorTextColor;
 };
 
 #endif // ROBOIDECONSOLE_H

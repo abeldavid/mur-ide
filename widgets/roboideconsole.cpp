@@ -1,13 +1,34 @@
 #include "roboideconsole.h"
 
 #include <QPalette>
-#include <QTextCursor>
 #include <QDebug>
-#include <iostream>
+#include <QFont>
 
-RoboIdeConsole::RoboIdeConsole(QWidget *parent) : QTextEdit(parent)
+RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
+    QTextEdit(parent),
+    m_defaultTxetColor(QColor("light grey")),
+    m_errorTextColor(QColor("red"))
 {
     setReadOnly(true);
+    QFont font("Courier", 11);
+    font.setStyleHint(QFont::Monospace);
+    setCurrentFont(font);
 }
 
+void RoboIdeConsole::appendMessage(const QString &text, bool isError)
+{
+    if (!isError) {
+        append(text);
+    }
+    else {
+        setTextColor(m_errorTextColor);
+        append(text);
+        setTextColor(m_defaultTxetColor);
+    }
+}
+
+void RoboIdeConsole::appendCompilationResult(const QString &text)
+{
+    append(text);
+}
 

@@ -18,7 +18,7 @@ public:
     QString pathToBinary() const;
     bool isCompiled() const;
 signals:
-    void onCompilationOutput(QString output);
+    void onCompilationOutput(QString output, bool isError);
     void finished();
     void run();
 public slots:

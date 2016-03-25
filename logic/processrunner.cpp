@@ -62,15 +62,15 @@ void ProcessRunner::processOutReceived()
 {
     QString str = m_process->readAllStandardOutput().simplified();
     if (str != "") {
-        emit processOutputReady(str);
+        emit processOutputReady(str, false);
     }
     str = m_process->readAllStandardError().simplified();
     if (str != "") {
-        emit processOutputReady(str);
+        emit processOutputReady(str, true);
     }
     str = m_process->readAll().simplified();
     if (str != "") {
-        emit processOutputReady(str);
+        emit processOutputReady(str, false);
     }
 }
 
