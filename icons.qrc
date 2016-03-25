@@ -16,5 +16,17 @@
         <file>icons/filetypes/dir.png</file>
         <file>icons/filetypes/file.png</file>
         <file>icons/filetypes/cdtoparent.png</file>
+        <file>icons/widgeticons/camera.png</file>
+        <file>icons/widgeticons/camera_dark.png</file>
+        <file>icons/widgeticons/dalnomer.png</file>
+        <file>icons/widgeticons/empty_port.png</file>
+        <file>icons/widgeticons/thruster_10.png</file>
+        <file>icons/widgeticons/thruster_10_dark.png</file>
+        <file>icons/widgeticons/thruster_20.png</file>
+        <file>icons/widgeticons/thruster_20_dark.png</file>
+        <file>icons/widgeticons/thruster_30.png</file>
+        <file>icons/widgeticons/thruster_30_dark.png</file>
+        <file>icons/widgeticons/thruster_40.png</file>
+        <file>icons/widgeticons/thruster_40_dark.png</file>
     </qresource>
 </RCC>

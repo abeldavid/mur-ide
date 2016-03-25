@@ -6,5 +6,6 @@
         <file>styles/toolbar.css</file>
         <file>styles/helpwidget.css</file>
         <file>styles/mainwindow.css</file>
+        <file>styles/devicelist.css</file>
     </qresource>
 </RCC>
