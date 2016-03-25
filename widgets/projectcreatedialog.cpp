@@ -13,6 +13,7 @@ ProjectCreateDialog::ProjectCreateDialog(QWidget *parent) :
     m_nameEdit(new QLineEdit(this))
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowTitle("Новый проект");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);

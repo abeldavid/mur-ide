@@ -13,6 +13,7 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
     m_nameEdit(new QLineEdit(this))
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowTitle("Создать файл");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);

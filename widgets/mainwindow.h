@@ -53,8 +53,8 @@ private:
     void createActions();
     void createToolBars();
     void createDockWindows();
-    void enableProjectActions();
-    void disableProjectActions();
+    void enableProject();
+    void disableProject();
     void connectActionsToSlots();
 
     QString saveFileAsDialog();

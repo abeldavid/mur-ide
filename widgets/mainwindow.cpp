@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
     createToolBars();
     createDockWindows();
     connectActionsToSlots();
-    showMaximized();
 
     QByteArray state = SettingsManager::instance().mainWindowState();
     if (state.size() != 0) {
@@ -59,6 +58,9 @@ MainWindow::MainWindow(QWidget *parent)
     mainWindowSheet.close();
 
     m_connectedDevicesList->setVisible(false);
+
+    showMaximized();
+    projectCreateDialog();
 }
 
 MainWindow::~MainWindow()
@@ -236,12 +238,12 @@ void MainWindow::openHelp()
 
 void MainWindow::onProjectOpened()
 {
-    enableProjectActions();
+    enableProject();
 }
 
 void MainWindow::onProjectClosed()
 {
-    disableProjectActions();
+    disableProject();
 }
 
 void MainWindow::openFile(const QString &fileName)
@@ -455,7 +457,7 @@ void MainWindow::createActions()
     m_mingwCompileAct = new QAction(tr("Компьютер"), this);
     m_mingwCompileAct->setCheckable(true);
 
-    disableProjectActions();
+    disableProject();
 }
 
 void MainWindow::createToolBars()
@@ -595,8 +597,9 @@ void MainWindow::createDockWindows()
     dock->setVisible(true);
 }
 
-void MainWindow::enableProjectActions()
+void MainWindow::enableProject()
 {
+    m_roboIdeTextEdit->setReadOnly(false);
     m_addFileAct->setEnabled(true);
     m_createFileAct->setEnabled(true);
     m_closeProjectAct->setEnabled(true);
@@ -608,8 +611,9 @@ void MainWindow::enableProjectActions()
     m_stopAppAct->setEnabled(true);
 }
 
-void MainWindow::disableProjectActions()
+void MainWindow::disableProject()
 {
+    m_roboIdeTextEdit->setReadOnly(true);
     m_addFileAct->setEnabled(false);
     m_createFileAct->setEnabled(false);
     m_closeProjectAct->setEnabled(false);
