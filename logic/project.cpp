@@ -20,6 +20,7 @@ const QString Project::headerFileExtension = ".h";
 const QString Project::defaultSourceName = "main" + Project::sourceFileExtension;
 const QString Project::defaultHeaderName = "main" + Project::headerFileExtension;
 const QString Project::defaultSourceContent = "#include \"" + Project::defaultHeaderName + "\"\n"
+                                              "#include <murapi.h>\n"
                                               "#include <iostream>\n\n"
                                               "int main () {\n    std::cout << \"Hello world\" << std::endl;\n}";
 const QString Project::defaultHeaderContent = "#pragma once";

@@ -44,7 +44,7 @@ void CompilerSettingsWidget::onCompilerChanged(int index)
 {
     if (m_view->isModified()) {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Сохранить?", "Настройки текущего компилятора не были сохранены. Сохнаить?",
+        reply = QMessageBox::question(this, "Сохранить?", "Настройки текущего компилятора не были сохранены. Сохранить?",
                                     QMessageBox::Yes|QMessageBox::No);
         if (reply == QMessageBox::Yes) {
             emit requireToSave();
