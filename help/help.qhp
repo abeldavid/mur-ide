@@ -6,20 +6,25 @@
         <filterAttribute>RoboIDE</filterAttribute>
         <filterAttribute>MUR</filterAttribute>
         <toc>
-            <section title="MUR RoboIDE документация" ref="doc.html">
-                <section title="Распознавание объектов" ref="doc.html#user-content-Camera"/>
-                <section title="Функции инициализации" ref="doc.html#user-content-Engines"/>
-                <section title="Получение данных" ref="doc.html#user-content-Sensors"/>
-                <section title="Основные типы данных" ref="doc.html#user-content-DataTypes"/>
-				<section title="Примеры" ref="doc.html#user-content-Examples"/>
+            <section title="Распознавание объектов" ref="doc.html#user-content-Camera"/>
+            <section title="Функции инициализации" ref="doc.html#user-content-Engines"/>
+            <section title="Получение данных" ref="doc.html#user-content-Sensors"/>
+            <section title="Основные типы данных" ref="doc.html#user-content-DataTypes">
+                <section title="Struct Object" ref="doc.html#datatype-struct-object"/>
+                <section title="Enum Object" ref="doc.html#datatype-enum-object"/>
+                <section title="Struct Motion" ref="doc.html#datatype-struct-motion"/>
+                <section title="Class Camera" ref="doc.html#datatype-class-camera"/>
+            </section>
+            <section title="Примеры" ref="examples.html">
+                <section title="Распознавание" ref="examples.html#recognition"/>
+                <section title="PD-регулятор" ref="examples.html#pd"/>
             </section>
         </toc>
         <keywords>
-            <keyword name="IDE" id="MyApplication::foo" ref="doc.html"/>
-            <keyword name="Camera" ref="doc.html#user-content-Camera"/>
         </keywords>
         <files>
             <file>*.html</file>
         </files>
     </filterSection>
 </QtHelpProject>
+
