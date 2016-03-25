@@ -58,8 +58,6 @@ MainWindow::MainWindow(QWidget *parent)
     setStyleSheet(styleSheet);
     mainWindowSheet.close();
 
-    m_connectedDevicesList->setVisible(false);
-
     showMaximized();
     projectCreateDialog();
 }
@@ -424,8 +422,7 @@ void MainWindow::createActions()
     m_saveAsAct->setShortcut(QKeySequence::SaveAs);
     m_saveAsAct->setIconVisibleInMenu(false);
 
-    m_createProjectAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый проект"), this);
-//    m_createProjectAct->setShortcut(QKeySequence::New);
+    m_createProjectAct = new QAction(tr("Новый проект"), this);
     m_createProjectAct->setIconVisibleInMenu(false);
 
     m_openProjectAct = new QAction(QIcon(":/icons/icons/tools/open.png"), tr("Открыть проект"), this);
@@ -600,11 +597,9 @@ void MainWindow::createDockWindows()
 
     dock->setWidget(m_connectedDevicesList);
     dock->setFeatures(QDockWidget::DockWidgetClosable);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
+    addDockWidget(Qt::BottomDockWidgetArea, dock);
     m_viewMenu->addAction(dock->toggleViewAction());
     dock->setStyleSheet(styleSheet);
-    dock->toggleViewAction()->setDisabled(true);
-    dock->setVisible(false);
 
     dock = new QDockWidget(tr("Справка"), this);
     dock->setObjectName("HelpWidget");
