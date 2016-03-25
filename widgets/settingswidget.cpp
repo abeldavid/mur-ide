@@ -18,7 +18,7 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
 
     mainLayout->addWidget(m_tabWidget);
 
-    QPushButton *applyButton = new QPushButton("Ok", this);
+    QPushButton *applyButton = new QPushButton("OK", this);
     mainLayout->addWidget(applyButton);
 
     setupTabs();

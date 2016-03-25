@@ -25,8 +25,9 @@ public:
 private slots:
     void runCompilation();
     void compilationFinished();
-    void uploadAndRun();
-    void runApp();
+    bool uploadApp();
+    bool runApp();
+    void combinedRunApp();
     void killApp();
     void openHelp();
     void switchCompilationTargetToEdison();
@@ -85,10 +86,11 @@ private:
     QAction *m_addFileAct;
     QAction *m_findAct;
     QAction *m_buildAct;
-    QAction *m_uploadAndRunAct;
+    QAction *m_uploadAct;
     QAction *m_showSettingsAct;
     QAction *m_runAppAct;
     QAction *m_stopAppAct;
+    QAction *m_combinedRunAct;
     QAction *m_openHelpAct;
     QAction *m_edisonCompileAct;
     QAction *m_mingwCompileAct;
@@ -108,6 +110,8 @@ private:
     QMenu *m_projectTreeContextMenu;
     ProjectCreateDialog *m_projectCreateDialog;
     FileCreateDialog *m_fileCreateDialog;
+
+    bool m_inCombinedRunState;
 };
 
 #endif // MAINWINDOW_H

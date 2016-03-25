@@ -45,11 +45,6 @@ void WiFiConnection::prepare()
     */
 }
 
-bool WiFiConnection::sendAndRun(QString file)
-{
-    return send(file);
-}
-
 QStringList WiFiConnection::appList()
 {
     return QStringList();

@@ -37,7 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_ftpWidget(new FtpWidget(this)),
       m_projectTreeContextMenu(new QMenu(this)),
       m_projectCreateDialog(new ProjectCreateDialog(this)),
-      m_fileCreateDialog(new FileCreateDialog(this))
+      m_fileCreateDialog(new FileCreateDialog(this)),
+      m_inCombinedRunState(false)
 {
     setCentralWidget(m_roboIdeTextEdit);
     createActions();
@@ -69,7 +70,6 @@ MainWindow::~MainWindow()
     SettingsManager::instance().setMainWindowState(state);
 }
 
-
 void MainWindow::closeEvent (QCloseEvent *event)
 {
     event->ignore();
@@ -81,12 +81,10 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
 void MainWindow::runCompilation()
 {
-    if (m_edisonCompileAct->isChecked())
-    {
+    if (m_edisonCompileAct->isChecked()) {
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::EDISON);
     }
-    if (m_mingwCompileAct->isChecked())
-    {
+    else if (m_mingwCompileAct->isChecked()) {
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     }
     m_buildAct->setEnabled(false);
@@ -102,32 +100,46 @@ void MainWindow::runCompilation()
 void MainWindow::compilationFinished()
 {
     m_buildAct->setEnabled(true);
+    if (m_inCombinedRunState) {
+        if (m_sourceCompiller->isCompiled()) {
+            bool isUploadOk = true;
+            if (m_edisonCompileAct->isChecked()) {
+                isUploadOk = uploadApp();
+            }
+            if (isUploadOk and runApp()) {
+                m_stopAppAct->setEnabled(true);
+            }
+        }
+        m_combinedRunAct->setEnabled(true);
+        m_inCombinedRunState = false;
+    }
 }
 
-void MainWindow::uploadAndRun()
+bool MainWindow::uploadApp()
 {
-    m_uploadAndRunAct->setDisabled(true);
-
-    if (m_wifiConnection->sendAndRun(m_sourceCompiller->pathToBinary())) {
+    m_uploadAct->setDisabled(true);
+    bool result = m_wifiConnection->send(m_sourceCompiller->pathToBinary());
+    if (result) {
         m_roboIdeConsole->append("Программа отправлена.");
     }
     else {
         m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
     }
-    m_uploadAndRunAct->setEnabled(true);
+    m_uploadAct->setEnabled(true);
+    return result;
 }
 
-void MainWindow::runApp()
+bool MainWindow::runApp()
 {
-    bool isOkay = false;
+    bool isOK = false;
     if (m_edisonCompileAct->isChecked()) {
         m_runAppAct->setDisabled(true);
         if (m_wifiConnection->runApp()) {
-            isOkay = true;
+            isOK = true;
         }
         m_runAppAct->setEnabled(true);
     }
-    if (m_mingwCompileAct->isChecked()) {
+    else if (m_mingwCompileAct->isChecked()) {
         if (m_localApp->isOpen()) {
             m_localApp->kill();
         }
@@ -136,11 +148,11 @@ void MainWindow::runApp()
         m_localApp->setProcessEnvironment(env);
         m_localApp->start(m_sourceCompiller->pathToBinary());
         if (m_localApp->state() != QProcess::NotRunning) {
-            isOkay = true;
+            isOK = true;
         }
     }
 
-    if (isOkay) {
+    if (isOK) {
         m_roboIdeConsole->append("Программа запущена!");
     }
     else {
@@ -148,10 +160,18 @@ void MainWindow::runApp()
         if (m_mingwCompileAct->isChecked()) {
             m_roboIdeConsole->append(m_localApp->errorString());
         }
-        if (m_edisonCompileAct->isChecked()) {
+        else if (m_edisonCompileAct->isChecked()) {
             m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
         }
     }
+    return isOK;
+}
+
+void MainWindow::combinedRunApp()
+{
+    m_inCombinedRunState = true;
+    m_combinedRunAct->setDisabled(true);
+    runCompilation();
 }
 
 void MainWindow::killApp()
@@ -164,7 +184,7 @@ void MainWindow::killApp()
         }
         m_stopAppAct->setEnabled(true);
     }
-    if (m_mingwCompileAct->isChecked()) {
+    else if (m_mingwCompileAct->isChecked()) {
         if (m_localApp->isOpen()) {
             m_localApp->kill();
             isOk = true;
@@ -178,13 +198,15 @@ void MainWindow::killApp()
         if (m_mingwCompileAct->isChecked()) {
             m_roboIdeConsole->append("Программа не была запущена. Нечего останавливать.");
         }
-        if (m_edisonCompileAct->isChecked()) {
+        else if (m_edisonCompileAct->isChecked()) {
             m_roboIdeConsole->append("Ошибка передачи. Проверьте соединение с аппаратом.");
         }
     }
+    m_stopAppAct->setEnabled(false);
 }
 
-void MainWindow::projectCreateDialog() {
+void MainWindow::projectCreateDialog()
+{
     m_projectCreateDialog->exec();
 }
 
@@ -194,7 +216,8 @@ void MainWindow::projectCreate(const QString &path, const QString &name)
     ProjectManager::instance().createProject(path, name);
 }
 
-void MainWindow::projectOpenDialog() {
+void MainWindow::projectOpenDialog()
+{
     QString filePath = QFileDialog::getOpenFileName(
                         this,
                         tr("Открыть проект"),
@@ -207,7 +230,8 @@ void MainWindow::projectOpenDialog() {
     }
 }
 
-void MainWindow::fileCreateDialog() {
+void MainWindow::fileCreateDialog()
+{
     m_fileCreateDialog->exec();
 }
 
@@ -441,9 +465,9 @@ void MainWindow::createActions()
     m_buildAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B));
     m_buildAct->setIconVisibleInMenu(false);
 
-    m_uploadAndRunAct = new QAction(QIcon(":/icons/icons/tools/upload.png"), tr("Отправить программу"), this);
-    m_uploadAndRunAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
-    m_uploadAndRunAct->setIconVisibleInMenu(false);
+    m_uploadAct = new QAction(QIcon(":/icons/icons/tools/upload.png"), tr("Отправить программу"), this);
+    m_uploadAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
+    m_uploadAct->setIconVisibleInMenu(false);
 
     m_stopAppAct = new QAction(QIcon(":/icons/icons/tools/stop.png"), tr("Остановить программу"), this);
     m_stopAppAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S));
@@ -452,6 +476,9 @@ void MainWindow::createActions()
     m_runAppAct = new QAction(QIcon(":/icons/icons/tools/start.png"), tr("Запустить программу"), this);
     m_runAppAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_R));
     m_runAppAct->setIconVisibleInMenu(false);
+
+    m_combinedRunAct = new QAction(QIcon(":/icons/icons/tools/start.png"), tr("Собрать и выполнить программу"), this);
+    m_combinedRunAct->setIconVisibleInMenu(false);
 
     m_showSettingsAct = new QAction(QIcon(":/icons/actions/preferences-desktop.png"), tr("Настройки"), this);
     m_showSettingsAct->setIconVisibleInMenu(false);
@@ -498,9 +525,7 @@ void MainWindow::createToolBars()
     m_toolBar->addAction(m_redoAct);
     m_toolBar->addSeparator();
 
-    m_toolBar->addAction(m_buildAct);
-    m_toolBar->addAction(m_uploadAndRunAct);
-    m_toolBar->addAction(m_runAppAct);
+    m_toolBar->addAction(m_combinedRunAct);
     m_toolBar->addAction(m_stopAppAct);
 }
 
@@ -536,7 +561,7 @@ void MainWindow::createMenus()
 
     m_compilationMenu = menuBar()->addMenu(tr("&Компиляция"));
     m_compilationMenu->addAction(m_buildAct);
-    m_compilationMenu->addAction(m_uploadAndRunAct);
+    m_compilationMenu->addAction(m_uploadAct);
     m_compilationMenu->addAction(m_edisonCompileAct);
     m_compilationMenu->addAction(m_mingwCompileAct);
 
@@ -616,9 +641,9 @@ void MainWindow::enableProject()
     m_deleteFileAct->setEnabled(true);
     m_renameFileAct->setEnabled(true);
     m_buildAct->setEnabled(true);
-    m_uploadAndRunAct->setEnabled(true);
+    m_uploadAct->setEnabled(true);
     m_runAppAct->setEnabled(true);
-    m_stopAppAct->setEnabled(true);
+    m_stopAppAct->setEnabled(false);
 }
 
 void MainWindow::disableProject()
@@ -630,7 +655,7 @@ void MainWindow::disableProject()
     m_deleteFileAct->setEnabled(false);
     m_renameFileAct->setEnabled(false);
     m_buildAct->setEnabled(false);
-    m_uploadAndRunAct->setEnabled(false);
+    m_uploadAct->setEnabled(false);
     m_runAppAct->setEnabled(false);
     m_stopAppAct->setEnabled(false);
 }
@@ -676,11 +701,12 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
     QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
-    QObject::connect(m_uploadAndRunAct, SIGNAL(triggered(bool)), this, SLOT(uploadAndRun()));
+    QObject::connect(m_uploadAct, SIGNAL(triggered(bool)), this, SLOT(uploadApp()));
     QObject::connect(m_showSettingsAct, SIGNAL(triggered(bool)), m_settingsWidget, SLOT(show()));
     QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_roboIdeConsole, SLOT(append(QString)));
     QObject::connect(m_runAppAct, SIGNAL(triggered(bool)), this, SLOT(runApp()));
     QObject::connect(m_stopAppAct, SIGNAL(triggered(bool)), this, SLOT(killApp()));
+    QObject::connect(m_combinedRunAct, SIGNAL(triggered(bool)), this, SLOT(combinedRunApp()));
     QObject::connect(m_edisonCompileAct, SIGNAL(triggered(bool)), this, SLOT(switchCompilationTargetToEdison()));
     QObject::connect(m_mingwCompileAct, SIGNAL(triggered(bool)), this, SLOT(switchCompilationTargetToDesktop()));
 

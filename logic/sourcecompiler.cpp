@@ -98,16 +98,14 @@ void SourceCompiler::onRunCompilation(QString src)
 
 void SourceCompiler::onCompilationFinished(int retCode)
 {
-    if (retCode != 0) {
+    if (retCode == 0) {
+        m_isCompiled = true;
+        onCompilationOutput(QString("Компиляция прошла успешно " + QDateTime::currentDateTime().toString()));
+    }
+    else {
         m_pathToBinary = "";
         m_isCompiled = false;
         onCompilationOutput(QString("Ошибка компиляции " + QDateTime::currentDateTime().toString()));
     }
-    m_isCompiled = true;
-    if (retCode == 0) {
-        onCompilationOutput(QString("Компиляция прошла успешно " + QDateTime::currentDateTime().toString()));
-    }
     emit finished();
 }
-
-

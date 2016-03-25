@@ -12,7 +12,6 @@ public:
     explicit WiFiConnection(QObject *parent = 0);
     ~WiFiConnection();
     void prepare();
-    bool sendAndRun(QString file);
     QStringList appList();
     bool runApp();
     bool killApp();
