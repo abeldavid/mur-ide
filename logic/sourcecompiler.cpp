@@ -13,12 +13,12 @@
 
 SourceCompiler::SourceCompiler(QObject *parent) :
     QObject(parent),
-   // m_compilationThread(new QThread(this)),
+    m_compilationThread(new QThread(this)),
     m_processRunner(new ProcessRunner),
     m_isCompiled(false)
 {
-    //m_processRunner->moveToThread(m_compilationThread);
-    //m_compilationThread->start();
+    m_processRunner->moveToThread(m_compilationThread);
+    m_compilationThread->start();
     QObject::connect(m_processRunner, SIGNAL(processOutputReady(QString, bool)), this, SIGNAL(onCompilationOutput(QString, bool)));
     QObject::connect(m_processRunner, SIGNAL(finished(int)), this, SLOT(onCompilationFinished(int)));
     QObject::connect(this, SIGNAL(run()), m_processRunner, SLOT(run()));
@@ -26,6 +26,7 @@ SourceCompiler::SourceCompiler(QObject *parent) :
 
 SourceCompiler::~SourceCompiler()
 {
+    m_compilationThread->terminate();
 }
 
 QString SourceCompiler::pathToBinary() const

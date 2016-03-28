@@ -18,12 +18,12 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
 void RoboIdeConsole::appendMessage(const QString &text, bool isError)
 {
     if (!isError) {
+        setTextColor(m_defaultTxetColor);
         append(text);
     }
     else {
         setTextColor(m_errorTextColor);
         append(text);
-        setTextColor(m_defaultTxetColor);
     }
 }
 

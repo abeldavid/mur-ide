@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QThread>
 
 #include "widgets/roboidetexteditor.h"
 #include "widgets/roboideconsole.h"
@@ -119,7 +120,7 @@ private:
     QMenu *m_projectTreeContextMenu;
     ProjectCreateDialog *m_projectCreateDialog;
     FileCreateDialog *m_fileCreateDialog;
-
+    QThread* m_wifiConnectionThread;
     bool m_inCombinedRunState;
 };
 
