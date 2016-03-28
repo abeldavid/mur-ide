@@ -102,12 +102,6 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     mainWindowSheet.close();
 
     mainLayout->setSpacing(10);
-
-    StatusInfo st = {};
-    st.devicesTypes[0] = 1;
-    st.devicesTypes[3] = 1;
-    st.yaw = 30.0f;
-    updateDevices(st);
 }
 
 void ConnectedDevicesList::updateDevices(const StatusInfo &status)
