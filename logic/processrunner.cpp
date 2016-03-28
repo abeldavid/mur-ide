@@ -3,17 +3,12 @@
 
 ProcessRunner::ProcessRunner(QObject *parent) :
     QObject(parent),
-    m_process(new QProcess(this)),
-    m_compilationThread(new QThread(parent))
+    m_process(new QProcess(this))
 {
-    moveToThread(m_compilationThread);
-
     QObject::connect(m_process, SIGNAL(readyReadStandardError()), SLOT(processOutReceived()));
     QObject::connect(m_process, SIGNAL(readyReadStandardOutput()), SLOT(processOutReceived()));
     QObject::connect(m_process, SIGNAL(readyRead()), SLOT(processOutReceived()));
     QObject::connect(m_process, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
-    m_compilationThread->start();
-
 }
 
 ProcessRunner::~ProcessRunner()
@@ -22,8 +17,6 @@ ProcessRunner::~ProcessRunner()
         m_process->waitForFinished(500);
     }
     delete m_process;
-    m_compilationThread->terminate();
-
 }
 
 QString ProcessRunner::path() const

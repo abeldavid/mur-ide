@@ -13,8 +13,8 @@ WiFiConnection::WiFiConnection(QObject *parent) :
     m_zmqReqSoc(zmq_socket(m_zmqContext, ZMQ_REQ)),
     m_zmqInfoSub(zmq_socket(m_zmqContext, ZMQ_SUB)),
     m_connectionTimeout(new QTimer(this)),
-    m_updateDeviceListTimer(new QTimer(this)),
-    m_connectionThread(new QThread(parent))
+    m_updateDeviceListTimer(new QTimer(this))
+   // m_connectionThread(new QThread(parent))
 {
     int timeout = 2000;
     int option = 0;
@@ -37,13 +37,11 @@ WiFiConnection::WiFiConnection(QObject *parent) :
     m_updateDeviceListTimer->start();
     m_connectionTimeout->start();
 
-    moveToThread(m_connectionThread);
-    m_connectionThread->start();
-
 }
 
 WiFiConnection::~WiFiConnection()
 {
+
 }
 
 void WiFiConnection::runApp()

@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_projectTreeContextMenu(new QMenu(this)),
       m_projectCreateDialog(new ProjectCreateDialog(this)),
       m_fileCreateDialog(new FileCreateDialog(this)),
+      m_wifiConnectionThread(new QThread(this)),
       m_inCombinedRunState(false)
 {
     setCentralWidget(m_roboIdeTextEdit);
@@ -61,12 +62,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     showMaximized();
     projectCreateDialog();
+
+    m_wifiConnection->moveToThread(m_wifiConnectionThread);
+    m_wifiConnectionThread->start();
+
 }
 
 MainWindow::~MainWindow()
 {
     QByteArray state = saveState();
     SettingsManager::instance().setMainWindowState(state);
+    m_wifiConnectionThread->terminate();
 }
 
 void MainWindow::closeEvent (QCloseEvent *event)
