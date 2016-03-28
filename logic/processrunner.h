@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QRunnable>
 #include <QProcess>
+#include <QThread>
 
 class ProcessRunner : public QObject, public QRunnable
 {
@@ -27,6 +28,7 @@ private:
     QString m_path;
     QStringList m_arguments;
     QProcess *m_process;
+    QThread *m_compilationThread;
 };
 
 #endif // PROCESSRUNNER_H
