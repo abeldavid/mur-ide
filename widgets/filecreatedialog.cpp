@@ -1,6 +1,6 @@
 #include "filecreatedialog.h"
 #include "projectmanager.h"
-#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QDialogButtonBox>
 #include <QComboBox>
 #include <QLabel>
@@ -15,13 +15,11 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowTitle("Создать файл");
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QFormLayout *layout = new QFormLayout(this);
     setLayout(layout);
 
     QLabel *nameLabel = new QLabel("Название файла: ", this);
-
-    layout->addWidget(nameLabel);
-    layout->addWidget(m_nameEdit);
+    layout->addRow(nameLabel);
 
     QComboBox *comboBox = new QComboBox(this);
 
@@ -31,12 +29,18 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
     proxy->sort(0);
     comboBox->setModel(proxy);
 
-    layout->addWidget(comboBox);
+    m_nameEdit->setFixedWidth(300);
+    layout->addRow(m_nameEdit, comboBox);
+
+    QFrame* myFrame = new QFrame();
+    myFrame->setFrameShape(QFrame::HLine);
+    layout->addRow(myFrame);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
                                                        Qt::Horizontal,
                                                        this);
-    layout->addWidget(buttonBox);
+    layout->addRow(buttonBox);
+
 
     this->setDefaultFileName(comboBox->currentText());
 

@@ -1,6 +1,6 @@
 #include "projectcreatedialog.h"
 #include "projectmanager.h"
-#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QPushButton>
@@ -15,26 +15,29 @@ ProjectCreateDialog::ProjectCreateDialog(QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowTitle("Новый проект");
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    QFormLayout *layout = new QFormLayout(this);
     setLayout(layout);
 
-    QLabel *dirLocationLabel = new QLabel("Расположение: ", this);
     QLabel *nameLabel = new QLabel("Название проекта: ", this);
-
-    layout->addWidget(dirLocationLabel);
-    m_dirLocationEdit->setText(ProjectManager::instance().projectsRoot());
-    layout->addWidget(m_dirLocationEdit);
-    QPushButton *loadPathButton = new QPushButton(tr("Обзор"), this);
-    layout->addWidget(loadPathButton);
-
-    layout->addWidget(nameLabel);
-    layout->addWidget(m_nameEdit);
+    layout->addRow(nameLabel);
+    layout->addRow(m_nameEdit);
     m_nameEdit->setText(ProjectManager::instance().defaultNewProjectName());
+
+    QLabel *dirLocationLabel = new QLabel("Расположение: ", this);
+    layout->addRow(dirLocationLabel);
+    m_dirLocationEdit->setText(ProjectManager::instance().projectsRoot());
+    m_dirLocationEdit->setFixedWidth(300);
+    QPushButton *loadPathButton = new QPushButton(tr("Обзор"), this);
+    layout->addRow(m_dirLocationEdit, loadPathButton);
+
+    QFrame* myFrame = new QFrame();
+    myFrame->setFrameShape(QFrame::HLine);
+    layout->addRow(myFrame);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
                                                        Qt::Horizontal,
                                                        this);
-    layout->addWidget(buttonBox);
+    layout->addRow(buttonBox);
 
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
