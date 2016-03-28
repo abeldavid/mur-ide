@@ -37,6 +37,7 @@ signals:
     void appKilled(bool);
     void appStarted(bool);
     void appSend(bool);
+    void statusUpdated(StatusInfo);
 public slots:
     void runApp();
     void killApp();
