@@ -18,6 +18,7 @@ struct StatusInfo
     float depth = 0.0f;
     uint8_t leak = 0;
     uint8_t version = 0;
+    uint8_t cameras = 0;
 };
 
 Q_DECLARE_METATYPE(StatusInfo)
@@ -29,19 +30,18 @@ class WiFiConnection : public QObject
 public:
     explicit WiFiConnection(QObject *parent = 0);
     ~WiFiConnection();
-    void prepare();
-    QStringList appList();
-    bool runApp();
-    bool killApp();
-    void stopAppByName(QString bin);
-    bool send(QString file);
+
 signals:
     void run();
     void onExecOutput(QString);
-
+    void appKilled(bool);
+    void appStarted(bool);
+    void appSend(bool);
 public slots:
+    void runApp();
+    void killApp();
+    void send(QString file);
 private slots:
-    void onExecFinished(int retCode);
     void updateRobotInfo();
     void onDisconected();
 private:
@@ -54,6 +54,7 @@ private:
     void* m_zmqInfoSub;
     QTimer *m_connectionTimeout;
     QTimer *m_updateDeviceListTimer;
+    QThread *m_connectionThread;
 };
 
 #endif // WIFICONNECTION_H

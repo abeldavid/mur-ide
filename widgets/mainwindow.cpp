@@ -116,16 +116,9 @@ void MainWindow::compilationFinished()
 
 bool MainWindow::uploadApp()
 {
-    m_uploadAct->setDisabled(true);
-    bool result = m_wifiConnection->send(m_sourceCompiller->pathToBinary());
-    if (result) {
-        m_roboIdeConsole->appendMessage("Программа отправлена.");
-    }
-    else {
-        m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.", true);
-    }
-    m_uploadAct->setEnabled(true);
-    return result;
+    emit sendFile(m_sourceCompiller->pathToBinary());
+    return true;
+
 }
 
 bool MainWindow::runApp()
@@ -133,10 +126,9 @@ bool MainWindow::runApp()
     bool isOK = false;
     if (m_edisonCompileAct->isChecked()) {
         m_runAppAct->setDisabled(true);
-        if (m_wifiConnection->runApp()) {
-            isOK = true;
-        }
+        emit startApp();
         m_runAppAct->setEnabled(true);
+        return true;
     }
     else if (m_mingwCompileAct->isChecked()) {
         if (m_localApp->isOpen()) {
@@ -166,6 +158,36 @@ bool MainWindow::runApp()
     return isOK;
 }
 
+void MainWindow::onEndFileUpload(bool isOk)
+{
+    if (isOk) {
+        m_roboIdeConsole->appendMessage("Программа отправлена.");
+    }
+    else {
+        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.", true);
+    }
+}
+
+void MainWindow::onAppKilled(bool isOk)
+{
+    if (isOk) {
+        m_roboIdeConsole->appendMessage("Программа остановлена!");
+    }
+    else {
+        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть остановлена. Проверьте соединение с аппаратом.", true);
+    }
+}
+
+void MainWindow::onAppStarted(bool isOk)
+{
+    if (isOk) {
+        m_roboIdeConsole->appendMessage("Программа запущена!");
+    }
+    else {
+        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть запущена. Проверьте соединение с аппаратом.", true);
+    }
+}
+
 void MainWindow::combinedRunApp()
 {
     m_inCombinedRunState = true;
@@ -173,15 +195,14 @@ void MainWindow::combinedRunApp()
     runCompilation();
 }
 
-void MainWindow::killApp()
+bool MainWindow::killApp()
 {
     bool isOk = false;
     if (m_edisonCompileAct->isChecked()) {
         m_stopAppAct->setDisabled(true);
-        if (m_wifiConnection->killApp()) {
-            isOk = true;
-        }
+        emit stopApp();
         m_stopAppAct->setEnabled(true);
+        return true;
     }
     else if (m_mingwCompileAct->isChecked()) {
         if (m_localApp->isOpen()) {
@@ -202,6 +223,7 @@ void MainWindow::killApp()
         }
     }
     m_stopAppAct->setEnabled(false);
+    return true;
 }
 
 void MainWindow::projectCreateDialog()
@@ -711,5 +733,13 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_localApp, SIGNAL(readyRead()), SLOT(processOutReceived()));
 
     QObject::connect(m_showFtpAct, SIGNAL(triggered(bool)), m_ftpWidget, SLOT(exec()));
+
+    QObject::connect(m_wifiConnection, SIGNAL(appKilled(bool)), this, SLOT(onAppKilled(bool)));
+    QObject::connect(m_wifiConnection, SIGNAL(appSend(bool)), this, SLOT(onEndFileUpload(bool)));
+    QObject::connect(m_wifiConnection, SIGNAL(appStarted(bool)), this, SLOT(onAppStarted(bool)));
+
+    QObject::connect(this, SIGNAL(startApp()), m_wifiConnection, SLOT(runApp()));
+    QObject::connect(this, SIGNAL(stopApp()), m_wifiConnection, SLOT(killApp()));
+    QObject::connect(this, SIGNAL(sendFile(QString)), m_wifiConnection, SLOT(send(QString)));
 }
 
