@@ -26,10 +26,10 @@ public slots:
 private slots:
     void onCompilationFinished(int retCode);
 private:
-    QThread *m_compilationThread;
     ProcessRunner *m_processRunner;
     QString m_pathToBinary;
     bool m_isCompiled;
+
 };
 
 #endif // SOURCECOMPILER_H

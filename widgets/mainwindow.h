@@ -27,8 +27,13 @@ private slots:
     void compilationFinished();
     bool uploadApp();
     bool runApp();
+
+    void onEndFileUpload(bool isOk);
+    void onAppKilled(bool isOk);
+    void onAppStarted(bool isOk);
+
     void combinedRunApp();
-    void killApp();
+    bool killApp();
     void openHelp();
     void switchCompilationTargetToEdison();
     void switchCompilationTargetToDesktop();
@@ -49,6 +54,10 @@ private slots:
     void projectContextMenu(const QPoint &point, const QString &fileName);
     void treeContextMenuTriggered(QAction*);
 
+signals:
+    void sendFile(QString);
+    void startApp();
+    void stopApp();
 private:
     void createMenus();
     void createActions();

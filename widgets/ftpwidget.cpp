@@ -139,8 +139,8 @@ void FtpWidget::connectToFtp()
     QUrl url(ftpServerLineEdit->text());
     if (!url.isValid() || url.scheme().toLower() != QLatin1String("ftp")) {
         ftp->connectToHost(ftpServerLineEdit->text(), 21);
-        //ftp->login(SettingsManager::instance().userLogin(), SettingsManager::instance().userPassword());
-        ftp->login();
+        ftp->login(SettingsManager::instance().userLogin(), SettingsManager::instance().userPassword());
+        //ftp->login();
     } else {
         ftp->connectToHost(url.host(), url.port(21));
 
