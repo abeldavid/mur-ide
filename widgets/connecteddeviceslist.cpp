@@ -95,11 +95,11 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     m_emptySlot->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(m_emptySlot, 3, 3);
 
-    QFile mainWindowSheet(":/dark/styles/devicelist.css");
-    mainWindowSheet.open(QFile::ReadOnly);
-    QString styleSheet = mainWindowSheet.readAll();
+    QFile styleFile(":/dark/styles/devicelist.css");
+    styleFile.open(QFile::ReadOnly);
+    QString styleSheet = styleFile.readAll();
     setStyleSheet(styleSheet);
-    mainWindowSheet.close();
+    styleFile.close();
 
     mainLayout->setSpacing(10);
 }

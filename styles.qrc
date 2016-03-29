@@ -7,5 +7,6 @@
         <file>styles/helpwidget.css</file>
         <file>styles/mainwindow.css</file>
         <file>styles/devicelist.css</file>
+		<file>styles/console.css</file>
     </qresource>
 </RCC>

@@ -1,5 +1,4 @@
 #include "helpbrowserwidget.h"
-#include <QAction>
 #include <QApplication>
 #include <QDebug>
 #include <QtHelp/QHelpContentWidget>
@@ -7,14 +6,20 @@
 HelpBrowser::HelpBrowser(QHelpEngine* helpEngine, QWidget* parent):
                         QTextBrowser(parent),
                         m_helpEngine(helpEngine),
-                        m_helpContextMenu(new QMenu(this))
+                        m_helpContextMenu(new QMenu(this)),
+                        m_copyAction(new QAction("Копировать", this))
 {
     setReadOnly(false);
     setContextMenuPolicy(Qt::CustomContextMenu);
-    QAction *copyAction = new QAction("Копировать", this);
-    m_helpContextMenu->addAction(copyAction);
-    connect(copyAction, SIGNAL(triggered(bool)), this, SLOT(copy()));
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint)), this, SLOT(onCustomContextMenu(const QPoint)));
+    m_copyAction->setEnabled(false);
+    m_helpContextMenu->addAction(m_copyAction);
+    connect(m_copyAction, SIGNAL(triggered(bool)), this, SLOT(copy()));
+    connect(this, &HelpBrowser::customContextMenuRequested, [=](const QPoint &point){
+        m_helpContextMenu->exec(mapToGlobal(point));
+    });
+    connect(this, &HelpBrowser::copyAvailable, [=](bool isAvailable) {
+        m_copyAction->setEnabled(isAvailable);
+    });
 }
 
 QVariant HelpBrowser::loadResource(int type, const QUrl &name)
@@ -42,9 +47,4 @@ void HelpBrowser::keyPressEvent(QKeyEvent *event)
     if (isCopyEvent or isMoveEvent) {
         QTextBrowser::keyPressEvent(event);
     }
-}
-
-void HelpBrowser::onCustomContextMenu(QPoint point)
-{
-    m_helpContextMenu->exec(mapToGlobal(point));
 }

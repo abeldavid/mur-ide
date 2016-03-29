@@ -5,6 +5,7 @@
 #include <QHelpEngine>
 #include <QKeyEvent>
 #include <QMenu>
+#include <QAction>
 
 class HelpBrowser : public QTextBrowser
 {
@@ -16,8 +17,7 @@ private:
     void keyPressEvent(QKeyEvent *event);
     QHelpEngine *m_helpEngine;
     QMenu *m_helpContextMenu;
-private slots:
-    void onCustomContextMenu(QPoint point);
+    QAction *m_copyAction;
 };
 
 #endif // HELPBROWSER_H

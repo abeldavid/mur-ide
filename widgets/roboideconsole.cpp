@@ -23,7 +23,13 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
         m_copyAction->setEnabled(isAvailable);
     });
 
-    QFont font("Courier", 11);
+    QFile styleFile(":/dark/styles/console.css");
+    styleFile.open(QFile::ReadOnly);
+    QString styleSheet = styleFile.readAll();
+    document()->setDefaultStyleSheet(styleSheet);
+    styleFile.close();
+
+    QFont font("Courier", 10);
     font.setStyleHint(QFont::Monospace);
     setCurrentFont(font);
 }
@@ -31,12 +37,10 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
 void RoboIdeConsole::appendMessage(const QString &text, bool isError)
 {
     if (!isError) {
-        setTextColor(m_defaultTextColor);
-        append(text);
+        append("<div class=\"outputOk\">" + text + "</div>");
     }
     else {
-        setTextColor(m_errorTextColor);
-        append(text);
+        append("<div class=\"outputError\">" + text + "</div>");
     }
 }
 
