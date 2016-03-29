@@ -5,6 +5,9 @@
 #include <QString>
 #include <QTextEdit>
 #include <QColor>
+#include <QMenu>
+#include <QKeyEvent>
+#include <QAction>
 
 class RoboIdeConsole : public QTextEdit
 {
@@ -16,11 +19,13 @@ signals:
 
 public slots:
     void appendMessage(const QString &text, bool isError = false);
-    void appendCompilationResult(const QString &text);
 
 private:
-    QColor m_defaultTxetColor;
+    QColor m_defaultTextColor;
     QColor m_errorTextColor;
+    QMenu *m_consoleContextMenu;
+    QAction *m_copyAction;
+    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // ROBOIDECONSOLE_H
