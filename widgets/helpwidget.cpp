@@ -26,9 +26,7 @@ HelpWidget::HelpWidget(QWidget *parent) :
 
     m_tabWidget->addTab(m_helpViewer, tr("Справка"));
 
-    connect(m_helpEngine->contentWidget(),
-            SIGNAL(linkActivated(QUrl)),
-            this, SLOT(goToHelpUrl(QUrl)));
+    connect(m_helpEngine->contentWidget(), SIGNAL(linkActivated(QUrl)), this, SLOT(goToHelpUrl(QUrl)));
 
     mainLayout->addWidget(m_tabWidget);
 
