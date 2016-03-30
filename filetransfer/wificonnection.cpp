@@ -47,12 +47,12 @@ WiFiConnection::~WiFiConnection()
 
 void WiFiConnection::runApp()
 {
-    /*
+
     if (!m_isConnected) {
-        emit appSend(false);
+        emit appStarted(false);
         return;
     }
-    */
+
     zmq_msg_t ideCmdData;
     uint8_t cmd = 30;
     zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
@@ -77,12 +77,12 @@ void WiFiConnection::runApp()
 
 void WiFiConnection::killApp()
 {
-    /*
+
     if (!m_isConnected) {
-        emit appSend(false);
+        emit appKilled(false);
         return;
     }
-    */
+
     qDebug() << "About to kill";
     zmq_msg_t ideCmdData;
     uint8_t cmd = 40;
@@ -109,12 +109,12 @@ void WiFiConnection::killApp()
 
 void WiFiConnection::send(QString file)
 {
-    /*
+
     if (!m_isConnected) {
         emit appSend(false);
         return;
     }
-    */
+
     zmq_msg_t ideCmdData;
     uint8_t cmd = 10;
     zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
@@ -193,7 +193,6 @@ void WiFiConnection::updateRobotInfo()
     if (-1 != zmq_msg_recv(&robotInfo, m_zmqInfoSub, ZMQ_DONTWAIT)) {
         memcpy(&m_robotInfo, zmq_msg_data(&robotInfo), sizeof(StatusInfo));
         //Restarting connection timeout;
-        qDebug() << "CC";
         m_connectionTimeout->start();
         m_isConnected = true;
         emit statusUpdated(m_robotInfo);
@@ -203,7 +202,7 @@ void WiFiConnection::updateRobotInfo()
 void WiFiConnection::onDisconected()
 {
     m_isConnected = false;
-    qDebug() << "DC";
+    qDebug() << "Disconnected";
     recreateSockets();
 }
 

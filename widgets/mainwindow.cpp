@@ -133,7 +133,7 @@ bool MainWindow::runApp()
     bool isOK = false;
     if (m_edisonCompileAct->isChecked()) {
         m_runAppAct->setDisabled(true);
-        emit startApp();
+        m_wifiConnection->runApp();
         m_runAppAct->setEnabled(true);
         return true;
     }
@@ -169,6 +169,7 @@ void MainWindow::onEndFileUpload(bool isOk)
 {
     if (isOk) {
         m_roboIdeConsole->appendMessage("Программа отправлена.\n");
+        m_wifiConnection->runApp();
     }
     else {
         m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true);

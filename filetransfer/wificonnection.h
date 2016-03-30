@@ -49,7 +49,7 @@ private:
     StatusInfo m_robotInfo;
     void recreateSockets();
     QString m_binaryPath;
-    bool m_isConnected;
+    bool m_isConnected = false;
     void* m_zmqContext;
     void* m_zmqReqSoc;
     void* m_zmqInfoSub;
