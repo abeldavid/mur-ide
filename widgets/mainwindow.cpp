@@ -419,15 +419,15 @@ void MainWindow::processOutReceived()
 {
     QString str = m_localApp->readAllStandardOutput().simplified();
     if (str != "") {
-        m_roboIdeConsole->appendMessage(str);
+        m_roboIdeConsole->appendMessage(str + "\n");
     }
     str = m_localApp->readAllStandardError().simplified();
     if (str != "") {
-        m_roboIdeConsole->appendMessage(str, true);
+        m_roboIdeConsole->appendMessage(str + "\n", true);
     }
     str = m_localApp->readAll().simplified();
     if (str != "") {
-        m_roboIdeConsole->appendMessage(str);
+        m_roboIdeConsole->appendMessage(str + "\n");
     }
 }
 

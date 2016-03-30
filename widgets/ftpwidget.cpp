@@ -208,7 +208,7 @@ void FtpWidget::ftpCommandFinished(int, bool error)
         if (error) {
             QMessageBox::information(this, tr("FTP"),
                                      tr("Невозможно подключится к FTP серверу "
-                                        "%1. Пожалуйста, проверте что IP адресс"
+                                        "%1. Пожалуйста, проверьте что IP адрес"
                                         "верный.")
                                      .arg(ftpServerLineEdit->text()));
             connectOrDisconnect();

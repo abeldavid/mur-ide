@@ -41,6 +41,7 @@ bool SourceCompiler::isCompiled() const
 
 void SourceCompiler::onRunCompilation(QString src)
 {   
+    Q_UNUSED(src);
     /*
     if (SETTINGS.currentTarget() == SettingsManager::TARGET::EDISON) {
         QString pathToSysRoot = SettingsManager::instance().edisonSysrootPath();
@@ -86,10 +87,10 @@ void SourceCompiler::onRunCompilation(QString src)
     processArgs << "--directory=" + ProjectManager::instance().getProjectPath();
 
     if (SETTINGS.currentTarget() == SettingsManager::TARGET::MINGW) {
-        m_pathToBinary = ProjectManager::instance().getProjectPath() + "/" +ProjectManager::instance().getProjectName() + ".exe";
+        m_pathToBinary = ProjectManager::instance().pathToFile(ProjectManager::instance().getProjectName() + ".exe");
     }
     if (SETTINGS.currentTarget() == SettingsManager::TARGET::EDISON) {
-        m_pathToBinary = ProjectManager::instance().getProjectPath() + "/" +ProjectManager::instance().getProjectName() + ".bin";
+        m_pathToBinary = ProjectManager::instance().pathToFile(ProjectManager::instance().getProjectName() + ".bin");
     }
     m_processRunner->setArguments(processArgs);
     m_processRunner->setPath(SETTINGS.mingwMakePath());
@@ -100,12 +101,12 @@ void SourceCompiler::onCompilationFinished(int retCode)
 {
     if (retCode == 0) {
         m_isCompiled = true;
-        onCompilationOutput(QString("Компиляция прошла успешно " + QDateTime::currentDateTime().toString()), false);
+        onCompilationOutput(QString("Компиляция прошла успешно " + QDateTime::currentDateTime().toString()) + "\n", false);
     }
     else {
         m_pathToBinary = "";
         m_isCompiled = false;
-        onCompilationOutput(QString("Ошибка компиляции " + QDateTime::currentDateTime().toString()), true);
+        onCompilationOutput(QString("Ошибка компиляции " + QDateTime::currentDateTime().toString()) + "\n", true);
     }
     emit finished();
 }
