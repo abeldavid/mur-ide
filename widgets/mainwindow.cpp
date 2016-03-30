@@ -63,8 +63,8 @@ MainWindow::MainWindow(QWidget *parent)
     showMaximized();
     projectCreateDialog();
 
-    m_wifiConnection->moveToThread(m_wifiConnectionThread);
-    m_wifiConnectionThread->start();
+    //m_wifiConnection->moveToThread(m_wifiConnectionThread);
+    //m_wifiConnectionThread->start();
 
 }
 
@@ -107,12 +107,8 @@ void MainWindow::compilationFinished()
     m_buildAct->setEnabled(true);
     if (m_inCombinedRunState) {
         if (m_sourceCompiller->isCompiled()) {
-            bool isUploadOk = true;
             if (m_edisonCompileAct->isChecked()) {
-                isUploadOk = uploadApp();
-            }
-            if (isUploadOk and runApp()) {
-                m_stopAppAct->setEnabled(true);
+                uploadApp();
             }
         }
         m_combinedRunAct->setEnabled(true);
@@ -168,6 +164,7 @@ void MainWindow::onEndFileUpload(bool isOk)
 {
     if (isOk) {
         m_roboIdeConsole->appendMessage("Программа отправлена.\n");
+        emit startApp();
     }
     else {
         m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true);
@@ -206,7 +203,8 @@ bool MainWindow::killApp()
     bool isOk = false;
     if (m_edisonCompileAct->isChecked()) {
         m_stopAppAct->setDisabled(true);
-        emit stopApp();
+        m_wifiConnection->killApp();
+        //emit stopApp();
         m_stopAppAct->setEnabled(true);
         return true;
     }
@@ -689,7 +687,7 @@ void MainWindow::enableProject()
     m_buildAct->setEnabled(true);
     m_uploadAct->setEnabled(true);
     m_runAppAct->setEnabled(true);
-    m_stopAppAct->setEnabled(false);
+    m_stopAppAct->setEnabled(true);
 }
 
 void MainWindow::disableProject()
