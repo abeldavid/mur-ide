@@ -6,7 +6,6 @@
 #include "project.h"
 #include "projectmanager.h"
 
-#include <QToolBar>
 #include <QAction>
 #include <QMenu>
 #include <QMenuBar>
@@ -40,7 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_projectCreateDialog(new ProjectCreateDialog(this)),
       m_fileCreateDialog(new FileCreateDialog(this)),
       m_wifiConnectionThread(new QThread(this)),
-      m_inCombinedRunState(false)
+      m_inCombinedRunState(false),
+      m_targetComboBox(new QComboBox(this))
 {
     setCentralWidget(m_roboIdeTextEdit);
     createActions();
@@ -395,6 +395,15 @@ void MainWindow::treeContextMenuTriggered(QAction *action)
     }
 }
 
+void MainWindow::onTargetComboChanged(QString currentText)
+{
+    if (currentText == m_edisonCompileAct->text()) {
+        m_edisonCompileAct->trigger();
+    } else if (currentText == m_mingwCompileAct->text()) {
+        m_mingwCompileAct->trigger();
+    }
+}
+
 void MainWindow::switchCompilationTargetToEdison()
 {
     m_mingwCompileAct->setChecked(false);
@@ -402,6 +411,9 @@ void MainWindow::switchCompilationTargetToEdison()
     SETTINGS.setCurrentTarget(SettingsManager::TARGET::EDISON);
     if (ProjectManager::instance().isProjectOpened()) {
         ProjectManager::instance().generateMakeFile();
+    }
+    if (m_targetComboBox->currentText() != m_edisonCompileAct->text()) {
+        m_targetComboBox->setCurrentText(m_edisonCompileAct->text());
     }
 }
 
@@ -412,6 +424,9 @@ void MainWindow::switchCompilationTargetToDesktop()
     SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     if (ProjectManager::instance().isProjectOpened()) {
         ProjectManager::instance().generateMakeFile();
+    }
+    if (m_targetComboBox->currentText() != m_mingwCompileAct->text()) {
+        m_targetComboBox->setCurrentText(m_mingwCompileAct->text());
     }
 }
 
@@ -553,6 +568,10 @@ void MainWindow::createToolBars()
 
     m_toolBar->addAction(m_combinedRunAct);
     m_toolBar->addAction(m_stopAppAct);
+
+    m_targetComboBox->addItem(m_edisonCompileAct->text());
+    m_targetComboBox->addItem(m_mingwCompileAct->text());
+    m_toolBar->addWidget(m_targetComboBox);
 }
 
 void MainWindow::createMenus()
@@ -588,6 +607,7 @@ void MainWindow::createMenus()
     m_compilationMenu = menuBar()->addMenu(tr("&Компиляция"));
     m_compilationMenu->addAction(m_buildAct);
     m_compilationMenu->addAction(m_uploadAct);
+    m_compilationMenu->addSeparator();
     m_compilationMenu->addAction(m_edisonCompileAct);
     m_compilationMenu->addAction(m_mingwCompileAct);
 
@@ -737,6 +757,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_combinedRunAct, SIGNAL(triggered(bool)), this, SLOT(combinedRunApp()));
     QObject::connect(m_edisonCompileAct, SIGNAL(triggered(bool)), this, SLOT(switchCompilationTargetToEdison()));
     QObject::connect(m_mingwCompileAct, SIGNAL(triggered(bool)), this, SLOT(switchCompilationTargetToDesktop()));
+    QObject::connect(m_targetComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(onTargetComboChanged(QString)));
 
     QObject::connect(m_localApp, SIGNAL(readyReadStandardError()), SLOT(processOutReceived()));
     QObject::connect(m_localApp, SIGNAL(readyReadStandardOutput()), SLOT(processOutReceived()));

@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QThread>
+#include <QComboBox>
+#include <QToolBar>
 
 #include "widgets/roboidetexteditor.h"
 #include "widgets/roboideconsole.h"
@@ -54,6 +56,7 @@ private slots:
     void saveFilePromt();
     void projectContextMenu(const QPoint &point, const QString &fileName);
     void treeContextMenuTriggered(QAction*);
+    void onTargetComboChanged(QString currentText);
 
 signals:
     void sendFile(QString);
@@ -122,6 +125,7 @@ private:
     FileCreateDialog *m_fileCreateDialog;
     QThread* m_wifiConnectionThread;
     bool m_inCombinedRunState;
+    QComboBox *m_targetComboBox;
 };
 
 #endif // MAINWINDOW_H
