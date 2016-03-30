@@ -150,15 +150,15 @@ bool MainWindow::runApp()
     }
 
     if (isOK) {
-        m_roboIdeConsole->appendMessage("Программа запущена!");
+        m_roboIdeConsole->appendMessage("Программа запущена!\n");
     }
     else {
-        m_roboIdeConsole->appendMessage("Во время запуска программы произошла ошибка.", true);
+        m_roboIdeConsole->appendMessage("Во время запуска программы произошла ошибка.\n", true);
         if (m_mingwCompileAct->isChecked()) {
             m_roboIdeConsole->appendMessage(m_localApp->errorString(), true);
         }
         else if (m_edisonCompileAct->isChecked()) {
-            m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.", true);
+            m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
         }
     }
     return isOK;
@@ -167,30 +167,30 @@ bool MainWindow::runApp()
 void MainWindow::onEndFileUpload(bool isOk)
 {
     if (isOk) {
-        m_roboIdeConsole->appendMessage("Программа отправлена.");
+        m_roboIdeConsole->appendMessage("Программа отправлена.\n");
     }
     else {
-        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.", true);
+        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true);
     }
 }
 
 void MainWindow::onAppKilled(bool isOk)
 {
     if (isOk) {
-        m_roboIdeConsole->appendMessage("Программа остановлена!");
+        m_roboIdeConsole->appendMessage("Программа остановлена!\n");
     }
     else {
-        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть остановлена. Проверьте соединение с аппаратом.", true);
+        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть остановлена. Проверьте соединение с аппаратом.\n", true);
     }
 }
 
 void MainWindow::onAppStarted(bool isOk)
 {
     if (isOk) {
-        m_roboIdeConsole->appendMessage("Программа запущена!");
+        m_roboIdeConsole->appendMessage("Программа запущена!\n");
     }
     else {
-        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть запущена. Проверьте соединение с аппаратом.", true);
+        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть запущена. Проверьте соединение с аппаратом.\n", true);
     }
 }
 
@@ -218,14 +218,14 @@ bool MainWindow::killApp()
 
     }
     if (isOk) {
-        m_roboIdeConsole->appendMessage("Программа остановлена!");
+        m_roboIdeConsole->appendMessage("Программа остановлена!\n");
     }
     else {
         if (m_mingwCompileAct->isChecked()) {
-            m_roboIdeConsole->appendMessage("Программа не была запущена. Нечего останавливать.");
+            m_roboIdeConsole->appendMessage("Программа не была запущена. Нечего останавливать.\n");
         }
         else if (m_edisonCompileAct->isChecked()) {
-            m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.", true);
+            m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
         }
     }
     m_stopAppAct->setEnabled(false);

@@ -9,7 +9,8 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
     m_defaultTextColor(QColor("light grey")),
     m_errorTextColor(QColor("red")),
     m_consoleContextMenu(new QMenu(this)),
-    m_copyAction(new QAction("Копировать", this))
+    m_copyAction(new QAction("Копировать", this)),
+    m_output({QString(), false})
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
     m_copyAction->setEnabled(false);
@@ -36,11 +37,18 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
 
 void RoboIdeConsole::appendMessage(const QString &text, bool isError)
 {
-    if (!isError) {
-        append("<div class=\"outputOk\">" + text + "</div>");
+    if (m_output.buffer.isEmpty()) {
+        m_output.isError = isError;
     }
-    else {
-        append("<div class=\"outputError\">" + text + "</div>");
+    m_output.buffer.append(text);
+    if (m_output.buffer.endsWith("\n")) {
+        if (!isError) {
+            append("<div class=\"outputOk\">" + m_output.buffer + "</div>");
+        }
+        else {
+            append("<div class=\"outputError\">" + m_output.buffer + "</div>");
+        }
+        m_output.buffer.clear();
     }
 }
 

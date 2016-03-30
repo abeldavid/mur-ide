@@ -10,6 +10,14 @@
 #include <QDropEvent>
 #include <QAction>
 
+struct OutputBuffer
+{
+    QString buffer;
+    bool isError;
+};
+
+Q_DECLARE_METATYPE(OutputBuffer)
+
 class RoboIdeConsole : public QTextEdit
 {
     Q_OBJECT
@@ -26,6 +34,7 @@ private:
     QColor m_errorTextColor;
     QMenu *m_consoleContextMenu;
     QAction *m_copyAction;
+    OutputBuffer m_output;
     void keyPressEvent(QKeyEvent *event);
     void dropEvent(QDropEvent *event);
 };

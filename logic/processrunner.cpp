@@ -60,15 +60,15 @@ void ProcessRunner::run()
 
 void ProcessRunner::processOutReceived()
 {
-    QString str = m_process->readAllStandardOutput().simplified();
+    QString str = m_process->readAllStandardOutput();
     if (str != "") {
         emit processOutputReady(str, false);
     }
-    str = m_process->readAllStandardError().simplified();
+    str = m_process->readAllStandardError();
     if (str != "") {
         emit processOutputReady(str, true);
     }
-    str = m_process->readAll().simplified();
+    str = m_process->readAll();
     if (str != "") {
         emit processOutputReady(str, false);
     }
