@@ -3,6 +3,8 @@
 #include <QPalette>
 #include <QDebug>
 #include <QFont>
+#include <QRegExp>
+#include <QStringList>
 
 RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
     QTextEdit(parent),
@@ -29,10 +31,6 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
     QString styleSheet = styleFile.readAll();
     document()->setDefaultStyleSheet(styleSheet);
     styleFile.close();
-
-    QFont font("Courier", 10);
-    font.setStyleHint(QFont::Monospace);
-    setCurrentFont(font);
 }
 
 void RoboIdeConsole::appendMessage(const QString &text, bool isError)
@@ -40,15 +38,34 @@ void RoboIdeConsole::appendMessage(const QString &text, bool isError)
     if (m_output.buffer.isEmpty()) {
         m_output.isError = isError;
     }
+    qDebug() << isError;
     m_output.buffer.append(text);
-    if (m_output.buffer.endsWith("\n")) {
-        if (!isError) {
-            append("<div class=\"outputOk\">" + m_output.buffer + "</div>");
+    if (m_output.buffer.contains("\n")) {
+        QStringList parts = m_output.buffer.split("\n");
+        for (int i = 0; i < parts.size()-1; i++) {
+            qDebug() << parts[i];
+            if (!isError) {
+                QRegExp rx("((?:\\w|\\.|-|\\\\|/)+[0-9:]*:)\\s(.+)");
+                if(rx.indexIn(parts[i]) != -1) {
+                    append("<div class=\"outputOk\"><b>" + rx.cap(1).simplified() + "</b> " + rx.cap(2).simplified() + "</div>");
+                } else {
+                    append("<div class=\"outputOk\">" + parts[i].simplified() + "</div>");
+                }
+            }
+            else {
+                QRegExp rx("((?:\\w|\\.|-|\\\\|/|:)+[0-9:]*:)\\s(.+)");
+                if(rx.indexIn(parts[i]) != -1) {
+                    append("<div class=\"outputError\"><b>" + rx.cap(1).simplified() + "</b> " + rx.cap(2).simplified() + "</div>");
+                } else {
+                    append("<div class=\"outputError\">" + parts[i].simplified() + "</div>");
+                }
+            }
         }
-        else {
-            append("<div class=\"outputError\">" + m_output.buffer + "</div>");
+        if (parts.last().simplified().isEmpty()) {
+            m_output.buffer.clear();
+        } else {
+            m_output.buffer = parts.last();
         }
-        m_output.buffer.clear();
     }
 }
 

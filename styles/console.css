@@ -1,7 +1,17 @@
-.outputOk{
-    color:#9d9d9d;
+div{
+    font-size: 10pt;
 }
-
+.outputOk{
+    color: #999999;
+}
+.outputOk b{
+    font-weight: 900;
+    color: #c0c0c0;
+}
 .outputError{
-    color:#cc3322;
+    color: #cc2222;
+}
+.outputError b{
+    font-weight: 900;
+    color: #ff5555;
 }
