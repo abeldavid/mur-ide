@@ -664,6 +664,8 @@ void MainWindow::enableProject()
     m_closeProjectAct->setEnabled(true);
     m_deleteFileAct->setEnabled(true);
     m_renameFileAct->setEnabled(true);
+    m_saveAct->setEnabled(true);
+    m_saveAsAct->setEnabled(true);
     m_buildAct->setEnabled(true);
     m_uploadAct->setEnabled(true);
     m_runAppAct->setEnabled(true);
@@ -678,6 +680,8 @@ void MainWindow::disableProject()
     m_closeProjectAct->setEnabled(false);
     m_deleteFileAct->setEnabled(false);
     m_renameFileAct->setEnabled(false);
+    m_saveAct->setEnabled(false);
+    m_saveAsAct->setEnabled(false);
     m_buildAct->setEnabled(false);
     m_uploadAct->setEnabled(false);
     m_runAppAct->setEnabled(false);
