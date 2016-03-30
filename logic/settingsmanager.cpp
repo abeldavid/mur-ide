@@ -1,6 +1,7 @@
 #include "settingsmanager.h"
 #include <QDebug>
 #include <QCoreApplication>
+#include <QDir>
 
 SettingsManager &SettingsManager::instance()
 {
@@ -32,7 +33,8 @@ QString SettingsManager::plinkPath() const
 {
     m_settings->beginGroup("wi-fi-connection-settings");
     QString plink = m_settings->value("Plink",
-                                        QCoreApplication::applicationDirPath() + "\\tools\\plink.exe").toString();
+                                    QDir::cleanPath(QCoreApplication::applicationDirPath() +
+                                        "/tools/plink.exe")).toString();
 
     m_settings->endGroup();
     return plink;
@@ -49,7 +51,8 @@ QString SettingsManager::pscpPath() const
 {
     m_settings->beginGroup("wi-fi-connection-settings");
     QString pscp = m_settings->value("Pscp",
-                                        QCoreApplication::applicationDirPath() + "\\tools\\pscp.exe").toString();
+                                QDir::cleanPath(QCoreApplication::applicationDirPath() +
+                                    "/tools/pscp.exe")).toString();
     m_settings->endGroup();
     return pscp;
 }
@@ -65,7 +68,8 @@ QString SettingsManager::edisonSysrootPath() const
 {
     m_settings->beginGroup("i586-poky-linux");
     QString sysroot = m_settings->value("Sysroot",
-                                        QCoreApplication::applicationDirPath() + "//devkit-x86//sysroots//i586-poky-linux").toString();
+                                QDir::cleanPath(QCoreApplication::applicationDirPath() +
+                                    "/devkit-x86/sysroots/i586-poky-linux")).toString();
     m_settings->endGroup();
     return sysroot;
 }
@@ -81,7 +85,8 @@ QString SettingsManager::edisonCompilerPath() const
 {
     m_settings->beginGroup("i586-poky-linux");
     QString compiler = m_settings->value("CC",
-                                        QCoreApplication::applicationDirPath() +"//devkit-x86//sysroots//x86_64-pokysdk-mingw32//usr//bin//i586-poky-linux//i586-poky-linux-g++.exe").toString();
+                                QDir::cleanPath(QCoreApplication::applicationDirPath() +
+                                    "/devkit-x86/sysroots/x86_64-pokysdk-mingw32/usr/bin/i586-poky-linux/i586-poky-linux-g++.exe")).toString();
     m_settings->endGroup();
     return compiler;
 }
@@ -96,7 +101,9 @@ void SettingsManager::setCompilerPath(const QString &path)
 QString SettingsManager::mingwMakePath() const
 {
     m_settings->beginGroup("i586-poky-linux");
-    QString make = m_settings->value("mingwMake", QCoreApplication::applicationDirPath() + "//devkit-x86//mingw492_32//bin//mingw32-make.exe").toString();
+    QString make = m_settings->value("mingwMake",
+                                     QDir::cleanPath(QCoreApplication::applicationDirPath() +
+                                        "/devkit-x86/mingw492_32/bin/mingw32-make.exe")).toString();
     m_settings->endGroup();
     return make;
 }
@@ -183,7 +190,7 @@ void SettingsManager::setEdisonCompilerOptions(const QStringList &options) const
 
 QString SettingsManager::mingwCompilerPath() const
 {
-    QString pathToCC = QCoreApplication::applicationDirPath() + "//devkit-x86//mingw492_32//bin//g++.exe";
+    QString pathToCC = QDir::cleanPath(QCoreApplication::applicationDirPath() + "/devkit-x86/mingw492_32/bin/g++.exe");
     m_settings->beginGroup("mingw-windows");
     QString cc = m_settings->value("MINGWCC", pathToCC).toString();
     m_settings->endGroup();
@@ -228,7 +235,7 @@ void SettingsManager::setMingwCompilerOptions(const QStringList &options) const
 QStringList SettingsManager::mingwLibsPaths() const
 {
     QStringList pathToLibs;
-    pathToLibs << "-L" + QCoreApplication::applicationDirPath() + "//devkit-x86//murlibs";
+    pathToLibs << "-L" + QDir::cleanPath(QCoreApplication::applicationDirPath() + "/devkit-x86/murlibs");
 
     m_settings->beginGroup("mingw-windows");
     QStringList libs = m_settings->value("MINGWCCLIBS", pathToLibs).toStringList();
@@ -246,7 +253,7 @@ void SettingsManager::setMingwLibsPaths(const QStringList &options) const
 QStringList SettingsManager::mingwIncludesPath() const
 {
     QStringList pathToIncludes;
-    pathToIncludes << "-I" + QCoreApplication::applicationDirPath() + "//devkit-x86//murlibs";
+    pathToIncludes << "-I" + QDir::cleanPath(QCoreApplication::applicationDirPath() + "/devkit-x86/murlibs");
 
     m_settings->beginGroup("mingw-windows");
     QStringList includes = m_settings->value("MINGWCCINCLUDES", pathToIncludes).toStringList();
@@ -263,7 +270,7 @@ void SettingsManager::setMingwIncludesPath(const QStringList &options)
 
 QString SettingsManager::mingwBinarysPath() const
 {
-    QString pathToBinarys = QCoreApplication::applicationDirPath() + "//devkit-x86//murlibs";
+    QString pathToBinarys = QDir::cleanPath(QCoreApplication::applicationDirPath() + "/devkit-x86/murlibs");
 
     m_settings->beginGroup("mingw-windows");
     QString bins = m_settings->value("MINGWCCBINS", pathToBinarys).toString();
