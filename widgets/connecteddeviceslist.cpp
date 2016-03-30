@@ -106,7 +106,7 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
 
 void ConnectedDevicesList::updateDevices(const StatusInfo &status)
 {
-    qDebug() << status.devicesTypes[0] << status.devicesTypes[0] << status.devicesTypes[0] << status.devicesTypes[0] << status.devicesTypes[0] << status.devicesTypes[0] ;
+    qDebug() << status.devicesTypes[0] << status.devicesTypes[1] << status.devicesTypes[2] << status.devicesTypes[3] << status.devicesTypes[4] << status.devicesTypes[5] ;
     qDebug() << status.cameras;
     if (m_prevStatusInfo.devicesTypes[0] != status.devicesTypes[0]) {
         if (status.devicesTypes[0] == 1) {
@@ -171,16 +171,16 @@ void ConnectedDevicesList::updateDevices(const StatusInfo &status)
     }
 
     if (m_prevStatusInfo.yaw != status.yaw) {
-        m_yaw->setText(QString::number(status.yaw));
+        m_yaw->setText(QString::number(status.yaw, 'f', 2));
     }
     if (m_prevStatusInfo.pitch != status.pitch) {
-        m_pitch->setText(QString::number(status.pitch));
+        m_pitch->setText(QString::number(status.pitch, 'f', 2));
     }
     if (m_prevStatusInfo.roll != status.roll) {
-        m_roll->setText(QString::number(status.roll));
+        m_roll->setText(QString::number(status.roll, 'f', 2));
     }
     if (m_prevStatusInfo.depth != status.depth) {
-        m_depth->setText(QString::number(status.depth));
+        m_depth->setText(QString::number(status.depth, 'f', 2));
     }
 
     m_prevStatusInfo = status;

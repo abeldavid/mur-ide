@@ -112,6 +112,8 @@ void MainWindow::compilationFinished()
         if (m_sourceCompiller->isCompiled()) {
             if (m_edisonCompileAct->isChecked()) {
                 uploadApp();
+            } else {
+                runApp();
             }
         }
         m_combinedRunAct->setEnabled(true);
@@ -121,7 +123,7 @@ void MainWindow::compilationFinished()
 
 bool MainWindow::uploadApp()
 {
-    emit sendFile(m_sourceCompiller->pathToBinary());
+    m_wifiConnection->send(m_sourceCompiller->pathToBinary());
     return true;
 
 }
@@ -167,7 +169,6 @@ void MainWindow::onEndFileUpload(bool isOk)
 {
     if (isOk) {
         m_roboIdeConsole->appendMessage("Программа отправлена.\n");
-        emit startApp();
     }
     else {
         m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true);

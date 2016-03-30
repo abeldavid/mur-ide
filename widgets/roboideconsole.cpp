@@ -35,6 +35,7 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
 
 void RoboIdeConsole::appendMessage(const QString &text, bool isError)
 {
+    qDebug()<<text;
     if (m_output.buffer.isEmpty()) {
         m_output.isError = isError;
     }
