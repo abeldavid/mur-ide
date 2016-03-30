@@ -7,6 +7,7 @@
 #include <QColor>
 #include <QMenu>
 #include <QKeyEvent>
+#include <QDropEvent>
 #include <QAction>
 
 class RoboIdeConsole : public QTextEdit
@@ -26,6 +27,7 @@ private:
     QMenu *m_consoleContextMenu;
     QAction *m_copyAction;
     void keyPressEvent(QKeyEvent *event);
+    void dropEvent(QDropEvent *event);
 };
 
 #endif // ROBOIDECONSOLE_H

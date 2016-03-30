@@ -61,3 +61,8 @@ void RoboIdeConsole::keyPressEvent(QKeyEvent *event)
     }
 
 }
+
+void RoboIdeConsole::dropEvent(QDropEvent *event)
+{
+    Q_UNUSED(event)
+}

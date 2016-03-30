@@ -48,3 +48,8 @@ void HelpBrowser::keyPressEvent(QKeyEvent *event)
         QTextBrowser::keyPressEvent(event);
     }
 }
+
+void HelpBrowser::dropEvent(QDropEvent *event)
+{
+    Q_UNUSED(event)
+}

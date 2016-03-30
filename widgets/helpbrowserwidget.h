@@ -4,6 +4,7 @@
 #include <QTextBrowser>
 #include <QHelpEngine>
 #include <QKeyEvent>
+#include <QDropEvent>
 #include <QMenu>
 #include <QAction>
 
@@ -15,6 +16,7 @@ public:
     QVariant loadResource (int type, const QUrl& name);
 private:
     void keyPressEvent(QKeyEvent *event);
+    void dropEvent(QDropEvent *event);
     QHelpEngine *m_helpEngine;
     QMenu *m_helpContextMenu;
     QAction *m_copyAction;
