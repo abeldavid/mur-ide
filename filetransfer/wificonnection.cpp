@@ -100,7 +100,7 @@ void WiFiConnection::killApp()
 
     }
     zmq_msg_close(&serverCmdData);
-    emit appKilled(false);
+    emit appKilled(true);
 }
 
 void WiFiConnection::send(QString file)
@@ -184,6 +184,7 @@ void WiFiConnection::send(QString file)
 void WiFiConnection::updateRobotInfo()
 {
     zmq_msg_t robotInfo;
+    zmq_msg_init(&robotInfo);
     if (-1 != zmq_msg_recv(&robotInfo, m_zmqInfoSub, ZMQ_DONTWAIT)) {
         memcpy(&m_robotInfo, zmq_msg_data(&robotInfo), sizeof(StatusInfo));
         //Restarting connection timeout;

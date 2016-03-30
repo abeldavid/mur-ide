@@ -106,6 +106,8 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
 
 void ConnectedDevicesList::updateDevices(const StatusInfo &status)
 {
+    qDebug() << status.devicesTypes[0] << status.devicesTypes[0] << status.devicesTypes[0] << status.devicesTypes[0] << status.devicesTypes[0] << status.devicesTypes[0] ;
+    qDebug() << status.cameras;
     if (m_prevStatusInfo.devicesTypes[0] != status.devicesTypes[0]) {
         if (status.devicesTypes[0] == 1) {
             m_thruster10->setPixmap(m_thruster10Icons.first);

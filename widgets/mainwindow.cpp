@@ -49,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent)
     createDockWindows();
     connectActionsToSlots();
 
+    m_helpWidget->setMinimumWidth(400);
+    m_projectTree->setMinimumWidth(200);
+
     QByteArray state = SettingsManager::instance().mainWindowState();
     if (state.size() != 0) {
         restoreState(state);
