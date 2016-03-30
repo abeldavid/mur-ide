@@ -151,6 +151,23 @@ void ConnectedDevicesList::updateDevices(const StatusInfo &status)
         }
     }
 
+    if (m_prevStatusInfo.cameras != status.cameras) {
+        switch (status.cameras){
+            case 0:
+                m_cameraOne->setPixmap(m_cameraOneIcons.second);
+                m_cameraTwo->setPixmap(m_cameraTwoIcons.second);
+                break;
+            case 1:
+                m_cameraOne->setPixmap(m_cameraOneIcons.first);
+                m_cameraTwo->setPixmap(m_cameraTwoIcons.second);
+                break;
+            case 2:
+                m_cameraOne->setPixmap(m_cameraOneIcons.first);
+                m_cameraTwo->setPixmap(m_cameraTwoIcons.first);
+                break;
+        }
+    }
+
     if (m_prevStatusInfo.yaw != status.yaw) {
         m_yaw->setText(QString::number(status.yaw));
     }
