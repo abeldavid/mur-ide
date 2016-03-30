@@ -8,7 +8,7 @@
 #include "settingsmanager.h"
 
 WiFiConnection::WiFiConnection(QObject *parent) :
-    QObject(),
+    QObject(parent),
     m_zmqContext(zmq_ctx_new()),
     m_zmqReqSoc(zmq_socket(m_zmqContext, ZMQ_REQ)),
     m_zmqInfoSub(zmq_socket(m_zmqContext, ZMQ_SUB)),
@@ -19,17 +19,18 @@ WiFiConnection::WiFiConnection(QObject *parent) :
     int timeout = 2000;
     int option = 0;
 
+    zmq_connect(m_zmqInfoSub, "tcp://192.168.42.1:2052");
+    zmq_connect(m_zmqReqSoc,  "tcp://192.168.42.1:7350");
+
     zmq_setsockopt(m_zmqReqSoc, ZMQ_SNDTIMEO, &timeout, sizeof(int));
     zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_RELAXED, &option, sizeof(int));
     zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_CORRELATE, &option, sizeof(int));
     zmq_setsockopt(m_zmqReqSoc, ZMQ_RCVTIMEO, &timeout, sizeof(int));
     zmq_setsockopt(m_zmqInfoSub, ZMQ_SUBSCRIBE, 0, 0);
 
-    zmq_connect(m_zmqInfoSub, "tcp://192.168.42.1:2052");
-    zmq_connect(m_zmqReqSoc, "tcp://192.168.42.1:7350");
 
     m_connectionTimeout->setInterval(7000);
-    m_updateDeviceListTimer->setInterval(500);
+    m_updateDeviceListTimer->setInterval(1000);
 
     QObject::connect(m_connectionTimeout, SIGNAL(timeout()), this, SLOT(onDisconected()));
     QObject::connect(m_updateDeviceListTimer, SIGNAL(timeout()), this, SLOT(updateRobotInfo()));
@@ -46,11 +47,12 @@ WiFiConnection::~WiFiConnection()
 
 void WiFiConnection::runApp()
 {
+    /*
     if (!m_isConnected) {
         emit appSend(false);
         return;
     }
-
+    */
     zmq_msg_t ideCmdData;
     uint8_t cmd = 30;
     zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
@@ -75,11 +77,13 @@ void WiFiConnection::runApp()
 
 void WiFiConnection::killApp()
 {
+    /*
     if (!m_isConnected) {
         emit appSend(false);
         return;
     }
-
+    */
+    qDebug() << "About to kill";
     zmq_msg_t ideCmdData;
     uint8_t cmd = 40;
     zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
@@ -105,11 +109,12 @@ void WiFiConnection::killApp()
 
 void WiFiConnection::send(QString file)
 {
+    /*
     if (!m_isConnected) {
         emit appSend(false);
         return;
     }
-
+    */
     zmq_msg_t ideCmdData;
     uint8_t cmd = 10;
     zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
@@ -188,6 +193,7 @@ void WiFiConnection::updateRobotInfo()
     if (-1 != zmq_msg_recv(&robotInfo, m_zmqInfoSub, ZMQ_DONTWAIT)) {
         memcpy(&m_robotInfo, zmq_msg_data(&robotInfo), sizeof(StatusInfo));
         //Restarting connection timeout;
+        qDebug() << "CC";
         m_connectionTimeout->start();
         m_isConnected = true;
         emit statusUpdated(m_robotInfo);
@@ -197,6 +203,7 @@ void WiFiConnection::updateRobotInfo()
 void WiFiConnection::onDisconected()
 {
     m_isConnected = false;
+    qDebug() << "DC";
     recreateSockets();
 }
 
