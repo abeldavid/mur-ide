@@ -151,7 +151,7 @@ void ConnectedDevicesList::updateDeviceIcon(uint8_t deviceNumber, const uint8_t 
     if (m_prevStatusInfo.devicesTypes[deviceNumber] != deviceStatus) {
         if (deviceStatus == 1) {
             deviceLabel->setPixmap(icons.first);
-        } else if (deviceStatus == 0) {
+        } else if (deviceStatus == 255) {
             deviceLabel->setPixmap(icons.second);
         }
     }
