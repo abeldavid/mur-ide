@@ -106,55 +106,15 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
 
 void ConnectedDevicesList::updateDevices(const StatusInfo &status)
 {
-    qDebug() << status.devicesTypes[0] << status.devicesTypes[1] << status.devicesTypes[2] << status.devicesTypes[3] << status.devicesTypes[4] << status.devicesTypes[5] ;
-    qDebug() << status.cameras;
-    if (m_prevStatusInfo.devicesTypes[0] != status.devicesTypes[0]) {
-        if (status.devicesTypes[0] == 1) {
-            m_thruster10->setPixmap(m_thruster10Icons.first);
-        } else if (status.devicesTypes[0] == 0) {
-            m_thruster10->setPixmap(m_thruster10Icons.second);
-        }
-    }
-    if (m_prevStatusInfo.devicesTypes[1] != status.devicesTypes[1]) {
-        if (status.devicesTypes[1] == 1) {
-            m_thruster20->setPixmap(m_thruster20Icons.first);
-        } else if (status.devicesTypes[1] == 0) {
-            m_thruster20->setPixmap(m_thruster20Icons.second);
-        }
-    }
-    if (m_prevStatusInfo.devicesTypes[2] != status.devicesTypes[2]) {
-        if (status.devicesTypes[2] == 1) {
-            m_thruster30->setPixmap(m_thruster30Icons.first);
-        } else if (status.devicesTypes[2] == 0) {
-            m_thruster30->setPixmap(m_thruster30Icons.second);
-        }
-    }
-    if (m_prevStatusInfo.devicesTypes[3] != status.devicesTypes[3]) {
-        if (status.devicesTypes[3] == 1) {
-            m_thruster40->setPixmap(m_thruster40Icons.first);
-        } else if (status.devicesTypes[3] == 0) {
-            m_thruster40->setPixmap(m_thruster40Icons.second);
-        }
-    }
-
-    if (m_prevStatusInfo.devicesTypes[4] != status.devicesTypes[4]) {
-        if (status.devicesTypes[4] == 1) {
-            m_altimetr->setPixmap(m_altimetrIcons.first);
-        } else if (status.devicesTypes[4] == 0) {
-            m_altimetr->setPixmap(m_altimetrIcons.second);
-        }
-    }
-    // empty slot
-    if (m_prevStatusInfo.devicesTypes[5] != status.devicesTypes[5]) {
-        if (status.devicesTypes[5] == 1) {
-            m_emptySlot->setPixmap(m_emptySlotIcons.first);
-        } else if (status.devicesTypes[5] == 0) {
-            m_emptySlot->setPixmap(m_emptySlotIcons.second);
-        }
-    }
+    updateDeviceIcon(0, status.devicesTypes[0], m_thruster10, m_thruster10Icons);
+    updateDeviceIcon(1, status.devicesTypes[1], m_thruster20, m_thruster20Icons);
+    updateDeviceIcon(2, status.devicesTypes[2], m_thruster30, m_thruster30Icons);
+    updateDeviceIcon(3, status.devicesTypes[3], m_thruster40, m_thruster40Icons);
+    updateDeviceIcon(4, status.devicesTypes[4], m_altimetr, m_altimetrIcons);
+    updateDeviceIcon(5, status.devicesTypes[5], m_emptySlot, m_emptySlotIcons);
 
     if (m_prevStatusInfo.cameras != status.cameras) {
-        switch (status.cameras){
+        switch (status.cameras) {
             case 0:
                 m_cameraOne->setPixmap(m_cameraOneIcons.second);
                 m_cameraTwo->setPixmap(m_cameraTwoIcons.second);
@@ -184,6 +144,17 @@ void ConnectedDevicesList::updateDevices(const StatusInfo &status)
     }
 
     m_prevStatusInfo = status;
+}
+
+void ConnectedDevicesList::updateDeviceIcon(uint8_t deviceNumber, const uint8_t &deviceStatus, QLabel *deviceLabel, const QPair<QPixmap, QPixmap> &icons)
+{
+    if (m_prevStatusInfo.devicesTypes[deviceNumber] != deviceStatus) {
+        if (deviceStatus == 1) {
+            deviceLabel->setPixmap(icons.first);
+        } else if (deviceStatus == 0) {
+            deviceLabel->setPixmap(icons.second);
+        }
+    }
 }
 
 

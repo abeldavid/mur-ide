@@ -15,25 +15,26 @@ public:
 
 public slots:
     void updateDevices(const StatusInfo &status);
+    void updateDeviceIcon(uint8_t deviceNumber, const uint8_t &deviceStatus, QLabel *deviceLabel, const QPair<QPixmap, QPixmap> &icons);
 private:
     QLabel* m_thruster10;
-    QPair <QPixmap, QPixmap> m_thruster10Icons;
+    QPair<QPixmap, QPixmap> m_thruster10Icons;
     QLabel* m_thruster20;
-    QPair <QPixmap, QPixmap> m_thruster20Icons;
+    QPair<QPixmap, QPixmap> m_thruster20Icons;
     QLabel* m_thruster30;
-    QPair <QPixmap, QPixmap> m_thruster30Icons;
+    QPair<QPixmap, QPixmap> m_thruster30Icons;
     QLabel* m_thruster40;
-    QPair <QPixmap, QPixmap> m_thruster40Icons;
+    QPair<QPixmap, QPixmap> m_thruster40Icons;
 
     QLabel* m_cameraOne;
-    QPair <QPixmap, QPixmap> m_cameraOneIcons;
+    QPair<QPixmap, QPixmap> m_cameraOneIcons;
     QLabel* m_cameraTwo;
-    QPair <QPixmap, QPixmap> m_cameraTwoIcons;
+    QPair<QPixmap, QPixmap> m_cameraTwoIcons;
 
     QLabel* m_altimetr;
-    QPair <QPixmap, QPixmap> m_altimetrIcons;
+    QPair<QPixmap, QPixmap> m_altimetrIcons;
     QLabel* m_emptySlot;
-    QPair <QPixmap, QPixmap> m_emptySlotIcons;
+    QPair<QPixmap, QPixmap> m_emptySlotIcons;
 
     QLabel* m_yaw;
     QLabel* m_pitch;
