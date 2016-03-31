@@ -19,6 +19,10 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
       m_cameraTwo(new QLabel(this)),
       m_altimetr(new QLabel(this)),
       m_emptySlot(new QLabel(this)),
+      m_headerYaw(new QLabel("", this)),
+      m_headerPitch(new QLabel("", this)),
+      m_headerRoll(new QLabel("", this)),
+      m_headerDepth(new QLabel("", this)),
       m_yaw(new QLabel("", this)),
       m_pitch(new QLabel("", this)),
       m_roll(new QLabel("", this)),
@@ -54,18 +58,14 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     m_connectionStatus->setStyleSheet("QLabel{color:#999999}");
     mainLayout->addWidget(m_connectionStatus, 0, 0, 1, 4, Qt::AlignHCenter);
 
-    QLabel* headerYaw = new QLabel("Курс", this);
-    headerYaw->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(headerYaw, 1, 0);
-    QLabel* headerPitch = new QLabel("Крен", this);
-    headerPitch->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(headerPitch, 1, 1);
-    QLabel* headerRoll = new QLabel("Дифф.", this);
-    headerRoll->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(headerRoll, 1, 2);
-    QLabel* headerDepth = new QLabel("Глуб.", this);
-    headerDepth->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(headerDepth, 1, 3);
+    m_headerYaw->setAlignment(Qt::AlignHCenter);
+    mainLayout->addWidget(m_headerYaw, 1, 0);
+    m_headerPitch->setAlignment(Qt::AlignHCenter);
+    mainLayout->addWidget(m_headerPitch, 1, 1);
+    m_headerRoll->setAlignment(Qt::AlignHCenter);
+    mainLayout->addWidget(m_headerRoll, 1, 2);
+    m_headerDepth->setAlignment(Qt::AlignHCenter);
+    mainLayout->addWidget(m_headerDepth, 1, 3);
 
     m_yaw->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(m_yaw, 2, 0);
@@ -130,6 +130,18 @@ void ConnectedDevicesList::updateDevices(const StatusInfo &status)
                 break;
         }
     }
+    if (m_headerYaw->text().isEmpty()) {
+        m_headerYaw->setText("Курс");
+    }
+    if (m_headerPitch->text().isEmpty()) {
+        m_headerPitch->setText("Крен");
+    }
+    if (m_headerRoll->text().isEmpty()) {
+        m_headerRoll->setText("Дифф.");
+    }
+    if (m_headerDepth->text().isEmpty()) {
+        m_headerDepth->setText("Глуб.");
+    }
 
     if (m_prevStatusInfo.yaw != status.yaw) {
         m_yaw->setText(QString::number(status.yaw, 'f', 2));
@@ -169,6 +181,10 @@ void ConnectedDevicesList::clearDevices()
     m_cameraTwo->clear();
     m_altimetr->clear();
     m_emptySlot->clear();
+    m_headerYaw->setText("");
+    m_headerPitch->setText("");
+    m_headerRoll->setText("");
+    m_headerDepth->setText("");
     m_yaw->setText("");
     m_pitch->setText("");
     m_roll->setText("");

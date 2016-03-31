@@ -40,6 +40,11 @@ private:
     QLabel* m_emptySlot;
     QPair<QPixmap, QPixmap> m_emptySlotIcons;
 
+    QLabel* m_headerYaw;
+    QLabel* m_headerPitch;
+    QLabel* m_headerRoll;
+    QLabel* m_headerDepth;
+
     QLabel* m_yaw;
     QLabel* m_pitch;
     QLabel* m_roll;
