@@ -317,6 +317,7 @@ void MainWindow::onProjectClosed()
 
 void MainWindow::openFile(const QString &fileName)
 {
+
     if (m_roboIdeTextEdit->isModified()) {
         saveFilePromt();
     }
@@ -701,7 +702,6 @@ void MainWindow::createDockWindows()
 
 void MainWindow::enableProject()
 {
-    m_roboIdeTextEdit->setReadOnly(false);
     m_addFileAct->setEnabled(true);
     m_createFileAct->setEnabled(true);
     m_closeProjectAct->setEnabled(true);

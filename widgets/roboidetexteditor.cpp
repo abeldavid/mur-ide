@@ -21,6 +21,7 @@ RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
 
 void RoboIdeTextEditor::showContent(const QString &fileName, const QString &content)
 {
+    setReadOnly(false);
     if (content.size()) {
         m_skipNullTextChanged = true;
     }
