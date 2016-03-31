@@ -19,11 +19,24 @@ QHeaderView::section {
     border: none;
 }
 
-QHeaderView::section:checked {
-    background-color: red;
-}
 
 QTreeWidget::item:selected {
     background-color: #909090;
 }
 
+QTreeWidget::branch:has-children:!has-siblings:closed,
+QTreeWidget::branch:closed:has-children:has-siblings {
+        border-image: none;
+        image: url(:/icons/icons/widgeticons/arrow-down.png);
+        margin-top: 3px;
+        margin-left: 8px;
+
+}
+
+QTreeWidget::branch:open:has-children:!has-siblings,
+QTreeWidget::branch:open:has-children:has-siblings  {
+        border-image: none;
+        image: url(:/icons/icons/widgeticons/arrow-left.png);
+        margin-top: 3px;
+        margin-left: 8px;
+}

@@ -3,31 +3,35 @@ QTabWidget {
 }
 
 QTabWidget::tab-bar {
-	border: none;
-	margin-bottom: 2px;
+        border: none;
+        margin-bottom: 2px;
+}
+
+QTabWidget::pane {
+    border: none;
 }
 
 QTabBar::tab {
-	border-top: 2px solid qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 #252525, stop:1 #636363);
-	border-left: 2px solid #282828;
-	border-right: 1px solid #282828;
+        border-top: 2px solid qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 #252525, stop:1 #636363);
+        border-left: 2px solid #282828;
+        border-right: 1px solid #282828;
 
-	background: #303030;
-	color: #CCCCCC;
+        background: #303030;
+        color: #CCCCCC;
         padding: 5px;
 }
 
 QTabBar::tab:selected {
-	background: #252525;
-	color: #D0D0D0;
+        background: #252525;
+        color: #D0D0D0;
 }
 
-QTextBrowser { 
+QTextBrowser {
     border: none;
 }
 
 QTreeView {
-	border: none;
+        border: none;
 }
 
 QScrollBar:horizontal {
@@ -48,7 +52,7 @@ QScrollBar::sub-line:horizontal {
       background: none;
 }
 
-QScrollBar:vertical {               
+QScrollBar:vertical {
     background: transparent;
     width: 15px;
 }
@@ -66,13 +70,13 @@ QScrollBar::sub-line:vertical {
 }
 
 QScrollBar::up-arrow:vertical  {
-	border: none;
-	background: none;
-	color: none;
+        border: none;
+        background: none;
+        color: none;
 }
 
 QScrollBar::down-arrow:vertical  {
-	border: none;
-	background: none;
-	color: none;
+        border: none;
+        background: none;
+        color: none;
 }

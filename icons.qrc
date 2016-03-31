@@ -3,14 +3,14 @@
         <file>icons/tools/compile.png</file>
         <file>icons/tools/copy.png</file>
         <file>icons/tools/new-file.png</file>
-		<file>icons/tools/new-file-inactive.png</file>
+        <file>icons/tools/new-file-inactive.png</file>
         <file>icons/tools/open.png</file>
         <file>icons/tools/paste.png</file>
         <file>icons/tools/redo.png</file>
         <file>icons/tools/save.png</file>
         <file>icons/tools/save-inactive.png</file>
         <file>icons/tools/save-as.png</file>
-		<file>icons/tools/save-as-inactive.png</file>
+        <file>icons/tools/save-as-inactive.png</file>
         <file>icons/tools/search.png</file>
         <file>icons/tools/start.png</file>
         <file>icons/tools/start-inactive.png</file>
@@ -33,5 +33,7 @@
         <file>icons/widgeticons/thruster_30_dark.png</file>
         <file>icons/widgeticons/thruster_40.png</file>
         <file>icons/widgeticons/thruster_40_dark.png</file>
+        <file>icons/widgeticons/arrow-left.png</file>
+        <file>icons/widgeticons/arrow-down.png</file>
     </qresource>
 </RCC>
