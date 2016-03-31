@@ -13,3 +13,43 @@ QScrollBar::sub-page:horizontal {
 QScrollBar::add-page:horizontal {
     background: #464646;
 }
+QScrollBar:vertical {
+    background: #464646;
+    width: 15px;
+}
+
+QScrollBar::handle:vertical {
+    background: #636363;
+}
+
+QScrollBar::sub-page:vertical {
+    background: #464646;
+}
+
+QScrollBar::add-page:vertical {
+    background: #464646;
+}
+
+QScrollBar::left-arrow:horizontal  {
+        border: none;
+        background: #464646;
+        color: none;
+}
+
+QScrollBar::right-arrow:horizontal  {
+        border: none;
+        background: #464646;
+        color: none;
+}
+
+QScrollBar::up-arrow:vertical  {
+        border: none;
+        background: #464646;
+        color: none;
+}
+
+QScrollBar::down-arrow:vertical  {
+        border: none;
+        background: #464646;
+        color: none;
+}

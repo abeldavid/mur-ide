@@ -26,16 +26,21 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
         m_copyAction->setEnabled(isAvailable);
     });
 
-    QFile styleFile(":/dark/styles/console.css");
-    styleFile.open(QFile::ReadOnly);
-    QString styleSheet = styleFile.readAll();
-    document()->setDefaultStyleSheet(styleSheet);
-    styleFile.close();
+    QFile editStyle(":/dark/styles/texteditscrollbar.css");
+    editStyle.open(QFile::ReadOnly);
+    QString styleSheet = editStyle.readAll();
+    editStyle.close();
+    setStyleSheet(styleSheet);
+
+    QFile consoleStyleFile(":/dark/styles/console.css");
+    consoleStyleFile.open(QFile::ReadOnly);
+    QString consoleStyleSheet = consoleStyleFile.readAll();
+    document()->setDefaultStyleSheet(consoleStyleSheet);
+    consoleStyleFile.close();
 }
 
 void RoboIdeConsole::appendMessage(const QString &text, bool isError)
 {
-    qDebug()<<text;
     if (m_output.buffer.isEmpty()) {
         m_output.isError = isError;
     }
