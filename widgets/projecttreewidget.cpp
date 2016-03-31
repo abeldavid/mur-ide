@@ -25,6 +25,13 @@ ProjectTree::ProjectTree(QWidget *parent) :
 
     connect(m_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(onItemClicked(QTreeWidgetItem*)));
     connect(m_tree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onCustomContextMenu(QPoint)));
+
+    QFile treeSheet(":/dark/styles/treewidget.css");
+    treeSheet.open(QFile::ReadOnly);
+    QString styleSheet = treeSheet.readAll();
+    m_tree->setStyleSheet(styleSheet);
+    treeSheet.close();
+
 }
 
 void ProjectTree::loadProject()

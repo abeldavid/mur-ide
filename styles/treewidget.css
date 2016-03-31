@@ -1,0 +1,29 @@
+QTreeWidget {
+    background-color: #252525;
+}
+
+QTreeWidget::item {
+    background-color: transparent;
+    color: #D0D0D0;
+}
+
+QTreeWidget::header {
+    background-color: transparent;
+    color: #D0D0D0;
+}
+
+QHeaderView::section {
+    background-color: #464646;
+    color: #D0D0D0;
+    padding-left: 4px;
+    border: none;
+}
+
+QHeaderView::section:checked {
+    background-color: red;
+}
+
+QTreeWidget::item:selected {
+    background-color: #909090;
+}
+
