@@ -1,6 +1,7 @@
 #ifndef CONNECTEDDEVICESLIST_H
 #define CONNECTEDDEVICESLIST_H
 
+#include <QString>
 #include <QWidget>
 #include <QLabel>
 #include <QIcon>
@@ -18,6 +19,8 @@ public slots:
     void updateDeviceIcon(uint8_t deviceNumber, const uint8_t &deviceStatus, QLabel *deviceLabel, const QPair<QPixmap, QPixmap> &icons);
     void clearDevices();
 private:
+    QPair<QString, QString> m_connectionTexts;
+    QLabel* m_connectionStatus;
     QLabel* m_thruster10;
     QPair<QPixmap, QPixmap> m_thruster10Icons;
     QLabel* m_thruster20;
