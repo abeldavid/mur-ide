@@ -16,6 +16,7 @@ public:
 public slots:
     void updateDevices(const StatusInfo &status);
     void updateDeviceIcon(uint8_t deviceNumber, const uint8_t &deviceStatus, QLabel *deviceLabel, const QPair<QPixmap, QPixmap> &icons);
+    void clearDevices();
 private:
     QLabel* m_thruster10;
     QPair<QPixmap, QPixmap> m_thruster10Icons;

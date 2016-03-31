@@ -202,8 +202,8 @@ void WiFiConnection::updateRobotInfo()
 void WiFiConnection::onDisconected()
 {
     m_isConnected = false;
-    qDebug() << "Disconnected";
     recreateSockets();
+    emit disconnected();
 }
 
 void WiFiConnection::recreateSockets()

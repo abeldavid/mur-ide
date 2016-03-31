@@ -41,13 +41,13 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     headerDepth->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(headerDepth, 0, 3);
 
-    m_depth->setAlignment(Qt::AlignHCenter);
+    m_yaw->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(m_yaw, 1, 0);
     m_pitch->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(m_pitch, 1, 1);
     m_roll->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(m_roll, 1, 2);
-    m_yaw->setAlignment(Qt::AlignHCenter);
+    m_depth->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(m_depth, 1, 3);
 
     m_thruster10Icons.first = QPixmap(":/icons/icons/widgeticons/thruster_10.png");
@@ -155,6 +155,22 @@ void ConnectedDevicesList::updateDeviceIcon(uint8_t deviceNumber, const uint8_t 
             deviceLabel->setPixmap(icons.second);
         }
     }
+}
+
+void ConnectedDevicesList::clearDevices()
+{
+    m_thruster10->clear();
+    m_thruster20->clear();
+    m_thruster30->clear();
+    m_thruster40->clear();
+    m_cameraOne->clear();
+    m_cameraTwo->clear();
+    m_altimetr->clear();
+    m_emptySlot->clear();
+    m_yaw->setText("");
+    m_pitch->setText("");
+    m_roll->setText("");
+    m_depth->setText("");
 }
 
 

@@ -773,6 +773,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_wifiConnection, SIGNAL(appStarted(bool)), this, SLOT(onAppStarted(bool)));
 
     QObject::connect(m_wifiConnection, SIGNAL(statusUpdated(StatusInfo)), m_connectedDevicesList, SLOT(updateDevices(StatusInfo)));
+    QObject::connect(m_wifiConnection, SIGNAL(disconnected()), m_connectedDevicesList, SLOT(clearDevices()));
 
     QObject::connect(this, SIGNAL(startApp()), m_wifiConnection, SLOT(runApp()));
     QObject::connect(this, SIGNAL(stopApp()), m_wifiConnection, SLOT(killApp()));

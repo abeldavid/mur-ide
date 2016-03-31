@@ -38,6 +38,7 @@ signals:
     void appStarted(bool);
     void appSend(bool);
     void statusUpdated(StatusInfo);
+    void disconnected();
 public slots:
     void runApp();
     void killApp();
