@@ -57,7 +57,7 @@ private slots:
     void projectContextMenu(const QPoint &point, const QString &fileName);
     void treeContextMenuTriggered(QAction*);
     void onTargetComboChanged(QString currentText);
-
+    void onLocalAppFinished();
 signals:
     void sendFile(QString);
     void startApp();

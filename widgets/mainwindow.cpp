@@ -64,11 +64,8 @@ MainWindow::MainWindow(QWidget *parent)
     mainWindowSheet.close();
 
     showMaximized();
+    disableProject();
     projectCreateDialog();
-
-    //m_wifiConnection->moveToThread(m_wifiConnectionThread);
-    //m_wifiConnectionThread->start();
-
 }
 
 MainWindow::~MainWindow()
@@ -135,6 +132,7 @@ bool MainWindow::runApp()
         m_runAppAct->setDisabled(true);
         m_wifiConnection->runApp();
         m_runAppAct->setEnabled(true);
+        m_stopAppAct->setEnabled(true);
         return true;
     }
     else if (m_mingwCompileAct->isChecked()) {
@@ -206,22 +204,30 @@ void MainWindow::combinedRunApp()
 bool MainWindow::killApp()
 {
     bool isOk = false;
+    bool isRunning = false;
     if (m_edisonCompileAct->isChecked()) {
         m_stopAppAct->setDisabled(true);
         m_wifiConnection->killApp();
-        //emit stopApp();
         m_stopAppAct->setEnabled(true);
         return true;
     }
     else if (m_mingwCompileAct->isChecked()) {
         if (m_localApp->isOpen()) {
+            if (m_localApp->state() != QProcess::NotRunning) {
+                isRunning = true;
+            }
             m_localApp->kill();
             isOk = true;
         }
 
     }
     if (isOk) {
-        m_roboIdeConsole->appendMessage("Программа остановлена!\n");
+        if (isRunning) {
+            m_roboIdeConsole->appendMessage("Программа остановлена!\n");
+        }
+        else {
+            m_roboIdeConsole->appendMessage("Программа не была запущена. Нечего останавливать.\n");
+        }
     }
     else {
         if (m_mingwCompileAct->isChecked()) {
@@ -231,7 +237,6 @@ bool MainWindow::killApp()
             m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
         }
     }
-    m_stopAppAct->setEnabled(false);
     return true;
 }
 
@@ -405,6 +410,10 @@ void MainWindow::onTargetComboChanged(QString currentText)
     } else if (currentText == m_mingwCompileAct->text()) {
         m_mingwCompileAct->trigger();
     }
+}
+
+void MainWindow::onLocalAppFinished()
+{
 }
 
 void MainWindow::switchCompilationTargetToEdison()
@@ -693,6 +702,7 @@ void MainWindow::enableProject()
     m_uploadAct->setEnabled(true);
     m_runAppAct->setEnabled(true);
     m_stopAppAct->setEnabled(true);
+    m_combinedRunAct->setEnabled(true);
 }
 
 void MainWindow::disableProject()
@@ -709,6 +719,8 @@ void MainWindow::disableProject()
     m_uploadAct->setEnabled(false);
     m_runAppAct->setEnabled(false);
     m_stopAppAct->setEnabled(false);
+    m_combinedRunAct->setEnabled(false);
+
 }
 
 void MainWindow::connectActionsToSlots()
@@ -777,5 +789,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(this, SIGNAL(startApp()), m_wifiConnection, SLOT(runApp()));
     QObject::connect(this, SIGNAL(stopApp()), m_wifiConnection, SLOT(killApp()));
     QObject::connect(this, SIGNAL(sendFile(QString)), m_wifiConnection, SLOT(send(QString)));
+    QObject::connect(m_localApp, SIGNAL(finished(int)), this, SLOT(onLocalAppFinished()));
+
 }
 
