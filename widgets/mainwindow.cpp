@@ -470,11 +470,15 @@ void MainWindow::createActions()
     m_undoAct->setShortcut(QKeySequence::Undo);
     m_undoAct->setIconVisibleInMenu(false);
 
-    m_saveAct = new QAction(QIcon(":/icons/icons/tools/save.png"), tr("Сохранить"), this);
+    QIcon saveIcon(QPixmap(":/icons/icons/tools/save.png"));
+    saveIcon.addPixmap(QPixmap(":/icons/icons/tools/save-inactive.png"), QIcon::Disabled);
+    m_saveAct = new QAction(saveIcon, tr("Сохранить"), this);
     m_saveAct->setShortcut(QKeySequence::Save);
     m_saveAct->setIconVisibleInMenu(false);
 
-    m_saveAsAct = new QAction(QIcon(":/icons/icons/tools/save-as.png"), tr("Сохранить как..."), this);
+    QIcon saveAsIcon(QPixmap(":/icons/icons/tools/save-as.png"));
+    saveAsIcon.addPixmap(QPixmap(":/icons/icons/tools/save-as-inactive.png"), QIcon::Disabled);
+    m_saveAsAct = new QAction(saveAsIcon, tr("Сохранить как..."), this);
     m_saveAsAct->setShortcut(QKeySequence::SaveAs);
     m_saveAsAct->setIconVisibleInMenu(false);
 
@@ -488,7 +492,9 @@ void MainWindow::createActions()
     m_closeProjectAct = new QAction(tr("Закрыть проект"), this);
     m_closeProjectAct->setIconVisibleInMenu(false);
 
-    m_createFileAct = new QAction(QIcon(":/icons/icons/tools/new-file.png"), tr("Новый файл"), this);
+    QIcon newFileIcon(QPixmap(":/icons/icons/tools/new-file.png"));
+    newFileIcon.addPixmap(QPixmap(":/icons/icons/tools/new-file-inactive.png"), QIcon::Disabled);
+    m_createFileAct = new QAction(newFileIcon, tr("Новый файл"), this);
     m_createFileAct->setShortcut(QKeySequence::New);
     m_createFileAct->setIconVisibleInMenu(false);
 
@@ -522,7 +528,9 @@ void MainWindow::createActions()
     m_uploadAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
     m_uploadAct->setIconVisibleInMenu(false);
 
-    m_stopAppAct = new QAction(QIcon(":/icons/icons/tools/stop.png"), tr("Остановить программу"), this);
+    QIcon stopIcon(QPixmap(":/icons/icons/tools/stop.png"));
+    stopIcon.addPixmap(QPixmap(":/icons/icons/tools/stop-inactive.png"), QIcon::Disabled);
+    m_stopAppAct = new QAction(stopIcon, tr("Остановить программу"), this);
     m_stopAppAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S));
     m_stopAppAct->setIconVisibleInMenu(false);
 
@@ -530,7 +538,9 @@ void MainWindow::createActions()
     m_runAppAct->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_R));
     m_runAppAct->setIconVisibleInMenu(false);
 
-    m_combinedRunAct = new QAction(QIcon(":/icons/icons/tools/start.png"), tr("Собрать и выполнить программу"), this);
+    QIcon startIcon(QPixmap(":/icons/icons/tools/start.png"));
+    startIcon.addPixmap(QPixmap(":/icons/icons/tools/start-inactive.png"), QIcon::Disabled);
+    m_combinedRunAct = new QAction(startIcon, tr("Собрать и выполнить программу"), this);
     m_combinedRunAct->setIconVisibleInMenu(false);
 
     m_showSettingsAct = new QAction(QIcon(":/icons/actions/preferences-desktop.png"), tr("Настройки"), this);
