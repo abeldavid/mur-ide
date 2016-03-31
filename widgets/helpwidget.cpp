@@ -33,9 +33,16 @@ HelpWidget::HelpWidget(QWidget *parent) :
     QFile helpStyle(":/dark/styles/helpwidget.css");
     helpStyle.open(QFile::ReadOnly);
 
-    QString styleSheet = helpStyle.readAll();\
+    QString styleSheet = helpStyle.readAll();
     setStyleSheet(styleSheet);
     helpStyle.close();
+
+
+    QFile treeSheet(":/dark/styles/helptreewidget.css");
+    treeSheet.open(QFile::ReadOnly);
+    QString treeStyleSheet = treeSheet.readAll();
+    m_helpEngine->contentWidget()->setStyleSheet(treeStyleSheet);
+    treeSheet.close();
 }
 
 void HelpWidget::goToHelpUrl(QUrl url)

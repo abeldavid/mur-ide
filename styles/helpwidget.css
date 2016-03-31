@@ -1,5 +1,5 @@
 QTabWidget {
-	border: none;
+        border: none;
 }
 
 QTabWidget::tab-bar {
@@ -14,7 +14,7 @@ QTabBar::tab {
 
 	background: #303030;
 	color: #CCCCCC;
-	padding: 5px;
+        padding: 5px;
 }
 
 QTabBar::tab:selected {

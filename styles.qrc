@@ -9,5 +9,6 @@
         <file>styles/devicelist.css</file>
         <file>styles/console.css</file>
         <file>styles/treewidget.css</file>
+        <file>styles/helptreewidget.css</file>
     </qresource>
 </RCC>

@@ -590,6 +590,7 @@ void MainWindow::createToolBars()
 
     m_toolBar->addAction(m_combinedRunAct);
     m_toolBar->addAction(m_stopAppAct);
+    m_toolBar->addSeparator();
 
     m_targetComboBox->addItem(m_edisonCompileAct->text());
     m_targetComboBox->addItem(m_mingwCompileAct->text());
