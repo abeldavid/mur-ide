@@ -140,10 +140,10 @@ void ConnectedDevicesList::updateDevices(const StatusInfo &status)
         m_headerYaw->setText("Курс");
     }
     if (m_headerPitch->text().isEmpty()) {
-        m_headerPitch->setText("Крен");
+        m_headerPitch->setText("Дифф.");
     }
     if (m_headerRoll->text().isEmpty()) {
-        m_headerRoll->setText("Дифф.");
+        m_headerRoll->setText("Крен");
     }
     if (m_headerDepth->text().isEmpty()) {
         m_headerDepth->setText("Глуб.");
