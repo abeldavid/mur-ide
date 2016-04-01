@@ -803,5 +803,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(this, SIGNAL(sendFile(QString)), m_wifiConnection, SLOT(send(QString)));
     QObject::connect(m_localApp, SIGNAL(finished(int)), this, SLOT(onLocalAppFinished()));
 
+    QObject::connect(m_sourceCompiller, SIGNAL(run()), m_roboIdeTextEdit, SLOT(clearErrors()));
+    QObject::connect(m_consoleWidget, SIGNAL(errorFound(QString,int)), m_roboIdeTextEdit, SLOT(highlightError(QString,int)));
 }
 

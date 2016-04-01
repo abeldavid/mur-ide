@@ -60,6 +60,12 @@ void ConsoleWidget::appendMessage(const QString &text, bool isError, bool isIDEM
             QRegExp rx(regexpString);
             if(rx.indexIn(parts[i]) != -1) {
                 append("<div class=\"" + qssClass + "\"><b>" + rx.cap(1).simplified() + "</b> " + rx.cap(2).simplified() + "</div>");
+                if (isError and !isIDEMessage) {
+                    QRegExp re(".*((?:\\w|\\.)+):(\\d+):(\\d+):");
+                    if (re.indexIn(rx.cap(1).simplified()) != -1) {
+                        emit errorFound(re.cap(1), re.cap(2).toInt());
+                    }
+                }
             } else {
                 append("<div class=\"" + qssClass + "\">" + parts[i].simplified() + "</div>");
             }
@@ -87,7 +93,6 @@ void ConsoleWidget::keyPressEvent(QKeyEvent *event)
     if (isCopyEvent or isMoveEvent) {
         QTextEdit::keyPressEvent(event);
     }
-
 }
 
 void ConsoleWidget::dropEvent(QDropEvent *event)

@@ -25,7 +25,7 @@ public:
     explicit ConsoleWidget(QWidget *parent = 0);
 
 signals:
-
+    void errorFound(QString fileName, int stringNumber);
 public slots:
     void appendMessage(const QString &text, bool isError = false, bool isIDEMessage = false);
 

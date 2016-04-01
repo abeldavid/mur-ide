@@ -35,5 +35,6 @@
         <file>icons/widgeticons/thruster_40_dark.png</file>
         <file>icons/widgeticons/arrow-left.png</file>
         <file>icons/widgeticons/arrow-down.png</file>
+        <file>icons/widgeticons/bullet-red.png</file>
     </qresource>
 </RCC>

@@ -4,10 +4,12 @@
 #include <QFontDatabase>
 #include <QDebug>
 #include <QFile>
+#include <QList>
 #include <QFileDialog>
 #include <QInputMethodEvent>
 #include <QCoreApplication>
 #include <QMessageBox>
+#include <QPixmap>
 
 RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
     : QsciScintilla(parent),
@@ -17,6 +19,7 @@ RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
     setupEditor();
     setupUi();
     QObject::connect(this, SIGNAL(textChanged()), this, SLOT(handleChangedText()));
+    markerDefine(QPixmap(":/icons/icons/widgeticons/bullet-red.png"), m_errorMarkerCode);
 }
 
 void RoboIdeTextEditor::showContent(const QString &fileName, const QString &content)
@@ -30,6 +33,11 @@ void RoboIdeTextEditor::showContent(const QString &fileName, const QString &cont
 
     m_isFileExist = true;
     m_fileName = fileName;
+
+    QList<int> lines = m_errorsFound.values(fileName);
+    for (auto lineNumber: lines) {
+        markerAdd(lineNumber-1, m_errorMarkerCode);
+    }
 }
 
 void RoboIdeTextEditor::onFileSaved(QString)
@@ -53,6 +61,20 @@ void RoboIdeTextEditor::clearText()
     setModified(false);
 }
 
+void RoboIdeTextEditor::highlightError(const QString &fileName, int lineNumber)
+{
+    m_errorsFound.insert(fileName, lineNumber);
+    if (m_fileName == fileName and !isModified()) {
+        markerAdd(lineNumber-1, m_errorMarkerCode);
+    }
+}
+
+void RoboIdeTextEditor::clearErrors()
+{
+    markerDeleteAll();
+    m_errorsFound.clear();
+}
+
 void RoboIdeTextEditor::setupEditor()
 {
 
@@ -67,6 +89,7 @@ void RoboIdeTextEditor::setupEditor()
     m_lexCpp->setFont(font);
     setupLexer();
     setLexer(m_lexCpp);
+    setEolMode(EolUnix);
 
     //! Setup highlighting on current line
    setCaretLineVisible(true);
@@ -85,11 +108,11 @@ void RoboIdeTextEditor::setupEditor()
    //setAutoCompletionUseSingle(QsciScintilla::AcusAlways);
    //setAutoCompletionThreshold(0);
 
-   //! Setup indent for 5 spaces
+   //! Setup indent for 4 spaces
    setAutoIndent(true);
    setIndentationGuides(false);
-   setIndentationsUseTabs(true);
-   setIndentationWidth(5);
+   setIndentationsUseTabs(false);
+   setIndentationWidth(4);
 
    //! Brace matching highlighting
    setBraceMatching(QsciScintilla::SloppyBraceMatch);

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QMultiMap>
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qsciapis.h>
 #include <Qsci/qscilexercpp.h>
@@ -22,6 +23,8 @@ public slots:
     QString fileName() const;
     bool fileExists() const;
     void clearText();
+    void highlightError(const QString &fileName, int lineNumber);
+    void clearErrors();
 
 private:
     void setupEditor();
@@ -31,6 +34,8 @@ private:
     QString m_fileName;
     QsciLexerCPP* m_lexCpp;
     bool m_skipNullTextChanged = false;
+    const int m_errorMarkerCode = 0;
+    QMultiMap<QString, int> m_errorsFound;
 
 private slots:
     void handleChangedText();
