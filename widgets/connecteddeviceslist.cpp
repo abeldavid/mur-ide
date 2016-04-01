@@ -29,6 +29,12 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
       m_depth(new QLabel("", this)),
       m_prevStatusInfo({})
 {
+    // initialize m_prevStatusInfo with values it never gets
+    // 0 for deiceStatus and version, 0.0f for yaw, pitch, roll, depth,
+    // and 255 for cameras and leaks
+    m_prevStatusInfo.cameras = 255;
+    m_prevStatusInfo.leak = 255;
+
     m_thruster10Icons.first = QPixmap(":/icons/icons/widgeticons/thruster_10.png");
     m_thruster10Icons.second = QPixmap(":/icons/icons/widgeticons/thruster_10_dark.png");
     m_thruster20Icons.first = QPixmap(":/icons/icons/widgeticons/thruster_20.png");
@@ -172,6 +178,7 @@ void ConnectedDevicesList::updateDeviceIcon(uint8_t deviceNumber, const uint8_t 
 
 void ConnectedDevicesList::clearDevices()
 {
+    m_connectionStatus->setStyleSheet("QLabel{color:#999999}");
     m_connectionStatus->setText(m_connectionTexts.second);
     m_thruster10->clear();
     m_thruster20->clear();
