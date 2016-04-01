@@ -18,7 +18,8 @@ public:
     QString pathToBinary() const;
     bool isCompiled() const;
 signals:
-    void onCompilationOutput(QString output, bool isError);
+    // TODO: remove bad interface dependency on consoleWidget
+    void onCompilationOutput(QString output, bool isError, bool isIDEMessage);
     void finished();
     void run();
 public slots:

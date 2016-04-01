@@ -19,7 +19,7 @@ SourceCompiler::SourceCompiler(QObject *parent) :
 {
     m_processRunner->moveToThread(m_compilationThread);
     m_compilationThread->start();
-    QObject::connect(m_processRunner, SIGNAL(processOutputReady(QString, bool)), this, SIGNAL(onCompilationOutput(QString, bool)));
+    QObject::connect(m_processRunner, SIGNAL(processOutputReady(QString, bool, bool)), this, SIGNAL(onCompilationOutput(QString, bool, bool)));
     QObject::connect(m_processRunner, SIGNAL(finished(int)), this, SLOT(onCompilationFinished(int)));
     QObject::connect(this, SIGNAL(run()), m_processRunner, SLOT(run()));
 }
@@ -101,12 +101,12 @@ void SourceCompiler::onCompilationFinished(int retCode)
 {
     if (retCode == 0) {
         m_isCompiled = true;
-        onCompilationOutput(QString("Компиляция прошла успешно " + QDateTime::currentDateTime().toString()) + "\n", false);
+        onCompilationOutput(QString("Компиляция прошла успешно " + QDateTime::currentDateTime().toString()) + "\n", false, true);
     }
     else {
         m_pathToBinary = "";
         m_isCompiled = false;
-        onCompilationOutput(QString("Ошибка компиляции " + QDateTime::currentDateTime().toString()) + "\n", true);
+        onCompilationOutput(QString("Ошибка компиляции " + QDateTime::currentDateTime().toString()) + "\n", true, true);
     }
     emit finished();
 }

@@ -21,7 +21,8 @@ public slots:
 private slots:
     void processOutReceived();
 signals:
-    void processOutputReady(QString, bool);
+    // TODO: remove bad interface dependency on consoleWidget
+    void processOutputReady(QString output, bool isError, bool isIDEMessage);
     void finished(int);
 private:
     QString m_path;

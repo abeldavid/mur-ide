@@ -27,7 +27,7 @@ public:
 signals:
 
 public slots:
-    void appendMessage(const QString &text, bool isError = false);
+    void appendMessage(const QString &text, bool isError = false, bool isIDEMessage = false);
 
 private:
     QColor m_defaultTextColor;

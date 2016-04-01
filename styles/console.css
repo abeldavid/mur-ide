@@ -1,18 +1,24 @@
-div{
+div {
     font-size: 10pt;
     padding-bottom: 6px;
 }
-.outputOk{
+.outputOk {
     color: #999999;
 }
-.outputOk b{
-    font-weight: 900;
+.outputOk b {
     color: #c0c0c0;
 }
-.outputError{
+.outputError {
     color: #cc2222;
 }
-.outputError b{
-    font-weight: 900;
+.outputError b {
     color: #ff5555;
+}
+.outputIDEOk {
+    font-weight: bold;
+    color: #498BBD;
+}
+.outputIDEError {
+    font-weight: bold;
+    color: #ff6000;
 }

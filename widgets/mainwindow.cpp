@@ -149,15 +149,15 @@ bool MainWindow::runApp()
     }
 
     if (isOK) {
-        m_consoleWidget->appendMessage("Программа запущена!\n");
+        m_consoleWidget->appendMessage("Программа запущена!\n", false, true);
     }
     else {
-        m_consoleWidget->appendMessage("Во время запуска программы произошла ошибка.\n", true);
+        m_consoleWidget->appendMessage("Во время запуска программы произошла ошибка.\n", true, true);
         if (m_mingwCompileAct->isChecked()) {
             m_consoleWidget->appendMessage(m_localApp->errorString(), true);
         }
         else if (m_edisonCompileAct->isChecked()) {
-            m_consoleWidget->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
+            m_consoleWidget->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true, true);
         }
     }
     return isOK;
@@ -166,31 +166,31 @@ bool MainWindow::runApp()
 void MainWindow::onEndFileUpload(bool isOk)
 {
     if (isOk) {
-        m_consoleWidget->appendMessage("Программа отправлена.\n");
+        m_consoleWidget->appendMessage("Программа отправлена.\n", false, true);
         m_wifiConnection->runApp();
     }
     else {
-        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true);
+        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true, true);
     }
 }
 
 void MainWindow::onAppKilled(bool isOk)
 {
     if (isOk) {
-        m_consoleWidget->appendMessage("Программа остановлена!\n");
+        m_consoleWidget->appendMessage("Программа остановлена!\n", false, true);
     }
     else {
-        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть остановлена. Проверьте соединение с аппаратом.\n", true);
+        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть остановлена. Проверьте соединение с аппаратом.\n", true, true);
     }
 }
 
 void MainWindow::onAppStarted(bool isOk)
 {
     if (isOk) {
-        m_consoleWidget->appendMessage("Программа запущена!\n");
+        m_consoleWidget->appendMessage("Программа запущена!\n", false, true);
     }
     else {
-        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть запущена. Проверьте соединение с аппаратом.\n", true);
+        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть запущена. Проверьте соединение с аппаратом.\n", true, true);
     }
 }
 
@@ -223,18 +223,18 @@ bool MainWindow::killApp()
     }
     if (isOk) {
         if (isRunning) {
-            m_consoleWidget->appendMessage("Программа остановлена!\n");
+            m_consoleWidget->appendMessage("Программа остановлена!\n", false, true);
         }
         else {
-            m_consoleWidget->appendMessage("Программа не была запущена. Нечего останавливать.\n");
+            m_consoleWidget->appendMessage("Программа не была запущена. Нечего останавливать.\n", false, true);
         }
     }
     else {
         if (m_mingwCompileAct->isChecked()) {
-            m_consoleWidget->appendMessage("Программа не была запущена. Нечего останавливать.\n");
+            m_consoleWidget->appendMessage("Программа не была запущена. Нечего останавливать.\n", false, true);
         }
         else if (m_edisonCompileAct->isChecked()) {
-            m_consoleWidget->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
+            m_consoleWidget->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true, true);
         }
     }
     return true;
@@ -773,7 +773,7 @@ void MainWindow::connectActionsToSlots()
      //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
     QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
-    QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString, bool)), m_consoleWidget, SLOT(appendMessage(QString, bool)));
+    QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString, bool, bool)), m_consoleWidget, SLOT(appendMessage(QString, bool, bool)));
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
     QObject::connect(m_uploadAct, SIGNAL(triggered(bool)), this, SLOT(uploadApp()));
     QObject::connect(m_showSettingsAct, SIGNAL(triggered(bool)), m_settingsWidget, SLOT(show()));
