@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "roboideconsole.h"
+#include "consolewidget.h"
 #include "wifipasswordwidget.h"
 #include "settingsmanager.h"
 #include "helpwidget.h"
@@ -26,7 +26,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       m_roboIdeTextEdit(new RoboIdeTextEditor(this)),
-      m_roboIdeConsole(new RoboIdeConsole(this)),
+      m_consoleWidget(new ConsoleWidget(this)),
       m_sourceCompiller(new SourceCompiler(this)),
       m_connectedDevicesList(new ConnectedDevicesList(this)),
       m_settingsWidget(new SettingsWidget(this)),
@@ -149,15 +149,15 @@ bool MainWindow::runApp()
     }
 
     if (isOK) {
-        m_roboIdeConsole->appendMessage("Программа запущена!\n");
+        m_consoleWidget->appendMessage("Программа запущена!\n");
     }
     else {
-        m_roboIdeConsole->appendMessage("Во время запуска программы произошла ошибка.\n", true);
+        m_consoleWidget->appendMessage("Во время запуска программы произошла ошибка.\n", true);
         if (m_mingwCompileAct->isChecked()) {
-            m_roboIdeConsole->appendMessage(m_localApp->errorString(), true);
+            m_consoleWidget->appendMessage(m_localApp->errorString(), true);
         }
         else if (m_edisonCompileAct->isChecked()) {
-            m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
+            m_consoleWidget->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
         }
     }
     return isOK;
@@ -166,31 +166,31 @@ bool MainWindow::runApp()
 void MainWindow::onEndFileUpload(bool isOk)
 {
     if (isOk) {
-        m_roboIdeConsole->appendMessage("Программа отправлена.\n");
+        m_consoleWidget->appendMessage("Программа отправлена.\n");
         m_wifiConnection->runApp();
     }
     else {
-        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true);
+        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true);
     }
 }
 
 void MainWindow::onAppKilled(bool isOk)
 {
     if (isOk) {
-        m_roboIdeConsole->appendMessage("Программа остановлена!\n");
+        m_consoleWidget->appendMessage("Программа остановлена!\n");
     }
     else {
-        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть остановлена. Проверьте соединение с аппаратом.\n", true);
+        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть остановлена. Проверьте соединение с аппаратом.\n", true);
     }
 }
 
 void MainWindow::onAppStarted(bool isOk)
 {
     if (isOk) {
-        m_roboIdeConsole->appendMessage("Программа запущена!\n");
+        m_consoleWidget->appendMessage("Программа запущена!\n");
     }
     else {
-        m_roboIdeConsole->appendMessage("Ошибка передачи. Программа не может быть запущена. Проверьте соединение с аппаратом.\n", true);
+        m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть запущена. Проверьте соединение с аппаратом.\n", true);
     }
 }
 
@@ -223,18 +223,18 @@ bool MainWindow::killApp()
     }
     if (isOk) {
         if (isRunning) {
-            m_roboIdeConsole->appendMessage("Программа остановлена!\n");
+            m_consoleWidget->appendMessage("Программа остановлена!\n");
         }
         else {
-            m_roboIdeConsole->appendMessage("Программа не была запущена. Нечего останавливать.\n");
+            m_consoleWidget->appendMessage("Программа не была запущена. Нечего останавливать.\n");
         }
     }
     else {
         if (m_mingwCompileAct->isChecked()) {
-            m_roboIdeConsole->appendMessage("Программа не была запущена. Нечего останавливать.\n");
+            m_consoleWidget->appendMessage("Программа не была запущена. Нечего останавливать.\n");
         }
         else if (m_edisonCompileAct->isChecked()) {
-            m_roboIdeConsole->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
+            m_consoleWidget->appendMessage("Ошибка передачи. Проверьте соединение с аппаратом.\n", true);
         }
     }
     return true;
@@ -447,15 +447,15 @@ void MainWindow::processOutReceived()
 {
     QString str = m_localApp->readAllStandardOutput().simplified();
     if (str != "") {
-        m_roboIdeConsole->appendMessage(str + "\n");
+        m_consoleWidget->appendMessage(str + "\n");
     }
     str = m_localApp->readAllStandardError().simplified();
     if (str != "") {
-        m_roboIdeConsole->appendMessage(str + "\n", true);
+        m_consoleWidget->appendMessage(str + "\n", true);
     }
     str = m_localApp->readAll().simplified();
     if (str != "") {
-        m_roboIdeConsole->appendMessage(str + "\n");
+        m_consoleWidget->appendMessage(str + "\n");
     }
 }
 
@@ -657,7 +657,7 @@ void MainWindow::createDockWindows()
     dock->setObjectName("ConsoleDockWidget");
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea
                           | Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
-    dock->setWidget(m_roboIdeConsole);
+    dock->setWidget(m_consoleWidget);
     dock->setFeatures(QDockWidget::DockWidgetClosable);
     addDockWidget(Qt::BottomDockWidgetArea, dock);
     m_viewMenu->addAction(dock->toggleViewAction());
@@ -773,11 +773,11 @@ void MainWindow::connectActionsToSlots()
      //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
     QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
-    QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString, bool)), m_roboIdeConsole, SLOT(appendMessage(QString, bool)));
+    QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString, bool)), m_consoleWidget, SLOT(appendMessage(QString, bool)));
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
     QObject::connect(m_uploadAct, SIGNAL(triggered(bool)), this, SLOT(uploadApp()));
     QObject::connect(m_showSettingsAct, SIGNAL(triggered(bool)), m_settingsWidget, SLOT(show()));
-    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_roboIdeConsole, SLOT(appendMessage(QString)));
+    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_consoleWidget, SLOT(appendMessage(QString)));
     QObject::connect(m_runAppAct, SIGNAL(triggered(bool)), this, SLOT(runApp()));
     QObject::connect(m_stopAppAct, SIGNAL(triggered(bool)), this, SLOT(killApp()));
     QObject::connect(m_combinedRunAct, SIGNAL(triggered(bool)), this, SLOT(combinedRunApp()));

@@ -18,11 +18,11 @@ struct OutputBuffer
 
 Q_DECLARE_METATYPE(OutputBuffer)
 
-class RoboIdeConsole : public QTextEdit
+class ConsoleWidget : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit RoboIdeConsole(QWidget *parent = 0);
+    explicit ConsoleWidget(QWidget *parent = 0);
 
 signals:
 

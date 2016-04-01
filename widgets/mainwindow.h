@@ -7,7 +7,7 @@
 #include <QToolBar>
 
 #include "widgets/roboidetexteditor.h"
-#include "widgets/roboideconsole.h"
+#include "widgets/consolewidget.h"
 #include "widgets/projecttreewidget.h"
 #include "logic/sourcecompiler.h"
 #include "widgets/connecteddeviceslist.h"
@@ -111,7 +111,7 @@ private:
     QAction *m_showFtpAct;
 
     RoboIdeTextEditor *m_roboIdeTextEdit;
-    RoboIdeConsole *m_roboIdeConsole;
+    ConsoleWidget *m_consoleWidget;
     SourceCompiler *m_sourceCompiller;
     ConnectedDevicesList *m_connectedDevicesList;
     SettingsWidget *m_settingsWidget;

@@ -1,4 +1,4 @@
-#include "roboideconsole.h"
+#include "consolewidget.h"
 
 #include <QPalette>
 #include <QDebug>
@@ -6,7 +6,7 @@
 #include <QRegExp>
 #include <QStringList>
 
-RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
+ConsoleWidget::ConsoleWidget(QWidget *parent) :
     QTextEdit(parent),
     m_defaultTextColor(QColor("light grey")),
     m_errorTextColor(QColor("red")),
@@ -19,10 +19,10 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
     m_consoleContextMenu->addAction(m_copyAction);
 
     connect(m_copyAction, SIGNAL(triggered(bool)), this, SLOT(copy()));
-    connect(this, &RoboIdeConsole::customContextMenuRequested, [=](const QPoint &point){
+    connect(this, &ConsoleWidget::customContextMenuRequested, [=](const QPoint &point){
         m_consoleContextMenu->exec(mapToGlobal(point));
     });
-    connect(this, &RoboIdeConsole::copyAvailable, [=](bool isAvailable) {
+    connect(this, &ConsoleWidget::copyAvailable, [=](bool isAvailable) {
         m_copyAction->setEnabled(isAvailable);
     });
 
@@ -39,7 +39,7 @@ RoboIdeConsole::RoboIdeConsole(QWidget *parent) :
     consoleStyleFile.close();
 }
 
-void RoboIdeConsole::appendMessage(const QString &text, bool isError)
+void ConsoleWidget::appendMessage(const QString &text, bool isError)
 {
     if (m_output.buffer.isEmpty()) {
         m_output.isError = isError;
@@ -73,7 +73,7 @@ void RoboIdeConsole::appendMessage(const QString &text, bool isError)
     }
 }
 
-void RoboIdeConsole::keyPressEvent(QKeyEvent *event)
+void ConsoleWidget::keyPressEvent(QKeyEvent *event)
 {
     bool isCopyEvent = event->modifiers().testFlag(Qt::ControlModifier) and
                       (event->key() == Qt::Key_C or event->key() == Qt::Key_Insert);
@@ -91,7 +91,7 @@ void RoboIdeConsole::keyPressEvent(QKeyEvent *event)
 
 }
 
-void RoboIdeConsole::dropEvent(QDropEvent *event)
+void ConsoleWidget::dropEvent(QDropEvent *event)
 {
     Q_UNUSED(event)
 }

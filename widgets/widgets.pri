@@ -3,7 +3,6 @@ DEPENDPATH += $$PWD
 
 HEADERS += \
     $$PWD/mainwindow.h \
-    $$PWD/roboideconsole.h \
     $$PWD/roboidetexteditor.h \
     $$PWD/connecteddeviceslist.h \
     $$PWD/wifipasswordwidget.h \
@@ -15,12 +14,12 @@ HEADERS += \
     $$PWD/compilationoptionsview.h \
     $$PWD/projectcreatedialog.h \
     $$PWD/filecreatedialog.h \
-    $$PWD/ftpwidget.h
+    $$PWD/ftpwidget.h \
+    $$PWD/consolewidget.h
 
 
 SOURCES += \
     $$PWD/mainwindow.cpp \
-    $$PWD/roboideconsole.cpp \
     $$PWD/roboidetexteditor.cpp \
     $$PWD/connecteddeviceslist.cpp \
     $$PWD/wifipasswordwidget.cpp \
@@ -32,5 +31,6 @@ SOURCES += \
     $$PWD/compilationoptionsview.cpp \
     $$PWD/projectcreatedialog.cpp \
     $$PWD/filecreatedialog.cpp \
-    $$PWD/ftpwidget.cpp
+    $$PWD/ftpwidget.cpp \
+    $$PWD/consolewidget.cpp
 
