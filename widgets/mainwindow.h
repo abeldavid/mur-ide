@@ -10,7 +10,7 @@
 #include "widgets/consolewidget.h"
 #include "widgets/projecttreewidget.h"
 #include "logic/sourcecompiler.h"
-#include "widgets/connecteddeviceslist.h"
+#include "widgets/devicelistwidget.h"
 #include "widgets/settingswidget.h"
 #include "widgets/cameraswidget.h"
 #include "filetransfer/wificonnection.h"

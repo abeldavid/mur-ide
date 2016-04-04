@@ -1,4 +1,4 @@
-#include "connecteddeviceslist.h"
+#include "devicelistwidget.h"
 
 #include <QHBoxLayout>
 #include <QGridLayout>
