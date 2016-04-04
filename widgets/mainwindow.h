@@ -58,10 +58,12 @@ private slots:
     void treeContextMenuTriggered(QAction*);
     void onTargetComboChanged(QString currentText);
     void onLocalAppFinished();
+    void onErrorFound(const QString &fileName, int lineNumber, int columnNjmber);
 signals:
     void sendFile(QString);
     void startApp();
     void stopApp();
+    void fatalErrorHighlight(int, int);
 private:
     void createMenus();
     void createActions();
@@ -125,6 +127,7 @@ private:
     FileCreateDialog *m_fileCreateDialog;
     QThread* m_wifiConnectionThread;
     bool m_inCombinedRunState;
+    bool m_currentErrorsFound;
     QComboBox *m_targetComboBox;
 };
 

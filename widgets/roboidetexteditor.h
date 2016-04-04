@@ -24,6 +24,7 @@ public slots:
     bool fileExists() const;
     void clearText();
     void highlightError(const QString &fileName, int lineNumber);
+    void highlightFatalErrorLine(int lineNumber, int columnNumber);
     void clearErrors();
     void closeFile();
 

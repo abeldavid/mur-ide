@@ -86,6 +86,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
 void MainWindow::runCompilation()
 {
+    m_currentErrorsFound = false;
     if (m_edisonCompileAct->isChecked()) {
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::EDISON);
     }
@@ -106,6 +107,7 @@ void MainWindow::runCompilation()
 
 void MainWindow::compilationFinished()
 {
+    m_currentErrorsFound = false;
     m_buildAct->setEnabled(true);
     if (m_inCombinedRunState) {
         if (m_sourceCompiller->isCompiled()) {
@@ -418,6 +420,17 @@ void MainWindow::onTargetComboChanged(QString currentText)
 
 void MainWindow::onLocalAppFinished()
 {
+}
+
+void MainWindow::onErrorFound(const QString &fileName, int lineNumber, int columnNumber)
+{
+    if (!m_currentErrorsFound) {
+        m_currentErrorsFound = true;
+        ProjectManager::instance().openFile(fileName);
+        emit fatalErrorHighlight(lineNumber, columnNumber);
+
+    }
+    m_roboIdeTextEdit->highlightError(fileName, lineNumber);
 }
 
 void MainWindow::switchCompilationTargetToEdison()
@@ -807,6 +820,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_localApp, SIGNAL(finished(int)), this, SLOT(onLocalAppFinished()));
 
     QObject::connect(m_sourceCompiller, SIGNAL(run()), m_roboIdeTextEdit, SLOT(clearErrors()));
-    QObject::connect(m_consoleWidget, SIGNAL(errorFound(QString,int)), m_roboIdeTextEdit, SLOT(highlightError(QString,int)));
+    QObject::connect(m_consoleWidget, SIGNAL(errorFound(QString, int, int)), this, SLOT(onErrorFound(QString, int, int)));
+    QObject::connect(this, SIGNAL(fatalErrorHighlight(int, int)), m_roboIdeTextEdit, SLOT(highlightFatalErrorLine(int, int)));
 }
 

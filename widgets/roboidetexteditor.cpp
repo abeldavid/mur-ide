@@ -69,6 +69,11 @@ void RoboIdeTextEditor::highlightError(const QString &fileName, int lineNumber)
     }
 }
 
+void RoboIdeTextEditor::highlightFatalErrorLine(int lineNumber, int columnNumber)
+{
+    setCursorPosition(lineNumber-1, columnNumber-1);
+}
+
 void RoboIdeTextEditor::clearErrors()
 {
     markerDeleteAll();

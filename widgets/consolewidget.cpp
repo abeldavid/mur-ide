@@ -54,21 +54,22 @@ void ConsoleWidget::appendMessage(const QString &text, bool isError, bool isIDEM
                 qssClass = isIDEMessage ? "outputIDEOk" : "outputOk";
             }
             else {
-                regexpString = "((?:\\w|\\.|-|\\\\|/|:)+[0-9:]*:)\\s(.+)";
+                regexpString = "((?:\\w|\\.|-|\\\\|/|:)+[0-9:]*:\\s?(?:error|warning)?:?)\\s(.+) ";
                 qssClass = isIDEMessage ? "outputIDEError" : "outputError";
             }
             QRegExp rxCompilationOut(regexpString);
             if(rxCompilationOut.indexIn(parts[i]) != -1) {
-                append("<div class=\"" + qssClass + "\"><b>" + rxCompilationOut.cap(1).simplified() +
-                       "</b> " + rxCompilationOut.cap(2).simplified() + "</div>");
                 if (isError and !isIDEMessage) {
-                    QRegExp rxErrorLocation(".*((?:\\w|\\.)+):(\\d+):(\\d+):");
-                    if (rxErrorLocation.indexIn(rxCompilationOut.cap(1).simplified()) != -1) {
-                        QRegExp rxErrorType("\\s*(error|warning):.*");
-                        qDebug() << rxErrorType.indexIn(rxCompilationOut.cap(2));
-                        emit errorFound(rxErrorLocation.cap(1), rxErrorLocation.cap(2).toInt());
+                    QRegExp rxError(".*((?:\\w|\\.)+):(\\d+):(\\d+):\\s?(error|warning):");
+                    if (rxError.indexIn(rxCompilationOut.cap(1).simplified()) != -1) {
+//                        bool isErrorFatal = (rxError.cap(4) == "error") ? true : false;
+                        if (rxError.cap(4) == "error") {
+                            emit errorFound(rxError.cap(1), rxError.cap(2).toInt(), rxError.cap(3).toInt());
+                        }
                     }
                 }
+                append("<div class=\"" + qssClass + "\"><b>" + rxCompilationOut.cap(1).simplified() +
+                       "</b> " + rxCompilationOut.cap(2).simplified() + "</div>");
             } else {
                 append("<div class=\"" + qssClass + "\">" + parts[i].simplified() + "</div>");
             }
