@@ -49,6 +49,7 @@ void WiFiConnection::runApp()
 {
 
     if (!m_isConnected) {
+        recreateSockets();
         emit appStarted(false);
         return;
     }
@@ -79,6 +80,7 @@ void WiFiConnection::killApp()
 {
 
     if (!m_isConnected) {
+        recreateSockets();
         emit appKilled(false);
         return;
     }
@@ -111,6 +113,7 @@ void WiFiConnection::send(QString file)
 {
 
     if (!m_isConnected) {
+        recreateSockets();
         emit appSend(false);
         return;
     }
