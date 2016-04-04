@@ -193,6 +193,11 @@ void ConnectedDevicesList::updateDeviceIcon(uint8_t deviceNumber, const uint8_t 
 
 void ConnectedDevicesList::clearDevices()
 {
+    //reinitialize m_prevStatusInfo (fix bug after disconnect)
+    m_prevStatusInfo = {};
+    m_prevStatusInfo.cameras = 255;
+    m_prevStatusInfo.leak = 255;
+
     m_connectionStatus->setStyleSheet("QLabel{color:#999999}");
     m_connectionStatus->setText(m_connectionTexts.second);
     m_thruster10->clear();
