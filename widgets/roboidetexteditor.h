@@ -25,6 +25,7 @@ public slots:
     void clearText();
     void highlightError(const QString &fileName, int lineNumber);
     void clearErrors();
+    void closeFile();
 
 private:
     void setupEditor();

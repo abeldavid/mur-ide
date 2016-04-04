@@ -75,6 +75,11 @@ void RoboIdeTextEditor::clearErrors()
     m_errorsFound.clear();
 }
 
+void RoboIdeTextEditor::closeFile()
+{
+    m_fileName = "";
+}
+
 void RoboIdeTextEditor::setupEditor()
 {
 

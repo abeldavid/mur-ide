@@ -57,13 +57,16 @@ void ConsoleWidget::appendMessage(const QString &text, bool isError, bool isIDEM
                 regexpString = "((?:\\w|\\.|-|\\\\|/|:)+[0-9:]*:)\\s(.+)";
                 qssClass = isIDEMessage ? "outputIDEError" : "outputError";
             }
-            QRegExp rx(regexpString);
-            if(rx.indexIn(parts[i]) != -1) {
-                append("<div class=\"" + qssClass + "\"><b>" + rx.cap(1).simplified() + "</b> " + rx.cap(2).simplified() + "</div>");
+            QRegExp rxCompilationOut(regexpString);
+            if(rxCompilationOut.indexIn(parts[i]) != -1) {
+                append("<div class=\"" + qssClass + "\"><b>" + rxCompilationOut.cap(1).simplified() +
+                       "</b> " + rxCompilationOut.cap(2).simplified() + "</div>");
                 if (isError and !isIDEMessage) {
-                    QRegExp re(".*((?:\\w|\\.)+):(\\d+):(\\d+):");
-                    if (re.indexIn(rx.cap(1).simplified()) != -1) {
-                        emit errorFound(re.cap(1), re.cap(2).toInt());
+                    QRegExp rxErrorLocation(".*((?:\\w|\\.)+):(\\d+):(\\d+):");
+                    if (rxErrorLocation.indexIn(rxCompilationOut.cap(1).simplified()) != -1) {
+                        QRegExp rxErrorType("\\s*(error|warning):.*");
+                        qDebug() << rxErrorType.indexIn(rxCompilationOut.cap(2));
+                        emit errorFound(rxErrorLocation.cap(1), rxErrorLocation.cap(2).toInt());
                     }
                 }
             } else {

@@ -93,8 +93,10 @@ void MainWindow::runCompilation()
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     }
     m_buildAct->setEnabled(false);
-    if (m_roboIdeTextEdit->isModified()) {
+    if (m_roboIdeTextEdit->fileName().isEmpty()) {
         saveFilePromt();
+    } else {
+        saveFile();
     }
     if (ProjectManager::instance().isProjectOpened()) {
         ProjectManager::instance().generateMakeFile();
@@ -296,6 +298,7 @@ void MainWindow::projectClose()
     }
     m_roboIdeTextEdit->clear();
     m_roboIdeTextEdit->setModified(false);
+    m_roboIdeTextEdit->closeFile();
     ProjectManager::instance().closeProject();
 }
 
