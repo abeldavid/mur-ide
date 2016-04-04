@@ -634,6 +634,7 @@ void MainWindow::createMenus()
     m_fileMenu->addAction(m_createProjectAct);
     m_fileMenu->addAction(m_openProjectAct);
     m_fileMenu->addAction(m_closeProjectAct);
+    m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_createFileAct);
     m_fileMenu->addAction(m_addFileAct);
     m_fileMenu->addAction(m_saveAct);
