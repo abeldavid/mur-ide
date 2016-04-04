@@ -3,6 +3,7 @@
 #include <QFormLayout>
 #include <QDialogButtonBox>
 #include <QComboBox>
+#include <QListView>
 #include <QLabel>
 #include <QDebug>
 #include <QStringListModel>
@@ -22,6 +23,7 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
     layout->addRow(nameLabel);
 
     QComboBox *comboBox = new QComboBox(this);
+    comboBox->setView(new QListView()); // style problem workaround
 
     QStringListModel *model = new QStringListModel(Project::defaultFilePrefixes.keys(), this);
     QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);

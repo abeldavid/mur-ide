@@ -8,3 +8,69 @@ QMainWindow::separator
 QMainWindow { 
     background-color: #464646;
 }
+QDialog {
+    background-color: #636363;
+    border: none;
+}
+QDialog QLabel {
+    color: #D0D0D0;
+}
+QDialog QLineEdit {
+    background-color: #D0D0D0;
+    color: #464646;
+    border: none;
+    padding: 4px;
+}
+
+QComboBox{
+    font-size: 10pt;
+    font-weight: 200;
+    background-color: #636363;
+    color: #D0D0D0;
+    padding: 3px 8px;
+    border: none;
+}
+QComboBox::down-arrow{
+    background: url(:/icons/icons/widgeticons/arrow-down.png) #636363 no-repeat;
+    margin: 4px 0 0 2px;
+
+}
+QComboBox::drop-down{
+   border-left: 1px solid #464646;
+   width:20px;
+}
+QComboBox::drop-down:on, QComboBox::down-arrow:on{
+    background-color:#888888;
+}
+QComboBox QAbstractItemView {
+    background-color: #636363;
+    color: #D0D0D0;
+    border: none;
+}
+QComboBox QAbstractItemView::item {
+    padding:3px 5px;
+    margin:0px;
+}
+QComboBox QAbstractItemView::item:selected {
+    background-color: lightgray;
+    color: #636363;
+    margin:0px;
+}
+QDialog QComboBox {
+    background-color:#464646;
+}
+QDialog QComboBox::drop-down {
+   border-left: 1px solid #636363;
+   width:20px;
+}
+QDialog QComboBox::down-arrow {
+    background-color:#464646;
+}
+QDialog QPushButton {
+    background-color:#464646;
+    color: #D0D0D0;
+    padding:6px;
+    border:none;
+    min-width:100px;
+}
+
