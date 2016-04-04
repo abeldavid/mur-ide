@@ -616,6 +616,7 @@ void MainWindow::createToolBars()
     m_toolBar->addAction(m_stopAppAct);
     m_toolBar->addSeparator();
 
+    m_targetComboBox->setView(new QListView()); // workaround on Qt bug with qcombobox style
     m_targetComboBox->addItem(m_edisonCompileAct->text());
     m_targetComboBox->addItem(m_mingwCompileAct->text());
     m_toolBar->addWidget(m_targetComboBox);

@@ -35,3 +35,38 @@ QToolBar::separator {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+QToolBar QComboBox{
+    font-size: 10pt;
+    font-weight: 200;
+    background-color: #636363;
+    color: #D0D0D0;
+    padding: 3px 8px;
+    border: none;
+}
+QToolBar QComboBox::down-arrow{
+    background: url(:/icons/icons/widgeticons/arrow-down.png) #636363 no-repeat;
+    margin: 4px 0 0 2px;
+
+}
+QToolBar QComboBox::drop-down{
+   border-left: 1px solid #464646;
+   width:20px;
+}
+QToolBar QComboBox::drop-down:on, QToolBar QComboBox::down-arrow:on{
+    background-color:#888888;
+}
+QComboBox QAbstractItemView {
+    background-color: #636363;
+    color: #D0D0D0;
+    border: none;
+}
+QAbstractItemView::item {
+    padding:3px 5px;
+    margin:0px;
+}
+QAbstractItemView::item:selected {
+    background-color: lightgray;
+    color: #636363;
+    margin:0px;
+}
