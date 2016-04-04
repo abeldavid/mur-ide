@@ -120,6 +120,17 @@ void ProjectManager::openFile(const QString &name)
     }
 }
 
+void ProjectManager::openDefaultProjectFile()
+{
+    QString fileName = m_project->getExistingFileName();
+    if (!fileName.isEmpty()) {
+    QString content;
+        if (m_project->openFile(fileName, content)) {
+            emit fileOpened(fileName, content);
+        }
+    }
+}
+
 void ProjectManager::saveFile(const QString &name, const QString &content)
 {
     if (m_project->saveFile(name, content)) {

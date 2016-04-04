@@ -313,6 +313,7 @@ void MainWindow::openHelp()
 void MainWindow::onProjectOpened()
 {
     enableProject();
+    ProjectManager::instance().openDefaultProjectFile();
 }
 
 void MainWindow::onProjectClosed()

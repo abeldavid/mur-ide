@@ -366,6 +366,16 @@ bool Project::generateMakeFile()
     return result;
 }
 
+QString Project::getExistingFileName()
+{
+    QStringList sources = getSources();
+    QString fileName = "";
+    if (sources.size() > 0) {
+        fileName = sources[0];
+    }
+    return fileName;
+}
+
 QString Project::getName()
 {
     return m_projectJson["name"].toString();

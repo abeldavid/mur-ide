@@ -47,6 +47,7 @@ public slots:
     void openProject(const QString &path);
     void closeProject();
     void openFile(const QString &name);
+    void openDefaultProjectFile();
     void saveFile(const QString &name, const QString &content);
     void renameFile(const QString &oldName, const QString &newName);
     void deleteFile(const QString &name);

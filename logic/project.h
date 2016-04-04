@@ -45,6 +45,7 @@ public:
     bool renameFile(const QString &oldName, const QString &newName);
     bool deleteFile(const QString &name);
     bool generateMakeFile();
+    QString getExistingFileName();
 
     QString getName();
     QStringList getSources();
