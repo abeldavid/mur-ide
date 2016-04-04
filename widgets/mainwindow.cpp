@@ -91,6 +91,7 @@ void MainWindow::runCompilation()
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::EDISON);
     }
     else if (m_mingwCompileAct->isChecked()) {
+        m_localApp->kill();
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     }
     m_buildAct->setEnabled(false);
