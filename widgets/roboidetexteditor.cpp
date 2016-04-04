@@ -100,7 +100,7 @@ void RoboIdeTextEditor::setupEditor()
    //! Setup right margin
    setMarginsBackgroundColor(QColor("gainsboro"));
    setMarginLineNumbers(1, true);
-   setMarginWidth(1, 30);
+   setMarginWidth(1, 40);
 
    //! Add some auto completion
    //setAutoCompletionSource(QsciScintilla::AcsAll);
