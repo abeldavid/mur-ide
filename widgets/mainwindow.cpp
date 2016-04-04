@@ -313,21 +313,27 @@ void MainWindow::openHelp()
 void MainWindow::onProjectOpened()
 {
     enableProject();
+    setWindowTitle(ProjectManager::instance().getProjectName() + " - " + appTitle);
     ProjectManager::instance().openDefaultProjectFile();
 }
 
 void MainWindow::onProjectClosed()
 {
+    setWindowTitle(appTitle);
     disableProject();
 }
 
 void MainWindow::openFile(const QString &fileName)
 {
-
     if (m_roboIdeTextEdit->isModified()) {
         saveFilePromt();
     }
     ProjectManager::instance().openFile(fileName);
+}
+
+void MainWindow::onFileOpened(const QString &fileName)
+{
+    setWindowTitle(fileName + " - " + ProjectManager::instance().getProjectName() + " - " + appTitle);
 }
 
 void MainWindow::saveFile()
@@ -780,6 +786,7 @@ void MainWindow::connectActionsToSlots()
 
     QObject::connect(m_projectTree, SIGNAL(fileSelected(QString)), this, SLOT(openFile(QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), this, SLOT(onFileOpened(QString)));
     QObject::connect(m_projectTree, SIGNAL(projectContextMenu(QPoint, QString)), this, SLOT(projectContextMenu(QPoint,QString)));
 
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));

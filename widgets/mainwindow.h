@@ -51,6 +51,7 @@ private slots:
     void onProjectOpened();
     void onProjectClosed();
     void openFile(const QString &fileName);
+    void onFileOpened(const QString &fileName);
     void saveFile();
     void saveFileAs();
     void saveFilePromt();
@@ -65,6 +66,8 @@ signals:
     void stopApp();
     void fatalErrorHighlight(int, int);
 private:
+    const QString appTitle = "RobobIDE";
+
     void createMenus();
     void createActions();
     void createToolBars();
