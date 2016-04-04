@@ -1,6 +1,7 @@
 #include "ftpwidget.h"
 #include "settingsmanager.h"
 
+#include <QFileDialog>
 #include <QtGui>
 #include <QtNetwork>
 #include <QHeaderView>
@@ -140,7 +141,6 @@ void FtpWidget::connectToFtp()
     if (!url.isValid() || url.scheme().toLower() != QLatin1String("ftp")) {
         ftp->connectToHost(ftpServerLineEdit->text(), 21);
         ftp->login(SettingsManager::instance().userLogin(), SettingsManager::instance().userPassword());
-        //ftp->login();
     } else {
         ftp->connectToHost(url.host(), url.port(21));
 
@@ -154,27 +154,19 @@ void FtpWidget::connectToFtp()
 
     fileList->setEnabled(true);
     connectButton->setEnabled(false);
-    connectButton->setText(tr("Disconnect"));
-    statusLabel->setText(tr("Connecting to FTP server %1...")
+    connectButton->setText(tr("Отключится"));
+    statusLabel->setText(tr("Подключение к FTP серверу %1...")
                          .arg(ftpServerLineEdit->text()));
 }
 
 void FtpWidget::downloadFile()
 {
-    QString fileName = fileList->currentItem()->text(0);
-//
-    if (QFile::exists(fileName)) {
-        QMessageBox::information(this, tr("FTP"),
-                                 tr("There already exists a file called %1 in "
-                                    "the current directory.")
-                                 .arg(fileName));
-        return;
-    }
+    QString fileName = QFileDialog::getSaveFileName(this);
 
     file = new QFile(fileName);
     if (!file->open(QIODevice::WriteOnly)) {
         QMessageBox::information(this, tr("FTP"),
-                                 tr("Unable to save the file %1: %2.")
+                                 tr("Невозможно сохранить файл %1: %2.")
                                  .arg(fileName).arg(file->errorString()));
         delete file;
         return;
