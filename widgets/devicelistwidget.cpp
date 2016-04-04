@@ -1,8 +1,7 @@
 #include "devicelistwidget.h"
 
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QGridLayout>
-#include <QLayout>
 #include <QLabel>
 #include <QFile>
 #include <QSpacerItem>
@@ -64,41 +63,49 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     m_connectionStatus->setStyleSheet("QLabel{color:#999999}");
     mainLayout->addWidget(m_connectionStatus, 0, 0, 1, 4, Qt::AlignHCenter);
 
-    m_headerYaw->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_headerYaw, 1, 0);
-    m_headerPitch->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_headerPitch, 1, 1);
-    m_headerRoll->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_headerRoll, 1, 2);
-    m_headerDepth->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_headerDepth, 1, 3);
 
-    m_yaw->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_yaw, 2, 0);
-    m_pitch->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_pitch, 2, 1);
-    m_roll->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_roll, 2, 2);
-    m_depth->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_depth, 2, 3);
+    m_headerYaw->setAlignment(Qt::AlignHCenter);
+    QVBoxLayout *yawLayout = new QVBoxLayout;
+    yawLayout->setSpacing(5);
+    mainLayout->addLayout(yawLayout, 1, 0, Qt::AlignHCenter);
+    yawLayout->addWidget(m_headerYaw, 0, Qt::AlignBottom);
+    yawLayout->addWidget(m_yaw, 0, Qt::AlignTop);
+    m_headerPitch->setAlignment(Qt::AlignHCenter);
+    QVBoxLayout *pitchLayout = new QVBoxLayout;
+    pitchLayout->setSpacing(5);
+    mainLayout->addLayout(pitchLayout, 1, 1, Qt::AlignHCenter);
+    pitchLayout->addWidget(m_headerPitch, 0, Qt::AlignBottom);
+    pitchLayout->addWidget(m_pitch, 0, Qt::AlignTop);
+    m_headerRoll->setAlignment(Qt::AlignHCenter);
+    QVBoxLayout *rollLayout = new QVBoxLayout;
+    rollLayout->setSpacing(5);
+    mainLayout->addLayout(rollLayout, 1, 2, Qt::AlignHCenter);
+    rollLayout->addWidget(m_headerRoll, 0, Qt::AlignBottom);
+    rollLayout->addWidget(m_roll, 0, Qt::AlignTop);
+    m_headerDepth->setAlignment(Qt::AlignHCenter);
+    QVBoxLayout *depthLayout = new QVBoxLayout;
+    depthLayout->setSpacing(5);
+    mainLayout->addLayout(depthLayout, 1, 3, Qt::AlignHCenter);
+    depthLayout->addWidget(m_headerDepth, 0, Qt::AlignBottom);
+    depthLayout->addWidget(m_depth, 0, Qt::AlignTop);
 
     m_thruster10->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_thruster10, 3, 0);
+    mainLayout->addWidget(m_thruster10, 2, 0);
     m_thruster20->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_thruster20, 3, 1);
+    mainLayout->addWidget(m_thruster20, 2, 1);
     m_thruster30->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_thruster30, 3, 2);
+    mainLayout->addWidget(m_thruster30, 2, 2);
     m_thruster40->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_thruster40, 3, 3);
+    mainLayout->addWidget(m_thruster40, 2, 3);
 
     m_cameraOne->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_cameraOne, 4, 0);
+    mainLayout->addWidget(m_cameraOne, 3, 0);
     m_cameraTwo->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_cameraTwo, 4, 1);
+    mainLayout->addWidget(m_cameraTwo, 3, 1);
     m_altimetr->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_altimetr, 4, 2);
+    mainLayout->addWidget(m_altimetr, 3, 2);
     m_emptySlot->setAlignment(Qt::AlignHCenter);
-    mainLayout->addWidget(m_emptySlot, 4, 3);
+    mainLayout->addWidget(m_emptySlot, 3, 3);
 
     QFile styleFile(":/dark/styles/devicelist.css");
     styleFile.open(QFile::ReadOnly);
@@ -107,6 +114,14 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     styleFile.close();
 
     mainLayout->setSpacing(10);
+
+    StatusInfo st;
+    st.yaw = 100.0f;
+    st.roll = 50.0f;
+    st.pitch = 22.5f;
+    st.depth = 18.5f;
+    st.devicesTypes[0]=1;
+    updateDevices(st);
 }
 
 void ConnectedDevicesList::updateDevices(const StatusInfo &status)
