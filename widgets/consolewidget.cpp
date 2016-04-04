@@ -12,13 +12,16 @@ ConsoleWidget::ConsoleWidget(QWidget *parent) :
     m_errorTextColor(QColor("red")),
     m_consoleContextMenu(new QMenu(this)),
     m_copyAction(new QAction("Копировать", this)),
+    m_clearAction(new QAction("Очистить", this)),
     m_output({QString(), false})
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
     m_copyAction->setEnabled(false);
     m_consoleContextMenu->addAction(m_copyAction);
+    m_consoleContextMenu->addAction(m_clearAction);
 
     connect(m_copyAction, SIGNAL(triggered(bool)), this, SLOT(copy()));
+    connect(m_clearAction, SIGNAL(triggered(bool)), this, SLOT(clear()));
     connect(this, &ConsoleWidget::customContextMenuRequested, [=](const QPoint &point){
         m_consoleContextMenu->exec(mapToGlobal(point));
     });

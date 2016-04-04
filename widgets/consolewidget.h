@@ -34,6 +34,7 @@ private:
     QColor m_errorTextColor;
     QMenu *m_consoleContextMenu;
     QAction *m_copyAction;
+    QAction *m_clearAction;
     OutputBuffer m_output;
     void keyPressEvent(QKeyEvent *event);
     void dropEvent(QDropEvent *event);
