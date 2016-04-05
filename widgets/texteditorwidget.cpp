@@ -1,4 +1,4 @@
-#include "roboidetexteditor.h"
+#include "texteditorwidget.h"
 
 #include <Qsci/qscilexercpp.h>
 #include <QFontDatabase>

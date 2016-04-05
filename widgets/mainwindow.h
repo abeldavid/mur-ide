@@ -6,7 +6,7 @@
 #include <QComboBox>
 #include <QToolBar>
 
-#include "widgets/roboidetexteditor.h"
+#include "widgets/texteditorwidget.h"
 #include "widgets/consolewidget.h"
 #include "widgets/projecttreewidget.h"
 #include "logic/sourcecompiler.h"
