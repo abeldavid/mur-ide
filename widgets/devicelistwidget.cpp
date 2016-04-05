@@ -194,7 +194,8 @@ void ConnectedDevicesList::updateDeviceIcon(uint8_t deviceNumber, const uint8_t 
 void ConnectedDevicesList::clearDevices()
 {
     //reinitialize m_prevStatusInfo (fix bug after disconnect)
-    m_prevStatusInfo = {};
+
+    m_prevStatusInfo = (StatusInfo){};
     m_prevStatusInfo.cameras = 255;
     m_prevStatusInfo.leak = 255;
 
