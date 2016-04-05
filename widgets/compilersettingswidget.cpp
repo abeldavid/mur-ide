@@ -16,6 +16,7 @@ CompilerSettingsWidget::CompilerSettingsWidget(QWidget *parent) :
     QGridLayout *layout = new QGridLayout(this);
     setLayout(layout);
 
+    m_compilerBox->setView(new QListView()); // style problem workaround
     layout->addWidget(m_compilerBox);
     layout->addWidget(m_view);
 

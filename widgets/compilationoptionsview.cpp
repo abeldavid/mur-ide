@@ -1,6 +1,6 @@
 #include <QDebug>
 #include <QApplication>
-
+#include <QFile>
 #include "compilationoptionsview.h"
 
 CompilationOptionsView::CompilationOptionsView(QWidget *parent) : QListWidget(parent)
@@ -104,5 +104,10 @@ void CompilationOptionsView::createMenu()
 
 void CompilationOptionsView::setup()
 {
+    QFile editStyle(":/dark/styles/texteditscrollbar.css");
+    editStyle.open(QFile::ReadOnly);
+    QString styleSheet = editStyle.readAll();
+    editStyle.close();
 
+    setStyleSheet(styleSheet);
 }
