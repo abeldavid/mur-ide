@@ -5,7 +5,6 @@
 #include <QWidget>
 #include <QMultiMap>
 #include <Qsci/qsciscintilla.h>
-#include <Qsci/qsciapis.h>
 #include <Qsci/qscilexercpp.h>
 
 class RoboIdeTextEditor : public QsciScintilla
@@ -29,15 +28,16 @@ public slots:
     void closeFile();
 
 private:
-    void setupEditor();
-    void setupLexer();
-    void setupUi();
     bool m_isFileExist;
     QString m_fileName;
     QsciLexerCPP* m_lexCpp;
     bool m_skipNullTextChanged = false;
     const int m_errorMarkerCode = 0;
     QMultiMap<QString, int> m_errorsFound;
+    void setupEditor();
+    void setupLexer();
+    void setupUi();
+    void keyPressEvent(QKeyEvent *e);
 
 private slots:
     void handleChangedText();

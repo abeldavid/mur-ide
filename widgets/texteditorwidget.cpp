@@ -1,6 +1,5 @@
 #include "texteditorwidget.h"
 
-#include <Qsci/qscilexercpp.h>
 #include <QFontDatabase>
 #include <QDebug>
 #include <QFile>
@@ -10,6 +9,7 @@
 #include <QCoreApplication>
 #include <QMessageBox>
 #include <QPixmap>
+#include <Qsci/qsciapis.h>
 
 RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
     : QsciScintilla(parent),
@@ -96,47 +96,51 @@ void RoboIdeTextEditor::setupEditor()
 
     //! Setup our C++ lexer
     m_lexCpp = new QsciLexerCPP(this);
+//    QsciAPIs api(m_lexCpp);
+//    api.prepare();
+    setLexer(m_lexCpp);
     m_lexCpp->setFont(font);
     setupLexer();
-    setLexer(m_lexCpp);
+
     setEolMode(EolUnix);
 
     //! Setup highlighting on current line
-   setCaretLineVisible(true);
-   setCaretLineBackgroundColor(QColor("#323232"));
-   setCaretForegroundColor(QColor("#777777"));
-   setMarginsForegroundColor(QColor("#777777"));
+    setCaretLineVisible(true);
+    setCaretLineBackgroundColor(QColor("#323232"));
+    setCaretForegroundColor(QColor("#777777"));
+    setMarginsForegroundColor(QColor("#777777"));
 
-   //! Setup right margin
-   setMarginsBackgroundColor(QColor("gainsboro"));
-   setMarginLineNumbers(1, true);
-   setMarginWidth(1, 40);
+    //! Setup right margin
+    setMarginsBackgroundColor(QColor("gainsboro"));
+    setMarginLineNumbers(1, true);
+    setMarginWidth(1, 40);
 
-   //! Add some auto completion
-   //setAutoCompletionSource(QsciScintilla::AcsAll);
-   //setAutoCompletionCaseSensitivity(true);
-   //setAutoCompletionUseSingle(QsciScintilla::AcusAlways);
-   //setAutoCompletionThreshold(0);
+    //! Add some auto completion
+    setAutoCompletionReplaceWord(true);
+    setAutoCompletionCaseSensitivity(true);
+    setAutoCompletionThreshold(3);
+    setAutoCompletionSource(QsciScintilla::AcsAll);
+//    setAutoCompletionUseSingle(QsciScintilla::AcusAlways);
 
-   //! Setup indent for 4 spaces
-   setAutoIndent(true);
-   setIndentationGuides(false);
-   setIndentationsUseTabs(false);
-   setIndentationWidth(4);
+    //! Setup indent for 4 spaces
+    setAutoIndent(true);
+    setIndentationGuides(false);
+    setIndentationsUseTabs(false);
+    setIndentationWidth(4);
 
-   //! Brace matching highlighting
-   setBraceMatching(QsciScintilla::SloppyBraceMatch);
+    //! Brace matching highlighting
+    setBraceMatching(QsciScintilla::SloppyBraceMatch);
 
-   setMatchedBraceBackgroundColor("#76715E");
-   setMatchedBraceForegroundColor("#FFFFFF");
+    setMatchedBraceBackgroundColor("#76715E");
+    setMatchedBraceForegroundColor("#FFFFFF");
 
-   setUnmatchedBraceForegroundColor("#FFFFFF");
-   setUnmatchedBraceBackgroundColor("#FA2772");
+    setUnmatchedBraceForegroundColor("#FFFFFF");
+    setUnmatchedBraceBackgroundColor("#FA2772");
 
-   //!Styles
-   m_lexCpp->setPaper(QColor(37, 37, 37));
-   setMarginsBackgroundColor(QColor(37, 37, 37));
-   setStyleSheet("QWidget {"
+    //!Styles
+    m_lexCpp->setPaper(QColor(37, 37, 37));
+    setMarginsBackgroundColor(QColor(37, 37, 37));
+    setStyleSheet("QWidget {"
                      "border-top: none;"
                      "border-left: none;"
                      "border-top: none;"
@@ -178,8 +182,16 @@ void RoboIdeTextEditor::setupUi()
     editStyle.open(QFile::ReadOnly);
     QString styleSheet = editStyle.readAll();
     editStyle.close();
-
     setStyleSheet(styleSheet);
+}
+
+void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
+{
+    if((e->modifiers() == Qt::CTRL) && (e->key() == Qt::Key_Space)) {
+        autoCompleteFromAll();
+        return; // не дает дописать NULL
+    }
+    QsciScintilla::keyPressEvent(e);
 }
 
 void RoboIdeTextEditor::handleChangedText()
