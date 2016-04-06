@@ -5,11 +5,7 @@ QTreeWidget {
 QTreeWidget::item {
     background-color: transparent;
     color: #D0D0D0;
-}
-
-QTreeWidget::header {
-    background-color: transparent;
-    color: #D0D0D0;
+    padding: 1px;
 }
 
 QHeaderView::section {

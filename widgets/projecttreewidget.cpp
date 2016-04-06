@@ -40,6 +40,7 @@ void ProjectTree::loadProject()
     prepareTreeView();
     m_tree->setHeaderHidden(false);
     m_tree->setHeaderLabel(ProjectManager::instance().getProjectName());
+    m_tree->headerItem()->setSizeHint(0, QSize(0, 24));
 
     for (auto fileName : ProjectManager::instance().getSourceFiles()) {
         QTreeWidgetItem *sourceItem = new QTreeWidgetItem(m_sources, QStringList(fileName));
