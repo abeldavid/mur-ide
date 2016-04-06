@@ -89,8 +89,8 @@ void RoboIdeTextEditor::setupEditor()
 {
 
     setUtf8(true);
+    setEolMode(EolUnix);
 
-    //! Setup our C++ lexer
     m_lexCpp = new QsciLexerCPP(this);
     QsciAPIs *api = new QsciAPIs(m_lexCpp);
     api->load("cpp.api");
@@ -98,9 +98,15 @@ void RoboIdeTextEditor::setupEditor()
     api->prepare();
     setLexer(m_lexCpp);
     setupLexer();
+    setAutoCompletionReplaceWord(true);
+    setAutoCompletionCaseSensitivity(true);
+    setAutoCompletionThreshold(1);
+    setAutoCompletionSource(QsciScintilla::AcsAll);
 
-
-    setEolMode(EolUnix);
+    setCallTipsPosition(CallTipsAboveText);
+    setCallTipsStyle(CallTipsContext);
+    setCallTipsBackgroundColor("#D0D0D0");
+    setCallTipsForegroundColor("#252525");
 
     //! Setup highlighting on current line
     setCaretLineVisible(true);
@@ -112,13 +118,6 @@ void RoboIdeTextEditor::setupEditor()
     setMarginsBackgroundColor(QColor("gainsboro"));
     setMarginLineNumbers(1, true);
     setMarginWidth(1, 40);
-
-    //! Add some auto completion
-    setAutoCompletionReplaceWord(true);
-    setAutoCompletionCaseSensitivity(true);
-    setAutoCompletionThreshold(3);
-    setAutoCompletionSource(QsciScintilla::AcsAll);
-//    setAutoCompletionUseSingle(QsciScintilla::AcusAlways);
 
     //! Setup indent for 4 spaces
     setAutoIndent(true);
@@ -136,7 +135,6 @@ void RoboIdeTextEditor::setupEditor()
     setUnmatchedBraceBackgroundColor("#FA2772");
 
     //!Styles
-    m_lexCpp->setPaper(QColor(37, 37, 37));
     setMarginsBackgroundColor(QColor(37, 37, 37));
     setStyleSheet("QWidget {"
                      "border-top: none;"
@@ -154,6 +152,8 @@ void RoboIdeTextEditor::setupLexer()
     QFont font = QFont("Courier");
     font.setPointSize(10);
     m_lexCpp->setFont(font);
+
+    m_lexCpp->setPaper(QColor(37, 37, 37));
 
     m_lexCpp->setColor("#FFFFFF", m_lexCpp->Default);
     m_lexCpp->setColor("#E7DB75", m_lexCpp->PreProcessor);
@@ -185,6 +185,10 @@ void RoboIdeTextEditor::setupUi()
     editStyle.open(QFile::ReadOnly);
     QString styleSheet = editStyle.readAll();
     editStyle.close();
+    // autocomplete
+    styleSheet += "QListView{background: #464646;color:#D0D0D0;}";
+    styleSheet += "QListView::item{padding:2px;}";
+    styleSheet += "QListView::item:selected{background: #252525; border: none; color: #AAAAAA;}";
     setStyleSheet(styleSheet);
 }
 
