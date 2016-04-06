@@ -111,7 +111,7 @@ void RoboIdeTextEditor::setupEditor()
     //! Setup highlighting on current line
     setCaretLineVisible(true);
     setCaretLineBackgroundColor(QColor("#323232"));
-    setCaretForegroundColor(QColor("#777777"));
+    setCaretForegroundColor(QColor("#D0D0D0"));
     setMarginsForegroundColor(QColor("#777777"));
 
     //! Setup right margin
@@ -132,7 +132,7 @@ void RoboIdeTextEditor::setupEditor()
     setMatchedBraceForegroundColor("#FFFFFF");
 
     setUnmatchedBraceForegroundColor("#FFFFFF");
-    setUnmatchedBraceBackgroundColor("#FA2772");
+    setUnmatchedBraceBackgroundColor("#DA2772");
 
     //!Styles
     setMarginsBackgroundColor(QColor(37, 37, 37));
