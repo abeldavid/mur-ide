@@ -198,6 +198,24 @@ void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
         autoCompleteFromAll();
         return; // не дает дописать NULL
     }
+    if(e->key() == Qt::Key_ParenLeft){
+        int line;
+        int index;
+        getCursorPosition(&line, &index);
+        insertAt(")", line, index);
+    }
+    if(e->key() == Qt::Key_BracketLeft){
+        int line;
+        int index;
+        getCursorPosition(&line, &index);
+        insertAt("]", line, index);
+    }
+    if(e->key() == Qt::Key_BraceLeft){
+        int line;
+        int index;
+        getCursorPosition(&line, &index);
+        insertAt("}", line, index);
+    }
     QsciScintilla::keyPressEvent(e);
 }
 
