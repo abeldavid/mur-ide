@@ -76,6 +76,23 @@ QDialog QPushButton {
     border:none;
     min-width:100px;
 }
+
+QDialog QPushButton:hover {
+    background-color: #909090;
+    color: #D0D0D0;
+    padding:6px;
+    border:none;
+    min-width:100px;
+}
+
+QDialog QPushButton:pressed {
+    background-color: #909090;
+    color: #D0D0D0;
+    padding:6px;
+    border:none;
+    min-width:100px;
+}
+
 QDialog QTabWidget {
     border: none;
 }
