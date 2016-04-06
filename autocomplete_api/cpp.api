@@ -1,0 +1,1152 @@
+#define
+#elif
+#else
+#endif
+#error
+#if
+#ifdef
+#ifndef
+#include
+#line
+#pragma
+#undef
+abort(void) -> void
+abs(int i) -> int
+absread
+abswrite
+access(const char *path, int amode) -> int
+accumulate
+acos(double x) -> double
+acosl
+address
+adjacent_difference
+adjacent_find
+advance
+allocate
+allocator
+allocmem
+always_noconv
+any
+append
+arc
+arg
+asctime(const struct tm *timeptr) -> char*
+asin(double x) -> double
+asinl
+asm
+assert(int expression) -> void
+assign
+at
+atan(double x) -> double
+atan2(double y, double x) -> double
+atan2l
+atanl
+atexit(void (*func)(void)) -> int
+atof(const char *nptr) -> double
+atoi(const char *nptr) -> int
+atol(const char *nptr) -> long int
+auto
+auto_ptr
+back
+back_inserter
+back_insert_iterator
+bad
+bar
+bar3d
+basic_string
+bcd
+bdos
+bdosptr
+begin
+bidirectional_iterator
+binary_function
+binary_negate
+binary_search
+bind1st
+bind2nd
+binder1st
+binder2nd
+bioscom
+biosdisk
+biosequip
+bioskey
+biosmemory
+biosprint
+biostime
+bitset
+bool
+boolalpha
+break
+brk
+bsearch(const void *key, const void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *)) -> void *
+cabs
+cabsl
+calloc(size_t nmemb, size_t size) -> void *
+capacity
+case
+catch
+category
+ceil(double x) -> double
+ceill
+cerr
+cgets
+char
+char_type
+chdir(const char *path) -> int
+chmod(const char *path, mode_t mode) -> int
+chsize
+cin
+circle
+class
+classic_table
+clear
+cleardevice
+clearerr(FILE *stream) -> void
+clearviewport
+clock(void) -> clock_t
+clog
+close(int filedes) -> int
+closedir(DIR *dirp) -> int
+closegraph
+clreol
+clrscr
+compare
+complex
+conj
+const
+construct
+const_cast
+const_pointer
+const_reference
+container
+continue
+copy
+copyfmt
+copy_backward
+coreleft
+cos(double x) -> double
+cosh(double x) -> double
+coshl
+cosl
+count
+country
+count_if
+cout
+cprintf
+cputs
+creat(const char *path, mode_t mode) -> int
+creatnew
+creattemp
+cscanf
+ctime(const time_t *timer) -> char *
+ctrlbrk
+curr_symbol
+c_str
+data
+date_order
+deallocate
+dec
+decimal_point
+default
+delay
+delete
+delline
+denorm_min
+deque
+destroy
+detectgraph
+difference_type
+difftime(time_t time1, time_t time0) -> double
+digits
+digits10
+disable
+distance
+div(int numer, int denom) -> div_t
+divides
+dllexport
+dllexport2
+dllimport
+dllimport2
+do
+dosexterr
+dostounix
+double
+do_always_noconv
+do_close
+do_compare
+do_curr_symbol
+do_decimal_point
+do_encoding
+do_get
+do_grouping
+do_hash
+do_in
+do_is
+do_length
+do_max_length
+do_narrow
+do_neg_format
+do_open
+do_out
+do_pos_format
+do_scan_is
+do_scan_not
+do_thousands_sep
+do_tolower
+do_toupper
+do_transform
+do_widen
+drawpoly
+dup(int filedes) -> int
+dup2(int filedes, int filedes2) -> int
+dynamic_cast
+eback
+ecvt
+egptr
+ellipse
+else
+empty
+enable
+encoding
+end
+endl
+ends
+enum
+eof
+epptr
+epsilon
+eq
+equal
+equal_range
+equal_to
+eq_int_type
+erase
+event_callback
+exceptions
+execl(const char *path, const char *args, ...) -> int
+execle(const char *path, const char *args, ...) -> int
+execlp(const char *file, const char *args, ...) -> int
+execlpe
+execv(const char *path, char *const argv[]) -> int
+execve(const char *path, char *const argv[], char *const *envp) -> int
+execvp(const char *file, char *const argv[]) -> int
+execvpe
+exit(int status) -> void
+exp(double x) -> double
+expl
+explicit
+extern
+extern_type
+fabs(double x) -> double
+fabsl
+facet
+fail
+failed
+failure
+false
+falsename
+farcalloc
+farcoreleft
+farfree
+farheapcheck
+farheapcheckfree
+farheapchecknode
+farheapfillfree
+farheapwalk
+farmalloc
+farrealloc
+fclose(File *stream) -> int
+fcloseall
+fcvt
+fdopen(int filedes, const char *type) -> File *
+feof(FILE *stream) -> int
+ferror(FILE *stream) -> int
+fflush(FILE *stream) -> int
+fgetc(FILE *stream) -> int
+fgetchar
+fgetpos(FILE *stream, fpos_t *pos) -> int
+fgets(char *s, int n, FILE *stream) -> char *
+filebuf
+filelength
+fileno(FILE *stream) -> int
+fill
+fillellipse
+fillpoly
+fill_n
+find
+findfirst
+findnext
+find_end
+find_first_not_of
+find_first_of
+find_if
+find_last_not_of
+find_last_of
+fixed
+flags
+flip
+float
+floodfill
+floor(double x) -> double
+floorl
+flush
+flushall
+fmod(double x, double y) -> double
+fmodl
+fmtflags
+fnmerge
+fnsplit
+fopen(const char * file, const char * mode) -> FILE *
+for
+forward_iterator
+for_each
+fprintf(FILE *stream, const char *format, ...) -> int
+fputc(int c, FILE *stream) -> int
+fputchar
+fputs(const char *s, FILE *stream) -> int
+FP_OFF
+FP_SEG
+frac_digits
+fread(void *ptr, size_t size, size_t nmemb, FILE *stream) -> size_t
+free(void *ptr) -> void
+freemem
+freeze
+freopen(const char *filename, const char *mode, FILE *stream) -> FILE *
+frexp(double value, int *exp) -> double
+frexpl
+friend
+front
+front_inserter
+front_insert_iterator
+fscanf(FILE *stream, const char *format, ...) -> int
+fseek(FILE *stream, long int offset, int whence) -> int
+fsetpos(FILE *stream, const fpos_t * pos) -> int
+fstat(int filedes, struct stat *buf) -> int
+fstream
+ftell(FILE *stream) -> long int
+ftime
+fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) -> size_t
+gbump
+gcount
+gcvt
+generate
+generate_n
+geninterrupt
+get
+getarccoords
+getaspectratio
+getbkcolor
+getc(FILE *stream) -> int
+getcbrk
+getch
+getchar(void) -> int
+getche
+getcolor
+getcurdir
+getcwd(char *buf, size_t size) -> char *
+getdate
+getdefaultpalette
+getdfree
+getdisk
+getdrivername
+getdta
+getenv(const char *name) -> char *
+getfat
+getfatd
+getfillpattern
+getfillsettings
+getftime
+getgraphmode
+getimage
+getline
+getlinesettings
+getloc
+getmaxcolor
+getmaxmode
+getmaxx
+getmaxy
+getmodename
+getmoderange
+getpalette
+getpalettesize
+getpass
+getpid(void) -> pid_t
+getpixel
+getpsp
+gets(char *s) -> char *
+gettext
+gettextinfo
+gettextsettings
+gettime
+getvect
+getverify
+getviewsettings
+getw
+getx
+gety
+get_allocator
+get_date
+get_monthname
+get_temporary_buffer
+get_time
+get_weekday
+get_year
+gmtime(const time_t *timer) -> struct tm *
+good
+goto
+gotoxy
+gptr
+graphdefaults
+grapherrormsg
+graphresult
+greater
+greater_equal
+grouping
+harderr
+hardresume
+hardretn
+hash
+has_denorm
+has_infinity
+has_quiet_NaN
+has_signaling_NaN
+heapcheck
+heapcheckfree
+heapchecknode
+heapfillfree
+heapwalk
+hex
+highvideo
+hypot
+hypotl
+id
+if
+ifstream
+ignore
+imag
+imagesize
+imbue
+in
+includes
+infinity
+init
+initgraph
+inline
+inner_product
+inp
+inplace_merge
+inport
+inportb
+input_iterator
+inpw
+insert
+inserter
+insert_iterator
+insline
+installuserdriver
+installuserfont
+int
+int86
+int86x
+intdos
+intdosx
+internal
+intern_type
+Intl
+intr
+int_type
+ioctl
+ios
+iostate
+ios_type
+is
+isalnum(int c) -> int
+isalpha(int c) -> int
+isascii
+isatty(int filedes) -> int
+iscntrl(int c) -> int
+isdigit(int c) -> int
+isgraph(int c) -> int
+islower(int c) -> int
+isprint(int c) -> int
+ispunct(int c) -> int
+isspace(int c) -> int
+istream
+istream_type
+istringstream
+isupper(int c) -> int
+isxdigit(int c) -> int
+is_bounded
+is_exact
+is_iec559
+is_integer
+is_modulo
+is_open
+is_signed
+is_specialized
+is_sync
+iter_swap
+iter_type
+itoa
+iword
+kbhit
+keep
+key_comp
+labs(long int i) -> long int
+ldexp(double x, int exp) -> double
+ldexpl
+ldiv(long int numer, long int denom) -> ldiv_t
+left
+length
+less
+less_equal
+lexicographical_compare
+lfind
+line
+linerel
+lineto
+list
+localeconv(void) -> struct lconv *
+localtime(const time_t *timer) -> struct tm *
+lock
+locking
+log(double x) -> double
+log10(double x) -> double
+log10l
+logical_and
+logical_not
+logical_or
+logl
+long
+longjmp(jmp_buf env, int val) -> void
+lower_bound
+lowvideo
+lsearch
+lseek(int filedes, off_t offset, int whence) -> off_t
+lt
+ltoa
+make_heap
+make_pair
+malloc(size_t size) -> void
+map
+matherr
+max
+max_element
+max_exponent
+max_exponent10
+max_length
+max_size
+mblen(const char *s, size_t n) -> int
+mbstowcs(wchar_t *pwcs, const char *s, size_t n) -> size_t
+mbtowc(wchar_t *pwc, const char *s, size_t n) -> int
+memccpy
+memchr(const void *s, int c, size_t n) -> void *
+memcmp(const void *s1, const void *s2, size_t n) -> int
+memcpy(void *s1, const void *s2, size_t n) -> void *
+memicmp
+memmove(void * s1, const void *s2, size_t n) -> void *
+memset(void *s, int c, size_t n) -> void *
+merge
+min
+minus
+min_element
+min_exponent
+min_exponent10
+mismatch
+mkdir(const char *path, mode_t mode) -> int
+mktemp
+mktime(struct tm *timer) -> time_t
+MK_FP
+modf(double value, double *iptr) -> double
+modfl
+modulus
+move
+movedata
+moverel
+movetext
+moveto
+movmem
+multimap
+multiset
+mutable
+name
+namespace
+narrow
+negate
+negative_sign
+neg_format
+new
+next_permutation
+noboolalpha
+none
+norm
+normvideo
+noshowbase
+noshowpoint
+noshowpos
+noskipws
+nosound
+not1
+not2
+not_eof
+not_equal_to
+nounitbuf
+nouppercase
+nth_element
+numeric_limits
+oct
+off_type
+ofstream
+open(const char *path, int oflag, ...) -> int
+opendir(const char *dirname) -> DIR *
+openmode
+ostream
+ostream_type
+ostringstream
+out
+outp
+outport
+outportb
+output_iterator
+outpw
+outtext
+outtextxy
+overflow
+pair
+parsfnm
+partial_sort
+partial_sort_copy
+partial_sum
+partition
+pbackfail
+pbase
+pbump
+pcount
+peek
+peekb
+perror(const char *s) -> void
+pieslice
+plus
+pointer
+pointer_to_binary_function
+pointer_to_unary_function
+poke
+pokeb
+polar
+poly
+polyl
+pop
+pop_back
+pop_front
+pop_heap
+positive_sign
+pos_format
+pos_type
+pow(double x, double y) -> double
+pow10
+pow10l
+powl
+pptr
+precision
+prev_permutation
+printf(const char *format, ...) -> int
+priority_queue
+private
+protected
+ptr_fun
+pubimbue
+public
+pubseekoff
+pubseekpos
+pubsetbuf
+pubsync
+push
+push_back
+push_front
+push_heap
+put
+putback
+putc(int c, FILE *stream) -> int
+putch
+putchar(int c) -> int
+putenv
+putimage
+putpixel
+puts(const char *s) -> int
+puttext
+putw
+pword
+qsort(void *base, size_t nmemb, size_t size) -> void
+queue
+quiet_NaN
+radix
+raise(int sig) -> int
+rand(void) -> int
+randbrd
+randbwr
+random
+randomize
+random_access_iterator
+random_shuffle
+raw_storage_iterator
+rbegin
+rdbuf
+rdstate
+read(int filedes, void *buf, unsigned int nbyte) -> int
+readdir(DIR *dirp) -> struct dirent *
+readsome
+real
+realloc(void *ptr, size_t size) -> void
+rectangle
+reference
+register
+registerbgidriver
+registerbgifont
+registerfarbgidriver
+registerfarbgifont
+register_callback
+reinterpret_cast
+release
+remove(const char *filename) -> int
+remove_copy
+remove_copy_if
+remove_if
+rename(const char * old, const char *new) -> int
+rend
+replace
+replace_copy
+replace_copy_if
+replace_if
+reserve
+reset
+resetiosflag
+resize
+restorecrtmode
+return
+return_temporary_buffer
+reverse
+reverse_bidirectional_iterator
+reverse_copy
+reverse_iterator
+rewind(FILE *stream) -> void
+rewinddir(DIR *dirp) -> void
+rfind
+right
+rmdir(const char *path) -> int
+rmtmp
+rotate
+rotate_copy
+round_error
+round_style
+sbrk
+sbumpc
+sb_type
+scanf(const char *format, ...) -> int
+scan_is
+scan_not
+scientific
+search
+searchpath
+search_n
+sector
+seekdir
+seekg
+seekoff
+seekp
+seekpos
+segread
+sentry
+set
+setactivepage
+setallpalette
+setaspectratio
+setbase
+setbkcolor
+setblock
+setbuf(FILE *stream, char *buf) -> void
+setcbrk
+setcolor
+setdate
+setdisk
+setdta
+setf
+setfill
+setfillpattern
+setfillstyle
+setftime
+setg
+setgraphbufsize
+setgraphmode
+setiosflag
+setjmp(jmp_buf env) -> int
+setlinestyle
+setlocale(int category, const char *locale) -> char *
+setmem
+setmode
+setp
+setpalette
+setprecision
+setrgbpalette
+setstate
+settextjustify
+settextstyle
+settime
+setusercharsize
+setvbuf(FILE *stream, char *buf, int mode, size_t size) -> int
+setvect
+setverify
+setviewport
+setvisualpage
+setw
+setwritemode
+set_difference
+set_intersection
+set_new_handler
+set_symmetric_difference
+set_union
+sgetc
+sgetn
+short
+showbase
+showmanyc
+showpoint
+showpos
+signal(int sig, void *func(int sig)) -> void
+signaling_NaN
+signed
+sin(double x) -> double
+sinh(double x) -> double
+sinhl
+sinl
+size
+sizeof
+size_type
+skipws
+sleep(unsigned int seconds) -> unsigned int
+snextc
+sopen
+sort
+sort_heap
+sound
+spawnl
+spawnle
+spawnlp
+spawnlpe
+spawnv
+spawnve
+spawnvp
+spawnvpe
+splice
+sprintf(char *s, const char *format, ...) -> int
+sputbackc
+sputc
+sputn
+sqrt(double x) -> double
+sqrtl
+srand(unsigned int seed) -> void
+sscanf(const char *s, const char *format, ...) -> int
+stable_partition
+stable_sort
+stack
+stackavail
+stat(const char *path, struct stat *buf) -> int
+state
+state_type
+static
+static_cast
+stime
+stpcpy
+str
+strcat(char *s1, const char *s2) -> char *
+strchr(const char *s, int c) -> char *
+strcmp(const char *s1, const char *s2) -> int
+strcmpi
+strcoll(const char *s1, const char *s2) -> int
+strcpy(char *s1, const char *s2) -> char *
+strcspn(const char *s1, const char *s2) -> size_t
+strdup
+streambuf
+streambuf_type
+strerror(int errnum) -> char *
+strftime(char *s, size_t maxsize, const char *format, const struct tm *timeptr) -> size_t *
+stricmp
+string
+stringbuf
+stringstream
+string_type
+strlen(const char *s) -> size_t
+strlwr
+strncat(char *s1, const char *s2, size_t n) -> char *
+strncmp(char *s1, const char *s2, size_t n) -> char *
+strncmpi
+strncpy(char *s1, const char *s2, size_t n) -> char *
+strnicmp
+strnset
+strpbrk(const char *s1, const char *s2) -> char *
+strrchr(const char *s, int c) -> char *
+strrev
+strset
+strspn(const char *s1, const char *s2) -> size_t
+strstr(const char *s1, const char *s2) -> char *
+strtod(const char *nptr, char **endptr) -> double
+strtok(char *s1, const char *s2) -> char *
+strtol(const char *nptr, char **endptr, int base) -> long int
+strtoul(const char *nptr, char **endptr, int base) -> unsigned long int
+struct
+strupr
+strxfrm(char *s1, const char *s2, size_t n) -> size_t
+substr
+sungetc
+swab
+swap
+swap_ranges
+switch
+sync
+sync_with_stdio
+system(const char *string) -> int
+table
+tan(double x) -> double
+tanh(double x) -> double
+tanhl
+tanl
+tell
+tellg
+tellp
+template
+tempnam
+test
+textattr
+textbackground
+textcolor
+textheight
+textmode
+textwidth
+this
+thousands_sep
+thread
+thread2
+throw
+tie
+time(time_t *timer) -> time_t
+times(struct tms *buffer) -> clock_t
+tinyness_before
+tmpfile(void) -> FILE *
+tmpnam(char *s) -> char *
+toascii
+tolower(int c) -> int
+top
+toupper(int c) -> int
+to_char_type
+to_int_type
+to_string
+to_ulong
+traits
+traits_type
+transform
+traps
+true
+truename
+try
+typedef
+typeid
+typename
+tzset(void) -> void
+uflow
+ultoa
+umask(mode_t cmask) -> mode_t
+unary_function
+unary_negate
+underflow
+unget
+ungetc(int c, FILE *stream) -> int
+ungetch
+uninitialized_copy
+uninitialized_fill
+uninitialized_fill_n
+union
+unique
+unique_copy
+unitbuf
+unixtodos
+unlink(const char *path) -> int
+unlock
+unsetf
+unsigned
+uppercase
+upper_bound
+using
+utime(const char *path, const struct utimbuf *times) -> int
+value_comp
+value_type
+va_arg(va_list ap, type) -> type
+va_end(va_list ap) -> void
+va_list
+va_start(va_list ap, parmN) -> void
+vector
+vfprintf(FILE *stream, const char *format, va_list arg) -> int
+vfscanf
+virtual
+void
+void*
+volatile
+vprintf(const char *format, va_list arg) -> int
+vscanf
+vsprintf(char *s, const char *format, va_list arg) -> int
+vsscanf
+wcerr
+wchar_t
+wcin
+wclog
+wcout
+wcstombs(char *s, const wchar_t *pwcs, size_t n) -> size_t
+wctomb(char *s, wchar_t wchar) -> int
+wfilebuf
+wfstream
+what
+wherex
+wherey
+which_open_mode
+while
+widen
+width
+wifstream
+window
+wios
+wistream
+wistringstream
+wofstream
+wostream
+wostringstream
+write(int filedes, const void *buf, unsigned int nbyte) -> int
+ws
+wstreambuf
+wstring
+wstringbuf
+wstringstream
+xalloc
+xsgetn
+xsputn
+_atold
+_bios_disk
+_bios_equiplist
+_bios_keybrd
+_bios_memsize
+_bios_printer
+_bios_serialcom
+_bios_timeofday
+_cexit
+_chain_intr
+_chdrive
+_chmod
+_clear87
+_close
+_control87
+_creat
+_c_exit
+_disable
+_dos_allocmem
+_dos_close
+_dos_creat
+_dos_creatnew
+_dos_findfirst
+_dos_findnext
+_dos_freemem
+_dos_getdate
+_dos_getdiskfree
+_dos_getdrive
+_dos_getfileattr
+_dos_getftime
+_dos_gettime
+_dos_getvect
+_dos_keep
+_dos_open
+_dos_read
+_dos_setblock
+_dos_setdate
+_dos_setdrive
+_dos_setfileattr
+_dos_setftime
+_dos_settime
+_dos_setvect
+_dos_write
+_enable
+_exit(int status) -> void
+_fmemccpy
+_fmemchr
+_fmemcmp
+_fmemcpy
+_fmemicmp
+_fmemset
+_fpreset
+_fsopen
+_fstrcat
+_fstrchr
+_fstrcmp
+_fstrcpy
+_fstrcspn
+_fstrdup
+_fstricmp
+_fstrlen
+_fstrlwr
+_fstrncat
+_fstrncmp
+_fstrncpy
+_fstrnicmp
+_fstrnset
+_fstrpbrk
+_fstrrchr
+_fstrrev
+_fstrset
+_fstrspn
+_fstrstr
+_fstrtok
+_fstrupr
+_fullpath
+_getdcwd
+_getdrive
+_graphfreemem
+_graphgetmem
+_harderr
+_hardresume
+_hardretn
+_lrotl
+_lrotr
+_makepath
+_matherrl
+_open
+_OvrInitEms
+_OvrInitExt
+_read
+_rotl
+_rotr
+_searchenv
+_setcursortype
+_splitpath
+_status87
+_strdate
+_strerror
+_strtime
+_strtold
+_tolower
+_toupper
+_write
+__asm
+__based1
+__cdecl
+__declspec
+__emit__
+__except
+__fastcall
+__finally
+__inline
+__int16
+__int32
+__int64
+__int8
+__leave
+__multiple_inheritance
+__single_inheritance
+__stdcall
+__try
+__virtual_inheritance
+~sentry

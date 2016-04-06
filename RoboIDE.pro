@@ -28,7 +28,6 @@ HELP_SOURCE = $$PWD\help\robohelp.qhcp
 HELP_INDEX = $$OUT_PWD\robohelp.qhc
 HELP_CONTENT =$$PWD\help\help.qch
 
-
 win32 {
     INCLUDEPATH += "$$PWD\extlibs\qsci\include"
     DEPENDPATH += "$$PWD\extlibs\qsci\include"
@@ -59,6 +58,11 @@ win32 {
     }
 
     copyToDestdir($$EXTRA_DLL)
+
+    AUTOCOMPLETE_API = $$PWD\autocomplete_api\cpp.api \
+                       $$PWD\autocomplete_api\roboIDE.api
+
+    copyToDestdir($$AUTOCOMPLETE_API)
 
     build_help.commands = $$quote(cmd /c $${HELP_COMMAND} /S /I /Y $${HELP_SOURCE} -o $${HELP_INDEX})
 }

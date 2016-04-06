@@ -1,0 +1,21 @@
+getDepth()->float
+getYaw()->float /*from -180 to 180*/
+getPitch()->float /*from -180 to 180*/
+getRoll()->float /*from -180 to 180*/
+getAS()->float
+setupThrusters(int idOne, int idTwo, int idThree, int idFour)
+detectLine(Camera &camera)->Object
+detectCircle(Camera &camera)->Object
+detectTriangle(Camera &camera)->Object
+detectRectangle(Camera &camera)->Object
+detectObject(Camera &camera)->Object
+detectMotion(Camera &camera)->Motion
+Object struct /*enum Object type, int x, int y, int r, float size, float angle*/
+Object enum /*NONE | TRIANGLE | RECTANGLE | CIRCLE*/
+Motion struct /*float angle, float distance*/
+Camera
+Camera.getFrame()->cv::Mat&
+Camera.getPrevFrame()->cv::Mat&
+Camera.init(int id)->void
+Camera.isInit()->bool
+Camera.setCameraRes(int w, int h)->void

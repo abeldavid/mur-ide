@@ -88,19 +88,17 @@ void RoboIdeTextEditor::closeFile()
 void RoboIdeTextEditor::setupEditor()
 {
 
-    //! Setup encoding and font
     setUtf8(true);
-    QFont font = QFont("Courier");
-
-    font.setPointSize(10);
 
     //! Setup our C++ lexer
     m_lexCpp = new QsciLexerCPP(this);
-//    QsciAPIs api(m_lexCpp);
-//    api.prepare();
+    QsciAPIs *api = new QsciAPIs(m_lexCpp);
+    api->load("cpp.api");
+    api->load("roboIDE.api");
+    api->prepare();
     setLexer(m_lexCpp);
-    m_lexCpp->setFont(font);
     setupLexer();
+
 
     setEolMode(EolUnix);
 
@@ -152,6 +150,11 @@ void RoboIdeTextEditor::setupEditor()
 //363636 - SELCET
 void RoboIdeTextEditor::setupLexer()
 {
+    //! Setup encoding and font
+    QFont font = QFont("Courier");
+    font.setPointSize(10);
+    m_lexCpp->setFont(font);
+
     m_lexCpp->setColor("#FFFFFF", m_lexCpp->Default);
     m_lexCpp->setColor("#E7DB75", m_lexCpp->PreProcessor);
     m_lexCpp->setColor("#E7DB75", m_lexCpp->PreProcessorComment);
