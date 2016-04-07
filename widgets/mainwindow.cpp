@@ -340,7 +340,7 @@ void MainWindow::onFileOpened(const QString &fileName)
 void MainWindow::saveFile()
 {
     QString fileName = m_roboIdeTextEdit->fileName();
-    if (fileName.isEmpty() or !m_roboIdeTextEdit->fileExists()) {
+    if (fileName.isEmpty() || !m_roboIdeTextEdit->fileExists()) {
         fileName = saveFileAsDialog();
     }
     if (!fileName.isEmpty()) {

@@ -34,17 +34,17 @@ QVariant HelpBrowser::loadResource(int type, const QUrl &name)
 
 void HelpBrowser::keyPressEvent(QKeyEvent *event)
 {
-    bool isCopyEvent = event->modifiers().testFlag(Qt::ControlModifier) and
-                      (event->key() == Qt::Key_C or event->key() == Qt::Key_Insert);
-    bool isMoveEvent = event->key() == Qt::Key_Up or
-                       event->key() == Qt::Key_Down or
-                       event->key() == Qt::Key_Left or
-                       event->key() == Qt::Key_Right or
-                       event->key() == Qt::Key_PageUp or
-                       event->key() == Qt::Key_PageDown or
-                       event->key() == Qt::Key_End or
+    bool isCopyEvent = event->modifiers().testFlag(Qt::ControlModifier) &&
+                      (event->key() == Qt::Key_C || event->key() == Qt::Key_Insert);
+    bool isMoveEvent = event->key() == Qt::Key_Up ||
+                       event->key() == Qt::Key_Down ||
+                       event->key() == Qt::Key_Left ||
+                       event->key() == Qt::Key_Right ||
+                       event->key() == Qt::Key_PageUp ||
+                       event->key() == Qt::Key_PageDown ||
+                       event->key() == Qt::Key_End ||
                        event->key() == Qt::Key_Home;
-    if (isCopyEvent or isMoveEvent) {
+    if (isCopyEvent || isMoveEvent) {
         QTextBrowser::keyPressEvent(event);
     }
 }

@@ -63,10 +63,10 @@ bool Project::create(const QString &path, const QString &name)
 {
     bool result = false;
     QDir projectDir(path); //here it is project parent dir, later it cds to project dir
-    if (projectDir.exists() and projectDir.mkdir(name) and projectDir.cd(name)) {
+    if (projectDir.exists() && projectDir.mkdir(name) && projectDir.cd(name)) {
         m_projectDir = projectDir;
-        if (writeFile(Project::defaultSourceName, Project::defaultSourceContent) and
-                writeFile(Project::defaultHeaderName, Project::defaultHeaderContent) and
+        if (writeFile(Project::defaultSourceName, Project::defaultSourceContent) &&
+                writeFile(Project::defaultHeaderName, Project::defaultHeaderContent) &&
                 createProjectFile(name)) {
             result = true;
             m_isOpened = true;
@@ -106,7 +106,7 @@ bool Project::close()
 
 bool Project::createFile(const QString &name)
 {
-    bool result = m_projectDir.exists() and writeFile(name);
+    bool result = m_projectDir.exists() && writeFile(name);
     if (result) {
         result = addFile(name);
     }
@@ -120,7 +120,7 @@ bool Project::addExistingFile(const QString &path)
     QString targetFileName = m_projectDir.filePath(sourceFileInfo.fileName());
     QFileInfo initTargetFileInfo(targetFileName);
     QFileInfo targetFileInfo = initTargetFileInfo;
-    while (targetFileInfo.exists() and targetFileInfo.isFile()) {
+    while (targetFileInfo.exists() && targetFileInfo.isFile()) {
         targetFileName = m_projectDir.filePath(
                     initTargetFileInfo.completeBaseName() +
                     QString("_") +
@@ -201,7 +201,7 @@ bool Project::renameFile(const QString &oldName, const QString &newName)
             projectSection.replace(i, newName);
             m_projectJson[fileType] = projectSection;
             QJsonDocument jsonDoc(m_projectJson);
-            result = m_projectDir.rename(oldName, newName) and
+            result = m_projectDir.rename(oldName, newName) &&
                     writeFile(Project::projectFileName, jsonDoc.toJson());
         }
     }
@@ -224,7 +224,7 @@ bool Project::deleteFile(const QString &name)
             projectSection.removeAt(i);
             m_projectJson[fileType] = projectSection;
             QJsonDocument jsonDoc(m_projectJson);
-            result = m_projectDir.remove(name) and
+            result = m_projectDir.remove(name) &&
                     writeFile(Project::projectFileName, jsonDoc.toJson());
         }
     }
