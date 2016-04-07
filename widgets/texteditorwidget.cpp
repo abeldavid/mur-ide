@@ -64,7 +64,7 @@ void RoboIdeTextEditor::clearText()
 void RoboIdeTextEditor::highlightError(const QString &fileName, int lineNumber)
 {
     m_errorsFound.insert(fileName, lineNumber);
-    if (m_fileName == fileName and !isModified()) {
+    if (m_fileName == fileName && !isModified()) {
         markerAdd(lineNumber-1, m_errorMarkerCode);
     }
 }
