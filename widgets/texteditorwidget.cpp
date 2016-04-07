@@ -202,7 +202,11 @@ void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
         int line;
         int index;
         getCursorPosition(&line, &index);
-        insertAt(")", line, index);
+        insertAt("(", line, index);
+        insertAt(")", line, index+1);
+        setCursorPosition(line, index + 1);
+        callTip();
+        return;
     }
     if(e->key() == Qt::Key_BracketLeft){
         int line;
