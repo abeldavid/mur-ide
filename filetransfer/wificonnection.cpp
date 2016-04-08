@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <thread>
 #include <zmq.h>
+#include <numeric>
 
 #include "wificonnection.h"
 #include "settingsmanager.h"
@@ -18,6 +19,7 @@ WiFiConnection::WiFiConnection(QObject *parent) :
 {
     int timeout = 2000;
     int option = 0;
+    int hwm = 5;
 
     zmq_connect(m_zmqInfoSub, "tcp://192.168.42.1:2052");
     zmq_connect(m_zmqReqSoc,  "tcp://192.168.42.1:7350");
@@ -27,7 +29,7 @@ WiFiConnection::WiFiConnection(QObject *parent) :
     zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_CORRELATE, &option, sizeof(int));
     zmq_setsockopt(m_zmqReqSoc, ZMQ_RCVTIMEO, &timeout, sizeof(int));
     zmq_setsockopt(m_zmqInfoSub, ZMQ_SUBSCRIBE, 0, 0);
-
+    zmq_setsockopt(m_zmqInfoSub, ZMQ_RCVHWM, &hwm, sizeof(int));
 
     m_connectionTimeout->setInterval(7000);
     m_updateDeviceListTimer->setInterval(1000);
