@@ -21,6 +21,7 @@
             </section>
         </toc>
         <keywords>
+			<keyword name="Camera" ref="doc.html#user-content-Camera"/>
         </keywords>
         <files>
             <file>*.html</file>

@@ -25,7 +25,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      m_roboIdeTextEdit(new RoboIdeTextEditor(this)),
+      m_textEditorWidget(new TextEditorWidget(this)),
       m_consoleWidget(new ConsoleWidget(this)),
       m_sourceCompiller(new SourceCompiler(this)),
       m_connectedDevicesList(new ConnectedDevicesList(this)),
@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_inCombinedRunState(false),
       m_targetComboBox(new QComboBox(this))
 {
-    setCentralWidget(m_roboIdeTextEdit);
+    setCentralWidget(m_textEditorWidget);
     createActions();
     createMenus();
     createToolBars();
@@ -78,7 +78,7 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent (QCloseEvent *event)
 {
     event->ignore();
-    if (m_roboIdeTextEdit->isModified()){
+    if (m_textEditorWidget->isModified()){
         saveFilePromt();
     }
     event->accept();
@@ -95,7 +95,7 @@ void MainWindow::runCompilation()
         SETTINGS.setCurrentTarget(SettingsManager::TARGET::MINGW);
     }
     m_buildAct->setEnabled(false);
-    if (m_roboIdeTextEdit->fileName().isEmpty()) {
+    if (m_textEditorWidget->fileName().isEmpty()) {
         saveFilePromt();
     } else {
         saveFile();
@@ -296,19 +296,24 @@ void MainWindow::fileAddDialog() {
 
 void MainWindow::projectClose()
 {
-    if (m_roboIdeTextEdit->isModified()) {
+    if (m_textEditorWidget->isModified()) {
         saveFilePromt();
     }
-    m_roboIdeTextEdit->clear();
-    m_roboIdeTextEdit->setModified(false);
-    m_roboIdeTextEdit->closeFile();
+    m_textEditorWidget->clear();
+    m_textEditorWidget->setModified(false);
+    m_textEditorWidget->closeFile();
     ProjectManager::instance().closeProject();
 }
 
 
 void MainWindow::openHelp()
 {
-    this->m_toggleHelpVisibilityAct->trigger();
+    if (focusWidget() == m_textEditorWidget) {
+        emit searchInHelp(m_textEditorWidget->getWordUnderCursor());
+    }
+    if (!(m_helpWidget->isVisible() && focusWidget() == m_textEditorWidget)) {
+        this->m_toggleHelpVisibilityAct->trigger();
+    }
 }
 
 void MainWindow::onProjectOpened()
@@ -326,7 +331,7 @@ void MainWindow::onProjectClosed()
 
 void MainWindow::openFile(const QString &fileName)
 {
-    if (m_roboIdeTextEdit->isModified()) {
+    if (m_textEditorWidget->isModified()) {
         saveFilePromt();
     }
     ProjectManager::instance().openFile(fileName);
@@ -339,12 +344,12 @@ void MainWindow::onFileOpened(const QString &fileName)
 
 void MainWindow::saveFile()
 {
-    QString fileName = m_roboIdeTextEdit->fileName();
-    if (fileName.isEmpty() || !m_roboIdeTextEdit->fileExists()) {
+    QString fileName = m_textEditorWidget->fileName();
+    if (fileName.isEmpty() || !m_textEditorWidget->fileExists()) {
         fileName = saveFileAsDialog();
     }
     if (!fileName.isEmpty()) {
-        ProjectManager::instance().saveFile(fileName, m_roboIdeTextEdit->text());
+        ProjectManager::instance().saveFile(fileName, m_textEditorWidget->text());
     }
 }
 
@@ -352,7 +357,7 @@ void MainWindow::saveFileAs()
 {
     QString fileName = saveFileAsDialog();
     if (!fileName.isEmpty()) {
-        ProjectManager::instance().saveFile(fileName, m_roboIdeTextEdit->text());
+        ProjectManager::instance().saveFile(fileName, m_textEditorWidget->text());
     }
 }
 
@@ -438,7 +443,7 @@ void MainWindow::onErrorFound(const QString &fileName, int lineNumber, int colum
         emit fatalErrorHighlight(lineNumber, columnNumber);
 
     }
-    m_roboIdeTextEdit->highlightError(fileName, lineNumber);
+    m_textEditorWidget->highlightError(fileName, lineNumber);
 }
 
 void MainWindow::switchCompilationTargetToEdison()
@@ -744,7 +749,7 @@ void MainWindow::enableProject()
 
 void MainWindow::disableProject()
 {
-    m_roboIdeTextEdit->setReadOnly(true);
+    m_textEditorWidget->setReadOnly(true);
     m_addFileAct->setEnabled(false);
     m_createFileAct->setEnabled(false);
     m_closeProjectAct->setEnabled(false);
@@ -782,21 +787,22 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileAdded()), m_projectTree, SLOT(loadProject()));
     QObject::connect(m_saveAct, SIGNAL(triggered(bool)), this, SLOT(saveFile()));
     QObject::connect(m_saveAsAct, SIGNAL(triggered(bool)), this, SLOT(saveFileAs()));
-    QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_roboIdeTextEdit, SLOT(onFileSaved(QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(fileSaved(QString)), m_textEditorWidget, SLOT(onFileSaved(QString)));
     QObject::connect(m_projectTreeContextMenu, SIGNAL(triggered(QAction*)), this, SLOT(treeContextMenuTriggered(QAction*)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileDeleted(QString)), m_projectTree, SLOT(loadProject()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileRenamed()), m_projectTree, SLOT(loadProject()));
 
     QObject::connect(m_projectTree, SIGNAL(fileSelected(QString)), this, SLOT(openFile(QString)));
-    QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_roboIdeTextEdit, SLOT(showContent(QString, QString)));
+    QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), m_textEditorWidget, SLOT(showContent(QString, QString)));
     QObject::connect(&ProjectManager::instance(), SIGNAL(fileOpened(QString, QString)), this, SLOT(onFileOpened(QString)));
     QObject::connect(m_projectTree, SIGNAL(projectContextMenu(QPoint, QString)), this, SLOT(projectContextMenu(QPoint,QString)));
 
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
-    QObject::connect(m_redoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(redo()));
-    QObject::connect(m_undoAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(undo()));
-    QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(copy()));
-    QObject::connect(m_pasteAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(paste()));
+    QObject::connect(this, SIGNAL(searchInHelp(QString)), m_helpWidget, SLOT(searchForWord(QString)));
+    QObject::connect(m_redoAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(redo()));
+    QObject::connect(m_undoAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(undo()));
+    QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(copy()));
+    QObject::connect(m_pasteAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(paste()));
      //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
     QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
@@ -830,8 +836,8 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(this, SIGNAL(sendFile(QString)), m_wifiConnection, SLOT(send(QString)));
     QObject::connect(m_localApp, SIGNAL(finished(int)), this, SLOT(onLocalAppFinished()));
 
-    QObject::connect(m_sourceCompiller, SIGNAL(run()), m_roboIdeTextEdit, SLOT(clearErrors()));
+    QObject::connect(m_sourceCompiller, SIGNAL(run()), m_textEditorWidget, SLOT(clearErrors()));
     QObject::connect(m_consoleWidget, SIGNAL(errorFound(QString, int, int)), this, SLOT(onErrorFound(QString, int, int)));
-    QObject::connect(this, SIGNAL(fatalErrorHighlight(int, int)), m_roboIdeTextEdit, SLOT(highlightFatalErrorLine(int, int)));
+    QObject::connect(this, SIGNAL(fatalErrorHighlight(int, int)), m_textEditorWidget, SLOT(highlightFatalErrorLine(int, int)));
 }
 

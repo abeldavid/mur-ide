@@ -65,6 +65,7 @@ signals:
     void startApp();
     void stopApp();
     void fatalErrorHighlight(int, int);
+    void searchInHelp(QString);
 private:
     const QString appTitle = "RobobIDE";
 
@@ -115,7 +116,7 @@ private:
     QAction *m_toggleHelpVisibilityAct;
     QAction *m_showFtpAct;
 
-    RoboIdeTextEditor *m_roboIdeTextEdit;
+    TextEditorWidget *m_textEditorWidget;
     ConsoleWidget *m_consoleWidget;
     SourceCompiler *m_sourceCompiller;
     ConnectedDevicesList *m_connectedDevicesList;

@@ -7,11 +7,11 @@
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexercpp.h>
 
-class RoboIdeTextEditor : public QsciScintilla
+class TextEditorWidget : public QsciScintilla
 {
     Q_OBJECT
 public:
-    explicit RoboIdeTextEditor(QWidget *parent = 0);
+    explicit TextEditorWidget(QWidget *parent = 0);
 
 signals:
     void fileModified();
@@ -26,9 +26,11 @@ public slots:
     void highlightFatalErrorLine(int lineNumber, int columnNumber);
     void clearErrors();
     void closeFile();
+    QString getWordUnderCursor();
 
 private:
     bool m_isFileExist;
+    bool m_inDoubleParenthesisMode;
     QString m_fileName;
     QsciLexerCPP* m_lexCpp;
     bool m_skipNullTextChanged = false;

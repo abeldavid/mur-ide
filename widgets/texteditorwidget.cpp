@@ -11,9 +11,10 @@
 #include <QPixmap>
 #include <Qsci/qsciapis.h>
 
-RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
+TextEditorWidget::TextEditorWidget(QWidget *parent)
     : QsciScintilla(parent),
       m_isFileExist(false),
+      m_inDoubleParenthesisMode(false),
       m_fileName(QString(""))
 {
     setupEditor();
@@ -22,7 +23,7 @@ RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
     markerDefine(QPixmap(":/icons/icons/widgeticons/bullet-red.png"), m_errorMarkerCode);
 }
 
-void RoboIdeTextEditor::showContent(const QString &fileName, const QString &content)
+void TextEditorWidget::showContent(const QString &fileName, const QString &content)
 {
     setReadOnly(false);
     if (content.size()) {
@@ -40,28 +41,28 @@ void RoboIdeTextEditor::showContent(const QString &fileName, const QString &cont
     }
 }
 
-void RoboIdeTextEditor::onFileSaved(QString)
+void TextEditorWidget::onFileSaved(QString)
 {
     setModified(false);
 }
 
-QString RoboIdeTextEditor::fileName() const
+QString TextEditorWidget::fileName() const
 {
     return m_fileName;
 }
 
-bool RoboIdeTextEditor::fileExists() const
+bool TextEditorWidget::fileExists() const
 {
     return m_isFileExist;
 }
 
-void RoboIdeTextEditor::clearText()
+void TextEditorWidget::clearText()
 {
     clear();
     setModified(false);
 }
 
-void RoboIdeTextEditor::highlightError(const QString &fileName, int lineNumber)
+void TextEditorWidget::highlightError(const QString &fileName, int lineNumber)
 {
     m_errorsFound.insert(fileName, lineNumber);
     if (m_fileName == fileName && !isModified()) {
@@ -69,23 +70,32 @@ void RoboIdeTextEditor::highlightError(const QString &fileName, int lineNumber)
     }
 }
 
-void RoboIdeTextEditor::highlightFatalErrorLine(int lineNumber, int columnNumber)
+void TextEditorWidget::highlightFatalErrorLine(int lineNumber, int columnNumber)
 {
     setCursorPosition(lineNumber-1, columnNumber-1);
 }
 
-void RoboIdeTextEditor::clearErrors()
+void TextEditorWidget::clearErrors()
 {
     markerDeleteAll();
     m_errorsFound.clear();
 }
 
-void RoboIdeTextEditor::closeFile()
+void TextEditorWidget::closeFile()
 {
     m_fileName = "";
 }
 
-void RoboIdeTextEditor::setupEditor()
+QString TextEditorWidget::getWordUnderCursor()
+{
+    int line;
+    int index;
+    getCursorPosition(&line, &index);
+    return wordAtLineIndex(line, index);
+
+}
+
+void TextEditorWidget::setupEditor()
 {
 
     setUtf8(true);
@@ -146,7 +156,7 @@ void RoboIdeTextEditor::setupEditor()
 }
 //1c1c1c - MENU
 //363636 - SELCET
-void RoboIdeTextEditor::setupLexer()
+void TextEditorWidget::setupLexer()
 {
     //! Setup encoding and font
     QFont font = QFont("Courier");
@@ -179,7 +189,7 @@ void RoboIdeTextEditor::setupLexer()
     m_lexCpp->setColor("#36AF90", m_lexCpp->UUID);
 }
 
-void RoboIdeTextEditor::setupUi()
+void TextEditorWidget::setupUi()
 {
     QFile editStyle(":/dark/styles/texteditscrollbar.css");
     editStyle.open(QFile::ReadOnly);
@@ -192,13 +202,22 @@ void RoboIdeTextEditor::setupUi()
     setStyleSheet(styleSheet);
 }
 
-void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
+void TextEditorWidget::keyPressEvent(QKeyEvent *e)
 {
     if((e->modifiers() == Qt::CTRL) && (e->key() == Qt::Key_Space)) {
         autoCompleteFromAll();
         return; // не дает дописать NULL
     }
-    if(e->key() == Qt::Key_ParenLeft){
+    if (m_inDoubleParenthesisMode) {
+        int line;
+        int index;
+        getCursorPosition(&line, &index);
+        setCursorPosition(line, index + 1);
+        m_inDoubleParenthesisMode = false;
+        return;
+    }
+    m_inDoubleParenthesisMode = false;
+    if(e->key() == Qt::Key_ParenLeft) {
         int line;
         int index;
         getCursorPosition(&line, &index);
@@ -206,6 +225,7 @@ void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
         insertAt(")", line, index+1);
         setCursorPosition(line, index + 1);
         callTip();
+        m_inDoubleParenthesisMode = true;
         return;
     }
     if(e->key() == Qt::Key_BracketLeft){
@@ -213,17 +233,19 @@ void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
         int index;
         getCursorPosition(&line, &index);
         insertAt("]", line, index);
+        m_inDoubleParenthesisMode = true;
     }
     if(e->key() == Qt::Key_BraceLeft){
         int line;
         int index;
         getCursorPosition(&line, &index);
         insertAt("}", line, index);
+        m_inDoubleParenthesisMode = true;
     }
     QsciScintilla::keyPressEvent(e);
 }
 
-void RoboIdeTextEditor::handleChangedText()
+void TextEditorWidget::handleChangedText()
 {
    if (!isModified()) {
        setModified(true);

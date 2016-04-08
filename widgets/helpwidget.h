@@ -11,10 +11,12 @@ class HelpWidget : public QWidget
 public:
     explicit HelpWidget(QWidget *parent = 0);
     ~HelpWidget();
+public slots:
+    void searchForWord(QString word);
 private:
-    QHelpEngine* m_helpEngine;
-    HelpBrowser* m_helpViewer;
-    QTabWidget* m_tabWidget;
+    QHelpEngine *m_helpEngine;
+    HelpBrowser *m_helpViewer;
+    QTabWidget *m_tabWidget;
 private slots:
     void goToHelpUrl(QUrl url);
 };
