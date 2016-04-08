@@ -15,7 +15,8 @@ HEADERS += \
     $$PWD/ftpwidget.h \
     $$PWD/consolewidget.h \
     $$PWD/devicelistwidget.h \
-    $$PWD/texteditorwidget.h
+    $$PWD/texteditorwidget.h \
+    $$PWD/bluetoothselectdialog.h
 
 
 SOURCES += \
@@ -32,5 +33,6 @@ SOURCES += \
     $$PWD/ftpwidget.cpp \
     $$PWD/consolewidget.cpp \
     $$PWD/devicelistwidget.cpp \
-    $$PWD/texteditorwidget.cpp
+    $$PWD/texteditorwidget.cpp \
+    $$PWD/bluetoothselectdialog.cpp
 

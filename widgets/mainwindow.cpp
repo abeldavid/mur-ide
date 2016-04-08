@@ -804,13 +804,14 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(copy()));
     QObject::connect(m_pasteAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(paste()));
      //QObject::connect(m_findAct, SIGNAL(triggered(bool)), m_roboIdeTextEdit, SLOT(()));
+
     QObject::connect(m_buildAct, SIGNAL(triggered(bool)), this, SLOT(runCompilation()));
     QObject::connect(&ProjectManager::instance(), SIGNAL(makeFileGenerated()), this, SLOT(runCompilation()));
     QObject::connect(m_sourceCompiller, SIGNAL(onCompilationOutput(QString, bool, bool)), m_consoleWidget, SLOT(appendMessage(QString, bool, bool)));
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
     QObject::connect(m_uploadAct, SIGNAL(triggered(bool)), this, SLOT(uploadApp()));
     QObject::connect(m_showSettingsAct, SIGNAL(triggered(bool)), m_settingsWidget, SLOT(show()));
-    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_consoleWidget, SLOT(appendMessage(QString)));
+    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_consoleWidget, SLOT(appendMessage(QString)));    
     QObject::connect(m_runAppAct, SIGNAL(triggered(bool)), this, SLOT(runApp()));
     QObject::connect(m_stopAppAct, SIGNAL(triggered(bool)), this, SLOT(killApp()));
     QObject::connect(m_combinedRunAct, SIGNAL(triggered(bool)), this, SLOT(combinedRunApp()));

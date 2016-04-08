@@ -15,6 +15,8 @@ class ConnectedDevicesList : public QWidget
 {
     Q_OBJECT
 public:
+    static const QString wifiCaption;
+    static const QString bluetoothCaption;
     explicit ConnectedDevicesList(QWidget *parent = 0);
     ~ConnectedDevicesList();
 
@@ -22,6 +24,11 @@ public slots:
     void updateDevices(const StatusInfo &status);
     void updateDeviceIcon(uint8_t deviceNumber, const uint8_t &deviceStatus, QLabel *deviceLabel, const QPair<QPixmap, QPixmap> &icons);
     void clearDevices();
+
+signals:
+    void connectToWifi();
+    void connectToBluetooth();
+
 private:
     QGridLayout *m_mainLayout;
     QVBoxLayout *m_connectionLayout;
@@ -60,6 +67,8 @@ private:
     StatusInfo m_prevStatusInfo;
     void createPixMaps();
     void initWidgets();
+private slots:
+    void setConnectionType(QString type);
 };
 
 #endif // CONNECTEDDEVICESLIST_H

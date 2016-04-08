@@ -6,6 +6,8 @@
 #include <QSpacerItem>
 #include <QDebug>
 #include <numeric>
+const QString ConnectedDevicesList::wifiCaption = "WiFi";
+const QString ConnectedDevicesList::bluetoothCaption = "Bluetooth";
 
 ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     : QWidget(parent),
@@ -52,6 +54,8 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
 
     m_mainLayout->setSpacing(10);
 
+    connect(m_connectionType, SIGNAL(currentIndexChanged(QString)), this, SLOT(setConnectionType(QString)));
+
 //    StatusInfo st;
 //    st.yaw = 100.0f;
 //    st.roll = 50.0f;
@@ -63,7 +67,7 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
 
 ConnectedDevicesList::~ConnectedDevicesList()
 {
-    delete m_bluetoothsVisible;
+    delete m_connectionLayout;
 }
 
 void ConnectedDevicesList::updateDevices(const StatusInfo &status)
@@ -189,8 +193,8 @@ void ConnectedDevicesList::initWidgets()
 {
     m_connectionType = new QComboBox(this);
     m_connectionType->setView(new QListView()); // style problem workaround
-    m_connectionType->addItem("WiFi");
-    m_connectionType->addItem("Bluetooth");
+    m_connectionType->addItem(ConnectedDevicesList::wifiCaption);
+    m_connectionType->addItem(ConnectedDevicesList::bluetoothCaption);
     m_connectionLayout->addWidget(m_connectionType);
     m_connectionStatus->setText(m_connectionTexts.second);
     m_connectionStatus->setStyleSheet("QLabel{color:#999999}");
@@ -239,6 +243,17 @@ void ConnectedDevicesList::initWidgets()
     m_mainLayout->addWidget(m_altimetr, 3, 2);
     m_emptySlot->setAlignment(Qt::AlignHCenter);
     m_mainLayout->addWidget(m_emptySlot, 3, 3);
+}
+
+void ConnectedDevicesList::setConnectionType(QString type)
+{
+    qDebug() << type;
+    if (type == ConnectedDevicesList::wifiCaption) {
+        emit connectToWifi();
+    }
+    else if(type == ConnectedDevicesList::bluetoothCaption) {
+        emit connectToBluetooth();
+    }
 }
 
 
