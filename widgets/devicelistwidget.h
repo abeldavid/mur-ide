@@ -51,6 +51,7 @@ private:
     QLabel* m_depth;
 
     StatusInfo m_prevStatusInfo;
+    void initStatusInfo();
 };
 
 #endif // CONNECTEDDEVICESLIST_H
