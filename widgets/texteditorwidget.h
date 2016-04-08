@@ -7,11 +7,11 @@
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexercpp.h>
 
-class RoboIdeTextEditor : public QsciScintilla
+class TextEditorWidget : public QsciScintilla
 {
     Q_OBJECT
 public:
-    explicit RoboIdeTextEditor(QWidget *parent = 0);
+    explicit TextEditorWidget(QWidget *parent = 0);
 
 signals:
     void fileModified();
