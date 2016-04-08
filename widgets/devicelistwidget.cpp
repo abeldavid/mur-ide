@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QSpacerItem>
 #include <QDebug>
+#include <numeric>
 
 ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     : QWidget(parent),
@@ -33,6 +34,7 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
     // and 255 for cameras and leaks
     m_prevStatusInfo.cameras = 255;
     m_prevStatusInfo.leak = 255;
+    m_prevStatusInfo.depth = std::numeric_limits<float>::min();
 
     m_thruster10Icons.first = QPixmap(":/icons/icons/widgeticons/thruster_10.png");
     m_thruster10Icons.second = QPixmap(":/icons/icons/widgeticons/thruster_10_dark.png");
@@ -197,6 +199,7 @@ void ConnectedDevicesList::clearDevices()
     m_prevStatusInfo = StatusInfo();
     m_prevStatusInfo.cameras = 255;
     m_prevStatusInfo.leak = 255;
+    m_prevStatusInfo.depth = std::numeric_limits<float>::min();
 
     m_connectionStatus->setStyleSheet("QLabel{color:#999999}");
     m_connectionStatus->setText(m_connectionTexts.second);
