@@ -65,6 +65,7 @@ signals:
     void startApp();
     void stopApp();
     void fatalErrorHighlight(int, int);
+    void searchInHelp(QString);
 private:
     const QString appTitle = "RobobIDE";
 

@@ -26,6 +26,7 @@ public slots:
     void highlightFatalErrorLine(int lineNumber, int columnNumber);
     void clearErrors();
     void closeFile();
+    QString getWordUnderCursor();
 
 private:
     bool m_isFileExist;

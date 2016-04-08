@@ -308,7 +308,12 @@ void MainWindow::projectClose()
 
 void MainWindow::openHelp()
 {
-    this->m_toggleHelpVisibilityAct->trigger();
+    if (focusWidget() == m_textEditorWidget) {
+        emit searchInHelp(m_textEditorWidget->getWordUnderCursor());
+    }
+    if (!(m_helpWidget->isVisible() && focusWidget() == m_textEditorWidget)) {
+        this->m_toggleHelpVisibilityAct->trigger();
+    }
 }
 
 void MainWindow::onProjectOpened()
@@ -793,6 +798,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_projectTree, SIGNAL(projectContextMenu(QPoint, QString)), this, SLOT(projectContextMenu(QPoint,QString)));
 
     QObject::connect(m_openHelpAct, SIGNAL(triggered(bool)), this, SLOT(openHelp()));
+    QObject::connect(this, SIGNAL(searchInHelp(QString)), m_helpWidget, SLOT(searchForWord(QString)));
     QObject::connect(m_redoAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(redo()));
     QObject::connect(m_undoAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(undo()));
     QObject::connect(m_copyAct, SIGNAL(triggered(bool)), m_textEditorWidget, SLOT(copy()));

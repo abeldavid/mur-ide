@@ -1,8 +1,10 @@
 #include <QFile>
+#include <QMap>
 #include <QLabel>
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QtHelp/QHelpContentWidget>
+#include <QtHelp/QHelpIndexModel>
 
 #include "helpwidget.h"
 
@@ -54,4 +56,12 @@ void HelpWidget::goToHelpUrl(QUrl url)
 HelpWidget::~HelpWidget()
 {
     m_helpEngine->deleteLater();
+}
+
+void HelpWidget::searchForWord(QString word)
+{
+    QMap<QString, QUrl> wordsFound = m_helpEngine->indexModel()->linksForKeyword(word);
+    if (!wordsFound.isEmpty()) {
+        goToHelpUrl(wordsFound["help"]);
+    }
 }

@@ -86,6 +86,15 @@ void TextEditorWidget::closeFile()
     m_fileName = "";
 }
 
+QString TextEditorWidget::getWordUnderCursor()
+{
+    int line;
+    int index;
+    getCursorPosition(&line, &index);
+    return wordAtLineIndex(line, index);
+
+}
+
 void TextEditorWidget::setupEditor()
 {
 
