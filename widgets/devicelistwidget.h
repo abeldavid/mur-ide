@@ -6,6 +6,9 @@
 #include <QLabel>
 #include <QIcon>
 #include <QPixmap>
+#include <QComboBox>
+#include <QGridLayout>
+#include <QVBoxLayout>
 #include "wificonnection.h"
 
 class ConnectedDevicesList : public QWidget
@@ -13,13 +16,17 @@ class ConnectedDevicesList : public QWidget
     Q_OBJECT
 public:
     explicit ConnectedDevicesList(QWidget *parent = 0);
+    ~ConnectedDevicesList();
 
 public slots:
     void updateDevices(const StatusInfo &status);
     void updateDeviceIcon(uint8_t deviceNumber, const uint8_t &deviceStatus, QLabel *deviceLabel, const QPair<QPixmap, QPixmap> &icons);
     void clearDevices();
 private:
+    QGridLayout *m_mainLayout;
+    QVBoxLayout *m_connectionLayout;
     QPair<QString, QString> m_connectionTexts;
+    QComboBox* m_connectionType;
     QLabel* m_connectionStatus;
     QLabel* m_thruster10;
     QPair<QPixmap, QPixmap> m_thruster10Icons;
@@ -51,6 +58,8 @@ private:
     QLabel* m_depth;
 
     StatusInfo m_prevStatusInfo;
+    void createPixMaps();
+    void initWidgets();
 };
 
 #endif // CONNECTEDDEVICESLIST_H
