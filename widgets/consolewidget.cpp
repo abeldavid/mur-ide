@@ -5,6 +5,7 @@
 #include <QFont>
 #include <QRegExp>
 #include <QStringList>
+#include <QScrollBar>
 
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
     QTextEdit(parent),
@@ -83,6 +84,7 @@ void ConsoleWidget::appendMessage(const QString &text, bool isError, bool isIDEM
             m_output.buffer = parts.last();
         }
     }
+    verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
 void ConsoleWidget::keyPressEvent(QKeyEvent *event)
