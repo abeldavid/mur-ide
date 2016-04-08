@@ -14,6 +14,7 @@
 RoboIdeTextEditor::RoboIdeTextEditor(QWidget *parent)
     : QsciScintilla(parent),
       m_isFileExist(false),
+      m_inDoubleParenthesisMode(false),
       m_fileName(QString(""))
 {
     setupEditor();
@@ -198,7 +199,16 @@ void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
         autoCompleteFromAll();
         return; // не дает дописать NULL
     }
-    if(e->key() == Qt::Key_ParenLeft){
+    if (m_inDoubleParenthesisMode) {
+        int line;
+        int index;
+        getCursorPosition(&line, &index);
+        setCursorPosition(line, index + 1);
+        m_inDoubleParenthesisMode = false;
+        return;
+    }
+    m_inDoubleParenthesisMode = false;
+    if(e->key() == Qt::Key_ParenLeft) {
         int line;
         int index;
         getCursorPosition(&line, &index);
@@ -206,6 +216,7 @@ void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
         insertAt(")", line, index+1);
         setCursorPosition(line, index + 1);
         callTip();
+        m_inDoubleParenthesisMode = true;
         return;
     }
     if(e->key() == Qt::Key_BracketLeft){
@@ -213,12 +224,14 @@ void RoboIdeTextEditor::keyPressEvent(QKeyEvent *e)
         int index;
         getCursorPosition(&line, &index);
         insertAt("]", line, index);
+        m_inDoubleParenthesisMode = true;
     }
     if(e->key() == Qt::Key_BraceLeft){
         int line;
         int index;
         getCursorPosition(&line, &index);
         insertAt("}", line, index);
+        m_inDoubleParenthesisMode = true;
     }
     QsciScintilla::keyPressEvent(e);
 }

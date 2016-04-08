@@ -29,6 +29,7 @@ public slots:
 
 private:
     bool m_isFileExist;
+    bool m_inDoubleParenthesisMode;
     QString m_fileName;
     QsciLexerCPP* m_lexCpp;
     bool m_skipNullTextChanged = false;
