@@ -9,7 +9,7 @@
 #include <QComboBox>
 #include <QGridLayout>
 #include <QVBoxLayout>
-#include "wificonnection.h"
+#include "statusinfo.h"
 
 class ConnectedDevicesList : public QWidget
 {

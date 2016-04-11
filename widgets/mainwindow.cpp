@@ -5,6 +5,7 @@
 #include "helpwidget.h"
 #include "project.h"
 #include "projectmanager.h"
+#include "statusinfo.h"
 
 #include <QAction>
 #include <QMenu>

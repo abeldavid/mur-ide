@@ -8,7 +8,8 @@ HEADERS += \
     $$PWD/projectmanager.h \
     $$PWD/project.h \
     $$PWD/qftp.h \
-    $$PWD/qurlinfo.h
+    $$PWD/qurlinfo.h \
+    $$PWD/statusinfo.h
 
 SOURCES += \
     $$PWD/sourcecompiler.cpp \

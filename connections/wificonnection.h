@@ -3,26 +3,10 @@
 
 #include "connections/abstractconnection.h"
 #include "logic/processrunner.h"
+#include "statusinfo.h"
 
 #include <QThread>
 #include <QTimer>
-
-static const std::size_t DEVICES_NUM = 6;
-
-struct StatusInfo
-{
-    uint8_t devicesTypes[DEVICES_NUM];
-    float yaw = 0.0f;
-    float pitch = 0.0f;
-    float roll = 0.0f;
-    float depth = 0.0f;
-    uint8_t leak = 0;
-    uint8_t version = 0;
-    uint8_t cameras = 0;
-};
-
-Q_DECLARE_METATYPE(StatusInfo)
-
 
 class WiFiConnection : public QObject
 {
