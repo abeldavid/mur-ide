@@ -80,7 +80,7 @@ copyToDestdir($$HELP_CONTENT)
 
 include(widgets/widgets.pri)
 include(logic/logic.pri)
-include(filetransfer/filetransfer.pri)
+include(connections/connections.pri)
 
 SOURCES += main.cpp
 

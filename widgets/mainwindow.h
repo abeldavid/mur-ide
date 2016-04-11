@@ -13,7 +13,7 @@
 #include "widgets/devicelistwidget.h"
 #include "widgets/settingswidget.h"
 #include "widgets/cameraswidget.h"
-#include "filetransfer/wificonnection.h"
+#include "connections/wificonnection.h"
 #include "widgets/helpwidget.h"
 #include "ftpwidget.h"
 #include "projectcreatedialog.h"

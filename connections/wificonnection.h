@@ -1,7 +1,7 @@
 #ifndef WIFICONNECTION_H
 #define WIFICONNECTION_H
 
-#include "filetransfer/abstractconnection.h"
+#include "connections/abstractconnection.h"
 #include "logic/processrunner.h"
 
 #include <QThread>

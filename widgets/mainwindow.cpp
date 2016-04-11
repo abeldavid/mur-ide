@@ -811,7 +811,6 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_sourceCompiller, SIGNAL(finished()), this, SLOT(compilationFinished()));
     QObject::connect(m_uploadAct, SIGNAL(triggered(bool)), this, SLOT(uploadApp()));
     QObject::connect(m_showSettingsAct, SIGNAL(triggered(bool)), m_settingsWidget, SLOT(show()));
-    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_consoleWidget, SLOT(appendMessage(QString)));    
     QObject::connect(m_runAppAct, SIGNAL(triggered(bool)), this, SLOT(runApp()));
     QObject::connect(m_stopAppAct, SIGNAL(triggered(bool)), this, SLOT(killApp()));
     QObject::connect(m_combinedRunAct, SIGNAL(triggered(bool)), this, SLOT(combinedRunApp()));
@@ -824,6 +823,8 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_localApp, SIGNAL(readyRead()), SLOT(processOutReceived()));
 
     QObject::connect(m_showFtpAct, SIGNAL(triggered(bool)), m_ftpWidget, SLOT(exec()));
+
+    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_consoleWidget, SLOT(appendMessage(QString)));
 
     QObject::connect(m_wifiConnection, SIGNAL(appKilled(bool)), this, SLOT(onAppKilled(bool)));
     QObject::connect(m_wifiConnection, SIGNAL(appSend(bool)), this, SLOT(onEndFileUpload(bool)));
