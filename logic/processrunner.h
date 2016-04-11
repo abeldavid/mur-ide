@@ -2,10 +2,9 @@
 #define PROCESSRUNNER_H
 
 #include <QObject>
-#include <QRunnable>
 #include <QProcess>
 
-class ProcessRunner : public QObject, public QRunnable
+class ProcessRunner : public QObject
 {
     Q_OBJECT
 public:

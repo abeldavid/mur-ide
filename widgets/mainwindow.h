@@ -129,7 +129,6 @@ private:
     QMenu *m_projectTreeContextMenu;
     ProjectCreateDialog *m_projectCreateDialog;
     FileCreateDialog *m_fileCreateDialog;
-    QThread* m_wifiConnectionThread;
     bool m_inCombinedRunState;
     bool m_currentErrorsFound;
     QComboBox *m_targetComboBox;

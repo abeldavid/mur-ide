@@ -9,13 +9,7 @@
 #include "settingsmanager.h"
 
 WiFiConnection::WiFiConnection(QObject *parent) :
-    QObject(parent),
-    m_zmqContext(zmq_ctx_new()),
-    m_zmqReqSoc(zmq_socket(m_zmqContext, ZMQ_REQ)),
-    m_zmqInfoSub(zmq_socket(m_zmqContext, ZMQ_SUB)),
-    m_connectionTimeout(new QTimer(this)),
-    m_updateDeviceListTimer(new QTimer(this))
-   // m_connectionThread(new QThread(parent))
+    AbstractConnection(parent)
 {
     int timeout = 2000;
     int option = 0;
@@ -39,7 +33,6 @@ WiFiConnection::WiFiConnection(QObject *parent) :
 
     m_updateDeviceListTimer->start();
     m_connectionTimeout->start();
-
 }
 
 WiFiConnection::~WiFiConnection()
@@ -193,6 +186,7 @@ void WiFiConnection::send(QString file)
 
 void WiFiConnection::updateRobotInfo()
 {
+    qDebug() << "update info";
     zmq_msg_t robotInfo;
     zmq_msg_init(&robotInfo);
     if (-1 != zmq_msg_recv(&robotInfo, m_zmqInfoSub, ZMQ_DONTWAIT)) {
@@ -206,6 +200,7 @@ void WiFiConnection::updateRobotInfo()
 
 void WiFiConnection::onDisconected()
 {
+    qDebug() << "connection timeout";
     m_isConnected = false;
     recreateSockets();
     emit disconnected();

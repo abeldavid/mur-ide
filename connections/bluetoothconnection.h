@@ -2,8 +2,9 @@
 #define BLUETOOTHCONNECTION_H
 
 #include <QObject>
+#include "abstractconnection.h"
 
-class BluetoothConnection : public QObject
+class BluetoothConnection : public AbstractConnection
 {
     Q_OBJECT
 public:
