@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>help</title>
+<title>examples</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!--This HTML file is auto-generated from markdown-->
+<style type="text/css">
+/* This file is deliberately empty */
+</style>
 <style type="text/css">
 .highlight  { background: #ffffff; }
 .highlight .c { color: #999988; font-style: italic } /* Comment */
@@ -148,24 +150,56 @@
 .pl-mo {
     color: #1d3e81;
 }
+.task-list {
+padding-left:10px;
+margin-bottom:0;
+}
+
+.task-list li {
+    margin-left: 20px;
+}
+
+.task-list-item {
+list-style-type:none;
+padding-left:10px;
+}
+
+.task-list-item label {
+font-weight:400;
+}
+
+.task-list-item.enabled label {
+cursor:pointer;
+}
+
+.task-list-item+.task-list-item {
+margin-top:3px;
+}
+
+.task-list-item-checkbox {
+display:inline-block;
+margin-left:-20px;
+margin-right:3px;
+vertical-align:1px;
+}
 </style>
 </head>
 <body>
 <p><a id="user-content-Examples"></a></p>
 
-<h2>Примеры</h2>
+<h1>Примеры</h1>
 
-<h3 id="recognition">Распознавание объектов</h3>
+<h2>Распознавание объектов</h2>
 
 <div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>murapi.h<span class="pl-pds">&gt;</span></span> <span class="pl-c">//заголовочный файл библиотеки libmurapi</span>
-<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {     
     <span class="pl-c">//Инициализируем движители.     </span>
     <span class="pl-c">//Первый движитель будет с ID 10,     </span>
     <span class="pl-c">//Второй - с ID 20, третий - с ID 30, четвертый - с ID 40     </span>
     <span class="pl-c1">setupThrusters</span>(<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">30</span>, <span class="pl-c1">40</span>);
 
     <span class="pl-c">//Создаем два экземпляра класса Camera     </span>
-    Camera cameraFront;
+    Camera cameraFront;     
     Camera cameraBot;
 
     <span class="pl-c">//Пускай у нас камера с ID 1 будет передней,     </span>
@@ -173,111 +207,313 @@
     <span class="pl-c">//ID присваиваются камерам в зависимости от их USB ID.     </span>
     <span class="pl-c">//Какая из них первая, а какая вторая можно будет определить     </span>
     <span class="pl-c">//только экспериментально     </span>
-    cameraFront.<span class="pl-c1">init</span>(<span class="pl-c1">1</span>);
+    cameraFront.<span class="pl-c1">init</span>(<span class="pl-c1">1</span>);     
     cameraBot.<span class="pl-c1">init</span>(<span class="pl-c1">2</span>);
 
     <span class="pl-c">//Установим разрешение на камеры     </span>
-    cameraBot.<span class="pl-c1">setCameraRes</span>(<span class="pl-c1">320</span>, <span class="pl-c1">240</span>);
+    cameraBot.<span class="pl-c1">setCameraRes</span>(<span class="pl-c1">320</span>, <span class="pl-c1">240</span>);     
     cameraFront.<span class="pl-c1">setCameraRes</span>(<span class="pl-c1">320</span>, <span class="pl-c1">240</span>);
 
     <span class="pl-c">//Создаем 2 экземпляра структуры Object     </span>
     <span class="pl-c">//Которые будут хранить информацию о найденных объектах     </span>
-    Object detectedObjectFront;
+    Object detectedObjectFront;     
     Object detectedObjectBot;
 
     <span class="pl-c">//В бесконечном цикле будем искать квадраты нижней     </span>
     <span class="pl-c">//И треугольники передней     </span>
-    <span class="pl-k">while</span>(<span class="pl-c1">true</span>) {
-        detectedObjectBot = <span class="pl-c1">detectRectangle</span>(cameraBot);
+    <span class="pl-k">while</span>(<span class="pl-c1">true</span>) {         
+        detectedObjectBot = <span class="pl-c1">detectRectangle</span>(cameraBot);         
         detectedObjectFront = <span class="pl-c1">detectTriangle</span>(cameraFront);
 
         <span class="pl-c">//Если передняя камера нашла треугольники         </span>
-        <span class="pl-k">if</span> (detectedObjectFront.<span class="pl-smi">type</span> == OBJECT::TRIANGLE) {
+        <span class="pl-k">if</span> (detectedObjectFront.<span class="pl-smi">type</span> == OBJECT::TRIANGLE) {             
             <span class="pl-c">//Пусть двигатели 2 и 3 у нас горизонтальные             </span>
             <span class="pl-c">//Устанавливаем тягу в 40             </span>
-            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">40</span>);
-            <span class="pl-c1">setThrusterPower</span>(THRUSTER::THREE, <span class="pl-c1">40</span>);
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">40</span>);             
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::THREE, <span class="pl-c1">40</span>);             
             <span class="pl-c">//Применяем установленную тягу             </span>
-            <span class="pl-c1">applyThrusterPower</span>();
-        }
-        <span class="pl-k">else</span> {
+            <span class="pl-c1">applyThrusterPower</span>();         
+        }         
+        <span class="pl-k">else</span> {             
             <span class="pl-c">//Если передняя камера не видит треугольник,</span>
             <span class="pl-c">//Идем с тягой 70             </span>
-            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">70</span>);
-            <span class="pl-c1">setThrusterPower</span>(THRUSTER::THREE, <span class="pl-c1">70</span>);
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">70</span>);             
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::THREE, <span class="pl-c1">70</span>);             
             <span class="pl-c">//Применяем установленную тягу             </span>
-            <span class="pl-c1">applyThrusterPower</span>();
+            <span class="pl-c1">applyThrusterPower</span>();         
         }
 
         <span class="pl-c">//Если нижняя камера нашла прямоугольник         </span>
-        <span class="pl-k">if</span> (detectedObjectBot.<span class="pl-smi">type</span> == OBJECT::RECTANGLE) {
+        <span class="pl-k">if</span> (detectedObjectBot.<span class="pl-smi">type</span> == OBJECT::RECTANGLE) {             
             <span class="pl-c">//Остановим движители             </span>
-            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">0</span>);
-            <span class="pl-c1">setThrusterPower</span>(THRUSTER::THREE, <span class="pl-c1">0</span>);
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">0</span>);             
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::THREE, <span class="pl-c1">0</span>);             
             <span class="pl-c">//Применяем установленную тягу             </span>
-            <span class="pl-c1">applyThrusterPower</span>();
+            <span class="pl-c1">applyThrusterPower</span>();             
             <span class="pl-c">//Выходим из цикла чтобы всплыть             </span>
-            <span class="pl-k">break</span>;
-        }
-    }
+            <span class="pl-k">break</span>;         
+        }     
+    }     
 
     <span class="pl-c">//Пока глубина &gt; 20см     </span>
-    <span class="pl-k">while</span> (<span class="pl-c1">getDepth</span>() &gt; <span class="pl-c1">20</span>) {
+    <span class="pl-k">while</span> (<span class="pl-c1">getDepth</span>() &gt; <span class="pl-c1">20</span>) {         
         <span class="pl-c">//Всплываем с тягой -80         </span>
-        <span class="pl-c1">setThrusterPower</span>(THRUSTER::ONE, -<span class="pl-c1">80</span>);
-        <span class="pl-c1">applyThrusterPower</span>();
-    }
+        <span class="pl-c1">setThrusterPower</span>(THRUSTER::ONE, -<span class="pl-c1">80</span>);         
+        <span class="pl-c1">applyThrusterPower</span>();     
+    }     
 
     <span class="pl-k">return</span> <span class="pl-c1">0</span>;
 }</pre></div>
 
-<h3 id="pd">PD - регулятор</h3>
+<h2>PD - регулятор</h2>
+
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>murapi.h<span class="pl-pds">&gt;</span></span> 
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cmath<span class="pl-pds">&gt;</span></span>  
+
+<span class="pl-k">void</span> <span class="pl-en">keepYaw</span>(<span class="pl-k">float</span> yaw, <span class="pl-k">int</span> power) {  
+    <span class="pl-c">//Устанавливаем коэффициенты     </span>
+    <span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">float</span> kp = <span class="pl-c1">0</span>.<span class="pl-c1">1F</span>;     
+    <span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">float</span> kd = <span class="pl-c1">0</span>.<span class="pl-c1">1F</span>;  
+    <span class="pl-c">//Вычисляем PD регулятор </span>
+    <span class="pl-k">static</span> <span class="pl-k">float</span> currentYaw = <span class="pl-c1">getYaw</span>();     
+    <span class="pl-k">static</span> <span class="pl-k">float</span> currentAS = <span class="pl-c1">getAS</span>();     
+    <span class="pl-k">static</span> <span class="pl-k">float</span> error = (yaw - currentYaw);     
+    <span class="pl-k">static</span> <span class="pl-k">float</span> pd = (error * kp) - (currentAS * kd);  
+    <span class="pl-k">static</span> <span class="pl-k">int</span> powerLeft = power + pd / <span class="pl-c1">2</span>.<span class="pl-c1">0F</span>;     
+    <span class="pl-k">static</span> <span class="pl-k">int</span> powerRight = power - pd / <span class="pl-c1">2</span>.<span class="pl-c1">0F</span>;  
+    <span class="pl-c">//Проверяем тягу на граничные значения     </span>
+    <span class="pl-k">if</span> (powerLeft &gt; <span class="pl-c1">100</span>) {         
+        powerLeft = (powerLeft - (<span class="pl-c1">std::abs</span>(powerLeft) - <span class="pl-c1">100</span>));     
+    }  
+    <span class="pl-k">if</span> (powerLeft &lt; -<span class="pl-c1">100</span>) {         
+        powerLeft = (powerLeft + (<span class="pl-c1">std::abs</span>(powerLeft) - <span class="pl-c1">100</span>));     
+    }  
+    <span class="pl-k">if</span> (powerRight &gt; <span class="pl-c1">100</span>) {         
+        powerRight = (powerRight - (<span class="pl-c1">std::abs</span>(powerRight) - <span class="pl-c1">100</span>));     
+    }  
+    <span class="pl-k">if</span> (powerRight &lt; -<span class="pl-c1">100</span>) {         
+        powerRight = (powerRight + (<span class="pl-c1">std::abs</span>(powerRight) - <span class="pl-c1">100</span>));     
+    }     
+    <span class="pl-c">//Устанавливаем тягу     </span>
+    <span class="pl-c1">setThrusterPower</span>(THRUSTER::ONE, powerLeft);     
+    <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, powerRight);  
+    <span class="pl-c">//Применяем установленную тягу     </span>
+    <span class="pl-c1">applyThrusterPower</span>(); 
+}
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {     
+    <span class="pl-c1">setupThrusters</span>(<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">30</span>, <span class="pl-c1">40</span>);     
+    <span class="pl-c">//Будем держать курс в 15 градусов     </span>
+    <span class="pl-k">float</span> yawSet = <span class="pl-c1">15</span>.<span class="pl-c1">0F</span>;     
+    <span class="pl-c">//Идем вперед, стабилизируясь по курсу в 15 градусов     </span>
+    <span class="pl-k">while</span> (<span class="pl-c1">true</span>) {         
+        <span class="pl-c">//Идем вперед с тягой в 40, удерживая курс 15 градусов         </span>
+        <span class="pl-c1">keepYaw</span>(yawSet, <span class="pl-c1">40</span>);     
+    }     
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>; 
+}  
+</pre></div>
+
+<h3>Распознавание треугольника</h3>
 
 <div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>murapi.h<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cmath<span class="pl-pds">&gt;</span></span>
 
-<span class="pl-k">void</span> <span class="pl-en">keepYaw</span>(<span class="pl-k">float</span> yaw, <span class="pl-k">int</span> power) {
-    <span class="pl-c">//Устанавливаем коэффициенты     </span>
-    <span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">float</span> kp = <span class="pl-c1">0</span>.<span class="pl-c1">1F</span>;
-    <span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-k">float</span> kd = <span class="pl-c1">0</span>.<span class="pl-c1">1F</span>;
-    <span class="pl-c">//Вычисляем PD регулятор </span>
-    <span class="pl-k">static</span> <span class="pl-k">float</span> currentYaw = <span class="pl-c1">getYaw</span>();
-    <span class="pl-k">static</span> <span class="pl-k">float</span> currentAS = <span class="pl-c1">getAS</span>();
-    <span class="pl-k">static</span> <span class="pl-k">float</span> error = (yaw - currentYaw);
-    <span class="pl-k">static</span> <span class="pl-k">float</span> pd = (error * kp) - (currentAS * kd);
-    <span class="pl-k">static</span> <span class="pl-k">int</span> powerLeft = power + pd / <span class="pl-c1">2</span>.<span class="pl-c1">0F</span>;
-    <span class="pl-k">static</span> <span class="pl-k">int</span> powerRight = power - pd / <span class="pl-c1">2</span>.<span class="pl-c1">0F</span>;
-    <span class="pl-c">//Проверяем тягу на граничные значения     </span>
-    <span class="pl-k">if</span> (powerLeft &gt; <span class="pl-c1">100</span>) {
-        powerLeft = (powerLeft - (<span class="pl-c1">std::abs</span>(powerLeft) - <span class="pl-c1">100</span>));
-    }
-    <span class="pl-k">if</span> (powerLeft &lt; -<span class="pl-c1">100</span>) {
-        powerLeft = (powerLeft + (<span class="pl-c1">std::abs</span>(powerLeft) - <span class="pl-c1">100</span>));
-    }
-    <span class="pl-k">if</span> (powerRight &gt; <span class="pl-c1">100</span>) {
-        powerRight = (powerRight - (<span class="pl-c1">std::abs</span>(powerRight) - <span class="pl-c1">100</span>));
-    }
-    <span class="pl-k">if</span> (powerRight &lt; -<span class="pl-c1">100</span>) {
-        powerRight = (powerRight + (<span class="pl-c1">std::abs</span>(powerRight) - <span class="pl-c1">100</span>));
-    }
-    <span class="pl-c">//Устанавливаем тягу     </span>
-    <span class="pl-c1">setThrusterPower</span>(THRUSTER::ONE, powerLeft);
-    <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, powerRight);
-    <span class="pl-c">//Применяем установленную тягу     </span>
-    <span class="pl-c1">applyThrusterPower</span>();
-}
+<span class="pl-k">int</span> <span class="pl-en">main</span>()
+{
+     <span class="pl-c">//Создаем объект камеры.</span>
+     Camera cam;
+     <span class="pl-c">//Инициализируем камеру.</span>
+     cam.<span class="pl-c1">init</span>(<span class="pl-c1">0</span>);
+     <span class="pl-c">//Создаем объект для хранения информации о найденом треугольнике. </span>
+     Object tri;
+     <span class="pl-c">//Будем искать треугольник в бесконечном цыкле. </span>
+     <span class="pl-k">while</span>(<span class="pl-c1">true</span>) 
+     {
+         <span class="pl-c">//Ищем треугольник.</span>
+         tri = <span class="pl-c1">detectTriangle</span>(cam);
 
-<span class="pl-k">int</span> <span class="pl-en">main</span>() {
-    <span class="pl-c1">setupThrusters</span>(<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">30</span>, <span class="pl-c1">40</span>);
-    <span class="pl-c">//Будем держать курс в 15 градусов     </span>
-    <span class="pl-k">float</span> yawSet = <span class="pl-c1">15</span>.<span class="pl-c1">0F</span>;
-    <span class="pl-c">//Идем вперед, стабилизируясь по курсу в 15 градусов     </span>
-    <span class="pl-k">while</span> (<span class="pl-c1">true</span>) {
-        <span class="pl-c">//Идем вперед с тягой в 40, удерживая курс 15 градусов         </span>
-        <span class="pl-c1">keepYaw</span>(yawSet, <span class="pl-c1">40</span>);
+         <span class="pl-c">//Если треугольник найден, то выходим из цикла.</span>
+         <span class="pl-k">if</span> (tri.<span class="pl-smi">type</span> == OBJECT::TRIANGLE) {
+            <span class="pl-k">break</span>;
+         }
+
+     }
+     <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+
+<h3>Распознавание круга</h3>
+
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>murapi.h<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>()
+{
+    <span class="pl-c">//Создаем объект камеры.</span>
+    Camera cam;
+    <span class="pl-c">//Инициализируем камеру.</span>
+    cam.<span class="pl-c1">init</span>(<span class="pl-c1">0</span>);
+    <span class="pl-c">//Создаем объект для хранения информации о найденом круге. </span>
+    Object circle;
+    <span class="pl-c">//Будем искать круг в бесконечном цыкле. </span>
+    <span class="pl-k">while</span>(<span class="pl-c1">true</span>) 
+    {
+        <span class="pl-c">//Ищем круг.</span>
+        circle = <span class="pl-c1">detectCircle</span>(cam);
+
+        <span class="pl-c">//Если треугольник найден, то выходим из цикла.</span>
+        <span class="pl-k">if</span> (circle.<span class="pl-smi">type</span> == OBJECT::CIRCLE) {
+            <span class="pl-k">break</span>;
+        }   
     }
     <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+
+<h3>Распознование прямоугольника</h3>
+
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>murapi.h<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>()
+{
+    <span class="pl-c">//Создаем объект камеры.</span>
+    Camera cam;
+    <span class="pl-c">//Инициализируем камеру.</span>
+    cam.<span class="pl-c1">init</span>(<span class="pl-c1">0</span>);
+    <span class="pl-c">//Создаем объект для хранения информации о найденом круге. </span>
+    Object rect;
+    <span class="pl-c">//Будем искать круг в бесконечном цыкле. </span>
+    <span class="pl-k">while</span>(<span class="pl-c1">true</span>) 
+    {
+        <span class="pl-c">//Ищем круг.</span>
+        rect = <span class="pl-c1">detectRectangle</span>(cam);
+
+        <span class="pl-c">//Если треугольник найден, то выходим из цикла.</span>
+        <span class="pl-k">if</span> (rect.<span class="pl-smi">type</span> == OBJECT::RECTANGLE) {
+            <span class="pl-k">break</span>;
+        }   
+    }
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+
+<h3>Вращение движителями в зависимости от найденных объектов</h3>
+
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>murapi.h<span class="pl-pds">&gt;</span></span> <span class="pl-c">//заголовочный файл библиотеки libmurapi</span>
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {     
+    <span class="pl-c">//Инициализируем движители.     </span>
+    <span class="pl-c">//Первый движитель будет с ID 10,     </span>
+    <span class="pl-c">//Второй - с ID 20, третий - с ID 30, четвертый - с ID 40     </span>
+    <span class="pl-c1">setupThrusters</span>(<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">30</span>, <span class="pl-c1">40</span>);
+
+    <span class="pl-c">//Создаем экземпляр класса Camera     </span>
+    Camera camera;     
+
+    <span class="pl-c">//Инициализируем камеру.  </span>
+    camera.<span class="pl-c1">init</span>(<span class="pl-c1">0</span>);     
+
+    <span class="pl-c">//Установим разрешение на камеру     </span>
+    camera.<span class="pl-c1">setCameraRes</span>(<span class="pl-c1">320</span>, <span class="pl-c1">240</span>);     
+
+    <span class="pl-c">//Создаем 2 экземпляра структуры Object     </span>
+    <span class="pl-c">//Которые будут хранить информацию о найденных объектах     </span>
+    Object detectedRect;     
+    Object detectedTri;
+
+    <span class="pl-c">//В бесконечном цикле будем искать квадраты и треугольники     </span>
+    <span class="pl-k">while</span>(<span class="pl-c1">true</span>) {         
+        detectedRect = <span class="pl-c1">detectRectangle</span>(camera);         
+        detectedTri = <span class="pl-c1">detectTriangle</span>(camera);
+
+        <span class="pl-c">//Если камера нашли треугольники         </span>
+        <span class="pl-k">if</span> (detectedTri.<span class="pl-smi">type</span> == OBJECT::TRIANGLE) { 
+            <span class="pl-c">//Вращаем вторым мотором с тягой -40             </span>
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, -<span class="pl-c1">40</span>);                                  
+            <span class="pl-c1">applyThrusterPower</span>();         
+        }         
+        <span class="pl-k">else</span> {             
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">0</span>);                                  
+            <span class="pl-c1">applyThrusterPower</span>();                
+        }
+
+        <span class="pl-c">//Если камера нашли квадраты</span>
+        <span class="pl-k">if</span> (detectedRect.<span class="pl-smi">type</span> == OBJECT::RECTANGLE) {
+            <span class="pl-c">//Вращаем вторым мотором с тягой +40              </span>
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">40</span>);                                  
+            <span class="pl-c1">applyThrusterPower</span>();         
+        }         
+        <span class="pl-k">else</span> {             
+            <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">0</span>);                                  
+            <span class="pl-c1">applyThrusterPower</span>();                
+        }   
+    }     
+
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+
+<h3>Пописксельная работа с изображением</h3>
+
+<p>В данном примере мы уменьшили количество цветов, используемых для отрисовки изображения, до трех. <br>
+<a href="HelpImages/reduceColors.png" target="_blank"><img src="HelpImages/reduceColors.png" alt="ColorReduce" style="max-width:100%;"></a></p>
+
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>murapi.h<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-c1">uint8_t</span> <span class="pl-en">reduceVal</span>(<span class="pl-k">const</span> <span class="pl-c1">uint8_t</span> val)
+{
+    <span class="pl-k">if</span> (val &lt; <span class="pl-c1">128</span>) {
+     <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+    }
+    <span class="pl-k">else</span> {
+     <span class="pl-k">return</span> <span class="pl-c1">255</span>;
+    }
 }
-</pre></div>
+
+<span class="pl-k">void</span> <span class="pl-en">reduceColors</span>(cv::Mat &amp;img)
+{
+    <span class="pl-c">// Изображение представленно в виде матрицы row x cols </span>
+    <span class="pl-c">//Обойдем кждый элемент данной матрицы. </span>
+    <span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; img.<span class="pl-smi">rows</span>; i++) {
+        <span class="pl-k">for</span> (<span class="pl-k">int</span> j = <span class="pl-c1">0</span>; j &lt; img.<span class="pl-smi">cols</span>; j++) {
+            <span class="pl-c">//Поскольку изображение цветное (3 канала по 8 бит на канал), </span>
+            <span class="pl-c">//Каждый элемент матрицы представлен в виде массива из 3 элементов</span>
+            <span class="pl-c">// Каждый элемент массива хранит информацию о значении составляющей цвета. </span>
+            cv::Vec3b pixels = img.<span class="pl-smi">at</span>&lt;cv::Vec3b&gt;(i,j); 
+
+            <span class="pl-c">//Изменяем значение каждой состовляющей цвета. </span>
+            pixels.<span class="pl-smi">val</span>[<span class="pl-c1">0</span>] = <span class="pl-c1">reduceVal</span>(pixels.<span class="pl-smi">val</span>[<span class="pl-c1">0</span>]); <span class="pl-c">//Blue</span>
+            pixels.<span class="pl-smi">val</span>[<span class="pl-c1">1</span>] = <span class="pl-c1">reduceVal</span>(pixels.<span class="pl-smi">val</span>[<span class="pl-c1">1</span>]); <span class="pl-c">//Green</span>
+            pixels.<span class="pl-smi">val</span>[<span class="pl-c1">2</span>] = <span class="pl-c1">reduceVal</span>(pixels.<span class="pl-smi">val</span>[<span class="pl-c1">2</span>]); <span class="pl-c">//Red</span>
+
+            img.<span class="pl-smi">at</span>&lt;cv::Vec3b&gt;(i,j) = pixels;
+        }
+    }
+}
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>()
+{
+    Camera cam;
+    cam.<span class="pl-c1">init</span>(<span class="pl-c1">0</span>);
+    <span class="pl-c">//В данной картинке мы будем хранить измененное изображение</span>
+    cv::Mat imageToShow;
+    <span class="pl-k">while</span>(<span class="pl-c1">true</span>) {
+        imageToShow = cam.<span class="pl-c1">getFrame</span>().<span class="pl-c1">clone</span>();
+        <span class="pl-c1">reduceColors</span>(imageToShow);
+        <span class="pl-c1">showImageOne</span>(imageToShow);     
+    }
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+
+<h3>Вращение всеми движителями</h3>
+
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>murapi.h<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span> () {
+
+    <span class="pl-c1">setupThrusters</span>(<span class="pl-c1">10</span>, <span class="pl-c1">20</span>, <span class="pl-c1">30</span>, <span class="pl-c1">40</span>);
+    <span class="pl-k">while</span>(<span class="pl-c1">true</span>) {
+        <span class="pl-c1">setThrusterPower</span>(THRUSTER::ONE, <span class="pl-c1">30</span>); 
+        <span class="pl-c1">setThrusterPower</span>(THRUSTER::TWO, <span class="pl-c1">30</span>); 
+        <span class="pl-c1">setThrusterPower</span>(THRUSTER::THREE, <span class="pl-c1">30</span>); 
+        <span class="pl-c1">setThrusterPower</span>(THRUSTER::FOUR, <span class="pl-c1">30</span>); 
+        <span class="pl-c1">applyThrusterPower</span>();        
+    }
+}</pre></div>
 </body>
 </html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

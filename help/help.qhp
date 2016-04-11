@@ -6,22 +6,40 @@
         <filterAttribute>RoboIDE</filterAttribute>
         <filterAttribute>MUR</filterAttribute>
         <toc>
-            <section title="Распознавание объектов" ref="doc.html#user-content-Camera"/>
-            <section title="Функции инициализации" ref="doc.html#user-content-Engines"/>
-            <section title="Получение данных" ref="doc.html#user-content-Sensors"/>
-            <section title="Основные типы данных" ref="doc.html#user-content-DataTypes">
+            <section title="Распознавание объектов" ref="doc.html#Camera"/>
+            <section title="Функции инициализации" ref="doc.html#Engines"/>
+            <section title="Получение данных" ref="doc.html#Sensors"/>
+            <section title="Основные типы данных" ref="doc.html#DataTypes">
                 <section title="Struct Object" ref="doc.html#datatype-struct-object"/>
                 <section title="Enum Object" ref="doc.html#datatype-enum-object"/>
                 <section title="Struct Motion" ref="doc.html#datatype-struct-motion"/>
                 <section title="Class Camera" ref="doc.html#datatype-class-camera"/>
             </section>
             <section title="Примеры" ref="examples.html">
-                <section title="Распознавание" ref="examples.html#recognition"/>
-                <section title="PD-регулятор" ref="examples.html#pd"/>
             </section>
         </toc>
         <keywords>
-			<keyword name="Camera" ref="doc.html#user-content-Camera"/>
+			<keyword name="Camera" ref="doc.html#Camera"/>
+            <keyword name="detectLine" ref="doc.html#Camera"/>
+            <keyword name="detectTriangle" ref="doc.html#Camera"/>
+            <keyword name="detectRectangle" ref="doc.html#Camera"/>
+            <keyword name="detectCircle" ref="doc.html#Camera"/>
+            <keyword name="detectMotion" ref="doc.html#Camera"/>
+            <keyword name="detectObject" ref="doc.html#Camera"/>
+
+            <keyword name="Motion" ref="doc.html#datatype-struct-motion"/>
+            <keyword name="Object" ref="doc.html#datatype-struct-object"/>
+            <keyword name="OBJECT" ref="doc.html#datatype-enum-object"/>
+
+            <keyword name="setThrusterPower" ref="doc.html#Engines"/>
+            <keyword name="applyThrusterPower" ref="doc.html#Engines"/>
+
+            <keyword name="getDepth" ref="doc.html#Sensors"/>
+            <keyword name="getYaw" ref="doc.html#Sensors"/>
+            <keyword name="getAS" ref="doc.html#Sensors"/>
+            <keyword name="getPitch" ref="doc.html#Sensors"/>
+            <keyword name="getRoll" ref="doc.html#Sensors"/>
+            <keyword name="getYaw" ref="doc.html#Sensors"/>
         </keywords>
         <files>
             <file>*.html</file>
