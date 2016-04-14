@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_sourceCompiller(new SourceCompiler(this)),
       m_connectedDevicesList(new ConnectedDevicesList(this)),
       m_settingsWidget(new SettingsWidget(this)),
-      m_wifiConnection(new WiFiConnection(this)),
+      m_connectionManager(new ConnectionManager(this)),
       m_localApp(new QProcess(this)),
       m_helpWidget(new HelpWidget(this)),
       m_projectTree(new ProjectTree(this)),
@@ -124,7 +124,7 @@ void MainWindow::compilationFinished()
 
 bool MainWindow::uploadApp()
 {
-    m_wifiConnection->sendFile(m_sourceCompiller->pathToBinary());
+    m_connectionManager->sendFile(m_sourceCompiller->pathToBinary());
     return true;
 
 }
@@ -134,7 +134,7 @@ bool MainWindow::runApp()
     bool isOK = false;
     if (m_edisonCompileAct->isChecked()) {
         m_runAppAct->setDisabled(true);
-        m_wifiConnection->runApp();
+        m_connectionManager->runApp();
         m_runAppAct->setEnabled(true);
         m_stopAppAct->setEnabled(true);
         return true;
@@ -171,7 +171,7 @@ void MainWindow::onEndFileUpload(bool isOk)
 {
     if (isOk) {
         m_consoleWidget->appendMessage("Программа отправлена.\n", false, true);
-        m_wifiConnection->runApp();
+        m_connectionManager->runApp();
     }
     else {
         m_consoleWidget->appendMessage("Ошибка передачи. Программа не может быть отправлена. Проверьте соединение с аппаратом.\n", true, true);
@@ -211,7 +211,7 @@ bool MainWindow::killApp()
     bool isRunning = false;
     if (m_edisonCompileAct->isChecked()) {
         m_stopAppAct->setDisabled(true);
-        m_wifiConnection->killApp();
+        m_connectionManager->killApp();
         m_stopAppAct->setEnabled(true);
         return true;
     }
@@ -823,18 +823,16 @@ void MainWindow::connectActionsToSlots()
 
     QObject::connect(m_showFtpAct, SIGNAL(triggered(bool)), m_ftpWidget, SLOT(exec()));
 
-    QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_consoleWidget, SLOT(appendMessage(QString)));
+    QObject::connect(m_connectionManager, SIGNAL(appKilled(bool)), this, SLOT(onAppKilled(bool)));
+    QObject::connect(m_connectionManager, SIGNAL(appSent(bool)), this, SLOT(onEndFileUpload(bool)));
+    QObject::connect(m_connectionManager, SIGNAL(appStarted(bool)), this, SLOT(onAppStarted(bool)));
 
-    QObject::connect(m_wifiConnection, SIGNAL(appKilled(bool)), this, SLOT(onAppKilled(bool)));
-    QObject::connect(m_wifiConnection, SIGNAL(appSent(bool)), this, SLOT(onEndFileUpload(bool)));
-    QObject::connect(m_wifiConnection, SIGNAL(appStarted(bool)), this, SLOT(onAppStarted(bool)));
+    QObject::connect(m_connectionManager, SIGNAL(statusUpdated(StatusInfo)), m_connectedDevicesList, SLOT(updateDevices(StatusInfo)));
+    QObject::connect(m_connectionManager, SIGNAL(disconnected()), m_connectedDevicesList, SLOT(clearDevices()));
 
-    QObject::connect(m_wifiConnection, SIGNAL(statusUpdated(StatusInfo)), m_connectedDevicesList, SLOT(updateDevices(StatusInfo)));
-    QObject::connect(m_wifiConnection, SIGNAL(disconnected()), m_connectedDevicesList, SLOT(clearDevices()));
-
-    QObject::connect(this, SIGNAL(startApp()), m_wifiConnection, SLOT(runApp()));
-    QObject::connect(this, SIGNAL(stopApp()), m_wifiConnection, SLOT(killApp()));
-    QObject::connect(this, SIGNAL(sendFile(QString)), m_wifiConnection, SLOT(send(QString)));
+    QObject::connect(this, SIGNAL(startApp()), m_connectionManager, SLOT(runApp()));
+    QObject::connect(this, SIGNAL(stopApp()), m_connectionManager, SLOT(killApp()));
+    QObject::connect(this, SIGNAL(sendFile(QString)), m_connectionManager, SLOT(send(QString)));
     QObject::connect(m_localApp, SIGNAL(finished(int)), this, SLOT(onLocalAppFinished()));
 
     QObject::connect(m_sourceCompiller, SIGNAL(run()), m_textEditorWidget, SLOT(clearErrors()));

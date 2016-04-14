@@ -13,7 +13,7 @@
 #include "widgets/devicelistwidget.h"
 #include "widgets/settingswidget.h"
 #include "widgets/cameraswidget.h"
-#include "connections/wificonnection.h"
+#include "connections/connectionmanager.h"
 #include "widgets/helpwidget.h"
 #include "ftpwidget.h"
 #include "projectcreatedialog.h"
@@ -121,7 +121,7 @@ private:
     SourceCompiler *m_sourceCompiller;
     ConnectedDevicesList *m_connectedDevicesList;
     SettingsWidget *m_settingsWidget;
-    WiFiConnection *m_wifiConnection;
+    ConnectionManager *m_connectionManager;
     QProcess *m_localApp;
     HelpWidget *m_helpWidget;
     ProjectTree *m_projectTree;

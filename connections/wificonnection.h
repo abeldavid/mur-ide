@@ -17,6 +17,9 @@ private slots:
     void updateRobotInfo();
     void onDisconected();
 private:
+    void* m_zmqContext;
+    void* m_zmqReqSoc;
+    void* m_zmqInfoSub;
     void recreateSockets();
 };
 

@@ -9,7 +9,10 @@
 #include "settingsmanager.h"
 
 WiFiConnection::WiFiConnection(QObject *parent) :
-    AbstractConnection(parent)
+    AbstractConnection(parent),
+    m_zmqContext(zmq_ctx_new()),
+    m_zmqReqSoc(zmq_socket(m_zmqContext, ZMQ_REQ)),
+    m_zmqInfoSub(zmq_socket(m_zmqContext, ZMQ_SUB))
 {
     int timeout = 2000;
     int option = 0;
