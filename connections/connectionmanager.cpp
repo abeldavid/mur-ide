@@ -4,6 +4,6 @@
 
 ConnectionManager::ConnectionManager(QObject *parent) : QObject(parent)
 {
-    m_connection = new WiFiConnection()
+    m_connection = new WiFiConnection(this);
 }
 

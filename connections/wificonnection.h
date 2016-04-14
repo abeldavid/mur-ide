@@ -12,7 +12,7 @@ public:
 public slots:
     void runApp();
     void killApp();
-    void send(QString file);
+    void sendFile(QString file);
 private slots:
     void updateRobotInfo();
     void onDisconected();

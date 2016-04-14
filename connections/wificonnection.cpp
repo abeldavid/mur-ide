@@ -107,12 +107,12 @@ void WiFiConnection::killApp()
     emit appKilled(true);
 }
 
-void WiFiConnection::send(QString file)
+void WiFiConnection::sendFile(QString file)
 {
 
     if (!m_isConnected) {
         recreateSockets();
-        emit appSend(false);
+        emit appSent(false);
         return;
     }
 
@@ -123,7 +123,7 @@ void WiFiConnection::send(QString file)
 
     if (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0)) {
         recreateSockets();
-        emit appSend(false);
+        emit appSent(false);
         return;
     }
     zmq_msg_close(&ideCmdData);
@@ -133,20 +133,20 @@ void WiFiConnection::send(QString file)
     if (-1 == zmq_msg_recv(&serverCmdData, m_zmqReqSoc, 0))
     {
         recreateSockets();
-        emit appSend(false);
+        emit appSent(false);
         return;
     }
     zmq_msg_close(&serverCmdData);
     QFileInfo fInfo(file);
     zmq_msg_t pathToBinary;
-    QString path = "/home/root/apps/" + fInfo.fileName();
+    QString path = m_binaryPath + fInfo.fileName();
 
     zmq_msg_init_size(&pathToBinary, path.size());
     memcpy(zmq_msg_data(&pathToBinary), path.toStdString().c_str(), path.size());
 
     if (-1 == zmq_msg_send(&pathToBinary, m_zmqReqSoc, 0)) {
         recreateSockets();
-        emit appSend(false);
+        emit appSent(false);
         return;
     }
     zmq_msg_close(&pathToBinary);
@@ -155,14 +155,14 @@ void WiFiConnection::send(QString file)
     zmq_msg_init(&serverPathData);
     if (-1 == zmq_msg_recv(&serverPathData, m_zmqReqSoc, 0)) {
         recreateSockets();
-        emit appSend(false);
+        emit appSent(false);
         return;
     }
     zmq_msg_close(&serverPathData);
 
     QFile bin(file);
     if (!bin.open(QIODevice::ReadOnly)) {
-        emit appSend(false);
+        emit appSent(false);
         return;
     }
     QByteArray blob = bin.readAll();
@@ -172,7 +172,7 @@ void WiFiConnection::send(QString file)
     memcpy(zmq_msg_data(&binaryData), (void*)blob.data(), blob.size());
     if (-1 == zmq_msg_send(&binaryData, m_zmqReqSoc, 0)) {
         recreateSockets();
-        emit appSend(false);
+        emit appSent(false);
         return;
     }
 
@@ -180,11 +180,11 @@ void WiFiConnection::send(QString file)
     zmq_msg_init(&serverBinData);
     if (-1 == zmq_msg_recv(&serverBinData, m_zmqReqSoc, 0)) {
         recreateSockets();
-        emit appSend(false);
+        emit appSent(false);
         return;
     }
     zmq_msg_close(&serverBinData);
-    emit appSend(true);
+    emit appSent(true);
 }
 
 void WiFiConnection::updateRobotInfo()

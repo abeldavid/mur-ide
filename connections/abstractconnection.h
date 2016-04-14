@@ -16,13 +16,11 @@ public:
 public slots:
     virtual void runApp() = 0;
     virtual void killApp() = 0;
-    virtual void send(QString file) = 0;
+    virtual void sendFile(QString file) = 0;
 signals:
-    void run();
-    void onExecOutput(QString);
     void appKilled(bool);
     void appStarted(bool);
-    void appSend(bool);
+    void appSent(bool);
     void statusUpdated(StatusInfo);
     void disconnected();
 protected slots:
@@ -31,14 +29,13 @@ protected slots:
     virtual void recreateSockets() = 0;
 protected:
     StatusInfo m_robotInfo;
-    QString m_binaryPath;
+    const QString m_binaryPath;
     bool m_isConnected = false;
     void* m_zmqContext;
     void* m_zmqReqSoc;
     void* m_zmqInfoSub;
     QTimer *m_connectionTimeout;
     QTimer *m_updateDeviceListTimer;
-    QThread *m_connectionThread;
 };
 
 #endif // ABSTRACTCONNECTION_H

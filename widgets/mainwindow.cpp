@@ -124,7 +124,7 @@ void MainWindow::compilationFinished()
 
 bool MainWindow::uploadApp()
 {
-    m_wifiConnection->send(m_sourceCompiller->pathToBinary());
+    m_wifiConnection->sendFile(m_sourceCompiller->pathToBinary());
     return true;
 
 }
@@ -826,7 +826,7 @@ void MainWindow::connectActionsToSlots()
     QObject::connect(m_wifiConnection, SIGNAL(onExecOutput(QString)), m_consoleWidget, SLOT(appendMessage(QString)));
 
     QObject::connect(m_wifiConnection, SIGNAL(appKilled(bool)), this, SLOT(onAppKilled(bool)));
-    QObject::connect(m_wifiConnection, SIGNAL(appSend(bool)), this, SLOT(onEndFileUpload(bool)));
+    QObject::connect(m_wifiConnection, SIGNAL(appSent(bool)), this, SLOT(onEndFileUpload(bool)));
     QObject::connect(m_wifiConnection, SIGNAL(appStarted(bool)), this, SLOT(onAppStarted(bool)));
 
     QObject::connect(m_wifiConnection, SIGNAL(statusUpdated(StatusInfo)), m_connectedDevicesList, SLOT(updateDevices(StatusInfo)));

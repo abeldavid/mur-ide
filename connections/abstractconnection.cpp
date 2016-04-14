@@ -3,6 +3,7 @@
 
 AbstractConnection::AbstractConnection(QObject *parent) :
     QObject(parent),
+    m_binaryPath("/home/root/apps/"),
     m_zmqContext(zmq_ctx_new()),
     m_zmqReqSoc(zmq_socket(m_zmqContext, ZMQ_REQ)),
     m_zmqInfoSub(zmq_socket(m_zmqContext, ZMQ_SUB)),
