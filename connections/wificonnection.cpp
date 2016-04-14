@@ -15,8 +15,11 @@ WiFiConnection::WiFiConnection(QObject *parent) :
     int option = 0;
     int hwm = 5;
 
-    zmq_connect(m_zmqInfoSub, "tcp://192.168.42.1:2052");
-    zmq_connect(m_zmqReqSoc,  "tcp://192.168.42.1:7350");
+    QString ipSub = "tcp://" + SettingsManager::instance().ipAddress() + ":2052";
+    QString ipReq = "tcp://" + SettingsManager::instance().ipAddress() + ":7350";
+
+    zmq_connect(m_zmqInfoSub, ipSub.toStdString().c_str());
+    zmq_connect(m_zmqReqSoc,  ipReq.toStdString().c_str());
 
     zmq_setsockopt(m_zmqReqSoc, ZMQ_SNDTIMEO, &timeout, sizeof(int));
     zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_RELAXED, &option, sizeof(int));
@@ -25,8 +28,8 @@ WiFiConnection::WiFiConnection(QObject *parent) :
     zmq_setsockopt(m_zmqInfoSub, ZMQ_SUBSCRIBE, 0, 0);
     zmq_setsockopt(m_zmqInfoSub, ZMQ_RCVHWM, &hwm, sizeof(int));
 
-    m_connectionTimeout->setInterval(7000);
-    m_updateDeviceListTimer->setInterval(1000);
+    m_connectionTimeout->setInterval(2000);
+    m_updateDeviceListTimer->setInterval(500);
 
     QObject::connect(m_connectionTimeout, SIGNAL(timeout()), this, SLOT(onDisconected()));
     QObject::connect(m_updateDeviceListTimer, SIGNAL(timeout()), this, SLOT(updateRobotInfo()));
@@ -217,8 +220,9 @@ void WiFiConnection::recreateSockets()
     zmq_setsockopt(m_zmqReqSoc, ZMQ_SNDTIMEO, &timeout, sizeof(int));
     zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_RELAXED, &option, sizeof(int));
     zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_CORRELATE, &option, sizeof(int));
-
     zmq_setsockopt(m_zmqReqSoc, ZMQ_RCVTIMEO, &timeout, sizeof(int));
-    zmq_connect(m_zmqReqSoc, "tcp://192.168.42.1:7350");
+
+    QString ipReq = "tcp://" + SettingsManager::instance().ipAddress() + ":7350";
+    zmq_connect(m_zmqReqSoc,  ipReq.toStdString().c_str());
 }
 

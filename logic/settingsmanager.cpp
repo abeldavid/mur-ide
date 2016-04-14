@@ -166,7 +166,6 @@ QStringList SettingsManager::edisonCompilerOptions() const
     QStringList defaultOptions;
     defaultOptions << "-O2";
     defaultOptions << "-std=c++11";
-    defaultOptions << "-lmur";
     defaultOptions << "-lopencv_core";
     defaultOptions << "-lopencv_highgui";
     defaultOptions << "-lopencv_imgproc";
@@ -174,6 +173,7 @@ QStringList SettingsManager::edisonCompilerOptions() const
     defaultOptions << "-lopencv_flann";
     defaultOptions << "-lopencv_objdetect";
     defaultOptions << "-lopencv_videostab";
+    defaultOptions << "-lopencv_video";
     defaultOptions << "-lzmq";
 
     QStringList compilerOpt = m_settings->value("CCOPT", defaultOptions).toStringList();
@@ -209,7 +209,6 @@ QStringList SettingsManager::mingwCompilerOptions() const
     QStringList defaultOptions;
     defaultOptions << "-O2";
     defaultOptions << "-std=c++11";
-    defaultOptions << "-lmur";
     defaultOptions << "-lopencv_core2410";
     defaultOptions << "-lopencv_highgui2410";
     defaultOptions << "-lopencv_imgproc2410";
@@ -217,6 +216,7 @@ QStringList SettingsManager::mingwCompilerOptions() const
     defaultOptions << "-lopencv_flann2410";
     defaultOptions << "-lopencv_objdetect2410";
     defaultOptions << "-lopencv_videostab2410";
+    defaultOptions << "-lopencv_video2410";
     defaultOptions << "-lzmq";
 
     m_settings->beginGroup("mingw-windows");

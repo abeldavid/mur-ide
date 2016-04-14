@@ -69,6 +69,7 @@ private:
     void initWidgets();
 private slots:
     void setConnectionType(QString type);
+    void initStatusInfo();
 };
 
 #endif // CONNECTEDDEVICESLIST_H

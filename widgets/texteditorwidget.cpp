@@ -209,12 +209,19 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *e)
         return; // не дает дописать NULL
     }
     if (m_inDoubleParenthesisMode) {
-        int line;
-        int index;
-        getCursorPosition(&line, &index);
-        setCursorPosition(line, index + 1);
-        m_inDoubleParenthesisMode = false;
-        return;
+        if (e->key() == Qt::Key_ParenRight ||
+                e->key() == Qt::Key_BracketRight ||
+                e->key() == Qt::Key_BraceRight) {
+            int line;
+            int index;
+            getCursorPosition(&line, &index);
+            setCursorPosition(line, index + 1);
+            m_inDoubleParenthesisMode = false;
+            return;
+        }
+        if (e->key() == Qt::Key_Z && e->modifiers().testFlag(Qt::ControlModifier)) {
+            // delete character next to cursor
+        }
     }
     m_inDoubleParenthesisMode = false;
     if(e->key() == Qt::Key_ParenLeft) {

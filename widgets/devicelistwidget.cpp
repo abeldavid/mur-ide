@@ -29,15 +29,9 @@ ConnectedDevicesList::ConnectedDevicesList(QWidget *parent)
       m_yaw(new QLabel("", this)),
       m_pitch(new QLabel("", this)),
       m_roll(new QLabel("", this)),
-      m_depth(new QLabel("", this)),
-      m_prevStatusInfo({})
+      m_depth(new QLabel("", this))
 {
-    // initialize m_prevStatusInfo with values it never gets
-    // 0 for deiceStatus and version, 0.0f for yaw, pitch, roll, depth,
-    // and 255 for cameras and leaks
-    m_prevStatusInfo.cameras = 255;
-    m_prevStatusInfo.leak = 255;
-    m_prevStatusInfo.depth = std::numeric_limits<float>::min();
+    initStatusInfo();
 
     createPixMaps();
 
@@ -139,11 +133,7 @@ void ConnectedDevicesList::updateDeviceIcon(uint8_t deviceNumber, const uint8_t 
 
 void ConnectedDevicesList::clearDevices()
 {
-    //reinitialize m_prevStatusInfo (fix bug after disconnect)
-    m_prevStatusInfo = StatusInfo();
-    m_prevStatusInfo.cameras = 255;
-    m_prevStatusInfo.leak = 255;
-    m_prevStatusInfo.depth = std::numeric_limits<float>::min();
+    initStatusInfo();
 
     m_connectionStatus->setStyleSheet("QLabel{color:#999999}");
     m_connectionStatus->setText(m_connectionTexts.second);
@@ -256,4 +246,13 @@ void ConnectedDevicesList::setConnectionType(QString type)
     }
 }
 
-
+void ConnectedDevicesList::initStatusInfo()
+{
+    // initialize m_prevStatusInfo with values it never gets
+    // 0 for deiceStatus and version, 0.0f for yaw, pitch, roll, depth,
+    // and 255 for cameras and leaks
+    m_prevStatusInfo = StatusInfo();
+    m_prevStatusInfo.cameras = 255;
+    m_prevStatusInfo.leak = 255;
+    m_prevStatusInfo.depth = std::numeric_limits<float>::min();
+}
