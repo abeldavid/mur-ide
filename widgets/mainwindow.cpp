@@ -832,7 +832,7 @@ void MainWindow::connectActionsToSlots()
 
     QObject::connect(this, SIGNAL(startApp()), m_connectionManager, SLOT(runApp()));
     QObject::connect(this, SIGNAL(stopApp()), m_connectionManager, SLOT(killApp()));
-    QObject::connect(this, SIGNAL(sendFile(QString)), m_connectionManager, SLOT(send(QString)));
+    QObject::connect(this, SIGNAL(sendFile(QString)), m_connectionManager, SLOT(sendFile(QString)));
     QObject::connect(m_localApp, SIGNAL(finished(int)), this, SLOT(onLocalAppFinished()));
 
     QObject::connect(m_sourceCompiller, SIGNAL(run()), m_textEditorWidget, SLOT(clearErrors()));

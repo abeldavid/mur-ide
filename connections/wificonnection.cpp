@@ -10,35 +10,18 @@
 
 WiFiConnection::WiFiConnection(QObject *parent) :
     AbstractConnection(parent),
-    m_zmqContext(zmq_ctx_new()),
-    m_zmqReqSoc(zmq_socket(m_zmqContext, ZMQ_REQ)),
-    m_zmqInfoSub(zmq_socket(m_zmqContext, ZMQ_SUB))
+    m_zmqContext(zmq_ctx_new())
 {
-    int timeout = 2000;
-    int option = 0;
-    int hwm = 5;
+    m_subAddr = "tcp://" + SettingsManager::instance().ipAddress() + ":2052";
+    m_reqAddr = "tcp://" + SettingsManager::instance().ipAddress() + ":7350";
 
-    QString ipSub = "tcp://" + SettingsManager::instance().ipAddress() + ":2052";
-    QString ipReq = "tcp://" + SettingsManager::instance().ipAddress() + ":7350";
+    m_zmqReqSoc = zmq_socket(m_zmqContext, ZMQ_REQ);
+    initReqSocket();
 
-    zmq_connect(m_zmqInfoSub, ipSub.toStdString().c_str());
-    zmq_connect(m_zmqReqSoc,  ipReq.toStdString().c_str());
+    m_zmqInfoSub = zmq_socket(m_zmqContext, ZMQ_SUB);
+    initSubSocket();
 
-    zmq_setsockopt(m_zmqReqSoc, ZMQ_SNDTIMEO, &timeout, sizeof(int));
-    zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_RELAXED, &option, sizeof(int));
-    zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_CORRELATE, &option, sizeof(int));
-    zmq_setsockopt(m_zmqReqSoc, ZMQ_RCVTIMEO, &timeout, sizeof(int));
-    zmq_setsockopt(m_zmqInfoSub, ZMQ_SUBSCRIBE, 0, 0);
-    zmq_setsockopt(m_zmqInfoSub, ZMQ_RCVHWM, &hwm, sizeof(int));
-
-    m_connectionTimeout->setInterval(2000);
-    m_updateDeviceListTimer->setInterval(500);
-
-    QObject::connect(m_connectionTimeout, SIGNAL(timeout()), this, SLOT(onDisconected()));
-    QObject::connect(m_updateDeviceListTimer, SIGNAL(timeout()), this, SLOT(updateRobotInfo()));
-
-    m_updateDeviceListTimer->start();
-    m_connectionTimeout->start();
+    initTimers();
 }
 
 WiFiConnection::~WiFiConnection()
@@ -48,98 +31,30 @@ WiFiConnection::~WiFiConnection()
 
 void WiFiConnection::runApp()
 {
-
-    if (!m_isConnected) {
-        recreateSockets();
-        emit appStarted(false);
-        return;
+    if (sendCommand(m_commandRun)) {
+        emit appStarted(true);
     }
-
-    zmq_msg_t ideCmdData;
-    uint8_t cmd = 30;
-    zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
-    memcpy(zmq_msg_data(&ideCmdData), &cmd, sizeof(uint8_t));
-
-    if (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0)) {
+    else {
         emit appStarted(false);
-        return;
     }
-    zmq_msg_close(&ideCmdData);
-
-    zmq_msg_t serverCmdData;
-    zmq_msg_init(&serverCmdData);
-    if (-1 == zmq_msg_recv(&serverCmdData, m_zmqReqSoc, 0))
-    {
-        emit appStarted(false);
-        return;
-    }
-    zmq_msg_close(&serverCmdData);
-    emit appStarted(true);
 }
 
 void WiFiConnection::killApp()
 {
-
-    if (!m_isConnected) {
-        recreateSockets();
-        emit appKilled(false);
-        return;
+    if (sendCommand(m_commandKill)) {
+        emit appKilled(true);
     }
-
-    qDebug() << "About to kill";
-    zmq_msg_t ideCmdData;
-    uint8_t cmd = 40;
-    zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
-    memcpy(zmq_msg_data(&ideCmdData), &cmd, sizeof(uint8_t));
-
-    if (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0)) {
+    else {
         emit appKilled(false);
-        return;
     }
-    zmq_msg_close(&ideCmdData);
-
-    zmq_msg_t serverCmdData;
-    zmq_msg_init(&serverCmdData);
-    if (-1 == zmq_msg_recv(&serverCmdData, m_zmqReqSoc, 0))
-    {
-        emit appKilled(false);
-        return;
-
-    }
-    zmq_msg_close(&serverCmdData);
-    emit appKilled(true);
 }
 
 void WiFiConnection::sendFile(QString file)
 {
-
-    if (!m_isConnected) {
-        recreateSockets();
+    if (!sendCommand(m_commandSend)) {
         emit appSent(false);
         return;
     }
-
-    zmq_msg_t ideCmdData;
-    uint8_t cmd = 10;
-    zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
-    memcpy(zmq_msg_data(&ideCmdData), &cmd, sizeof(uint8_t));
-
-    if (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0)) {
-        recreateSockets();
-        emit appSent(false);
-        return;
-    }
-    zmq_msg_close(&ideCmdData);
-
-    zmq_msg_t serverCmdData;
-    zmq_msg_init(&serverCmdData);
-    if (-1 == zmq_msg_recv(&serverCmdData, m_zmqReqSoc, 0))
-    {
-        recreateSockets();
-        emit appSent(false);
-        return;
-    }
-    zmq_msg_close(&serverCmdData);
     QFileInfo fInfo(file);
     zmq_msg_t pathToBinary;
     QString path = m_binaryPath + fInfo.fileName();
@@ -148,7 +63,7 @@ void WiFiConnection::sendFile(QString file)
     memcpy(zmq_msg_data(&pathToBinary), path.toStdString().c_str(), path.size());
 
     if (-1 == zmq_msg_send(&pathToBinary, m_zmqReqSoc, 0)) {
-        recreateSockets();
+        recreateReqSocket();
         emit appSent(false);
         return;
     }
@@ -157,7 +72,7 @@ void WiFiConnection::sendFile(QString file)
     zmq_msg_t serverPathData;
     zmq_msg_init(&serverPathData);
     if (-1 == zmq_msg_recv(&serverPathData, m_zmqReqSoc, 0)) {
-        recreateSockets();
+        recreateReqSocket();
         emit appSent(false);
         return;
     }
@@ -174,7 +89,7 @@ void WiFiConnection::sendFile(QString file)
     zmq_msg_init_size(&binaryData, blob.size());
     memcpy(zmq_msg_data(&binaryData), (void*)blob.data(), blob.size());
     if (-1 == zmq_msg_send(&binaryData, m_zmqReqSoc, 0)) {
-        recreateSockets();
+        recreateReqSocket();
         emit appSent(false);
         return;
     }
@@ -182,7 +97,7 @@ void WiFiConnection::sendFile(QString file)
     zmq_msg_t serverBinData;
     zmq_msg_init(&serverBinData);
     if (-1 == zmq_msg_recv(&serverBinData, m_zmqReqSoc, 0)) {
-        recreateSockets();
+        recreateReqSocket();
         emit appSent(false);
         return;
     }
@@ -208,24 +123,69 @@ void WiFiConnection::onDisconected()
 {
     qDebug() << "connection timeout";
     m_isConnected = false;
-    recreateSockets();
+    recreateReqSocket();
     emit disconnected();
 }
 
-void WiFiConnection::recreateSockets()
+bool WiFiConnection::sendCommand(uint8_t cmd)
 {
-    int timeout = 2000;
-    int option = 0;
+    if (!m_isConnected) {
+        recreateReqSocket();
+        return false;
+    }
+    zmq_msg_t ideCmdData;
+    zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
+    memcpy(zmq_msg_data(&ideCmdData), &cmd, sizeof(uint8_t));
 
-    zmq_close(m_zmqReqSoc);
+    if (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0)) {
+        recreateReqSocket(); // TODO: check if correct (was not in run and kill, but was in send file)
+        return false;
+    }
+    zmq_msg_close(&ideCmdData);
 
-    zmq_socket(m_zmqContext, ZMQ_REQ);
-    zmq_setsockopt(m_zmqReqSoc, ZMQ_SNDTIMEO, &timeout, sizeof(int));
-    zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_RELAXED, &option, sizeof(int));
-    zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_CORRELATE, &option, sizeof(int));
-    zmq_setsockopt(m_zmqReqSoc, ZMQ_RCVTIMEO, &timeout, sizeof(int));
-
-    QString ipReq = "tcp://" + SettingsManager::instance().ipAddress() + ":7350";
-    zmq_connect(m_zmqReqSoc,  ipReq.toStdString().c_str());
+    zmq_msg_t serverCmdData;
+    zmq_msg_init(&serverCmdData);
+    if (-1 == zmq_msg_recv(&serverCmdData, m_zmqReqSoc, 0))
+    {
+        recreateReqSocket(); // TODO: -||-
+        return false;
+    }
+    zmq_msg_close(&serverCmdData);
+    return true;
 }
 
+void WiFiConnection::initSubSocket()
+{
+    zmq_setsockopt(m_zmqInfoSub, ZMQ_SUBSCRIBE, 0, 0);
+    zmq_setsockopt(m_zmqInfoSub, ZMQ_RCVHWM, &m_subHWM, sizeof(int));
+    zmq_connect(m_zmqInfoSub, m_subAddr.toStdString().c_str());
+}
+
+void WiFiConnection::initReqSocket()
+{
+    zmq_setsockopt(m_zmqReqSoc, ZMQ_SNDTIMEO, &m_reqTimeout, sizeof(int));
+    zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_RELAXED, &m_reqOption, sizeof(int));
+    zmq_setsockopt(m_zmqReqSoc, ZMQ_REQ_CORRELATE, &m_reqOption, sizeof(int));
+    zmq_setsockopt(m_zmqReqSoc, ZMQ_RCVTIMEO, &m_reqTimeout, sizeof(int));
+    zmq_connect(m_zmqReqSoc,  m_reqAddr.toStdString().c_str());
+}
+
+void WiFiConnection::recreateReqSocket()
+{
+
+    zmq_close(m_zmqReqSoc);
+    zmq_socket(m_zmqContext, ZMQ_REQ);
+    initReqSocket();
+}
+
+void WiFiConnection::initTimers()
+{
+    m_connectionTimeout->setInterval(m_disconnectInterval);
+    m_updateDevicesTimer->setInterval(m_updateInterval);
+
+    QObject::connect(m_connectionTimeout, SIGNAL(timeout()), this, SLOT(onDisconected()));
+    QObject::connect(m_updateDevicesTimer, SIGNAL(timeout()), this, SLOT(updateRobotInfo()));
+
+    m_updateDevicesTimer->start();
+    m_connectionTimeout->start();
+}

@@ -26,13 +26,17 @@ signals:
 protected slots:
     virtual void updateRobotInfo() = 0;
     virtual void onDisconected() = 0;
-    virtual void recreateSockets() = 0;
 protected:
+    const uint8_t m_commandSend = 10;
+    const uint8_t m_commandRun = 30;
+    const uint8_t m_commandKill = 40;
+    const int m_updateInterval = 500;
+    const int m_disconnectInterval = 2000;
     StatusInfo m_robotInfo;
     const QString m_binaryPath;
     bool m_isConnected = false;
     QTimer *m_connectionTimeout;
-    QTimer *m_updateDeviceListTimer;
+    QTimer *m_updateDevicesTimer;
 };
 
 #endif // ABSTRACTCONNECTION_H

@@ -33,7 +33,7 @@ void ConnectionManager::connectSignals()
 
 void ConnectionManager::connectToWifi()
 {
-    delete m_connection;
+    //delete m_connection;
     m_connection = new WiFiConnection(this);
     connectSignals();
 }

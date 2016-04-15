@@ -17,10 +17,19 @@ private slots:
     void updateRobotInfo();
     void onDisconected();
 private:
+    const int m_reqTimeout = 2000;
+    const int m_reqOption = 0;
+    const int m_subHWM = 5;
+    QString m_subAddr;
+    QString m_reqAddr;
     void* m_zmqContext;
     void* m_zmqReqSoc;
     void* m_zmqInfoSub;
-    void recreateSockets();
+    bool sendCommand(uint8_t command);
+    void initSubSocket();
+    void initReqSocket();
+    void recreateReqSocket();
+    void initTimers();
 };
 
 #endif // WIFICONNECTION_H
