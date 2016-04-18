@@ -37,6 +37,7 @@ protected:
     bool m_isConnected = false;
     QTimer *m_connectionTimeout;
     QTimer *m_updateDevicesTimer;
+    void initTimers();
 };
 
 #endif // ABSTRACTCONNECTION_H

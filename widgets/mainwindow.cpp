@@ -823,6 +823,9 @@ void MainWindow::connectActionsToSlots()
 
     QObject::connect(m_showFtpAct, SIGNAL(triggered(bool)), m_ftpWidget, SLOT(exec()));
 
+    QObject::connect(m_connectedDevicesList, SIGNAL(connectToWifi()), m_connectionManager, SLOT(connectToWifi()));
+    QObject::connect(m_connectedDevicesList, SIGNAL(connectToBluetooth()), m_connectionManager, SLOT(connectToBluetooth()));
+
     QObject::connect(m_connectionManager, SIGNAL(appKilled(bool)), this, SLOT(onAppKilled(bool)));
     QObject::connect(m_connectionManager, SIGNAL(appSent(bool)), this, SLOT(onEndFileUpload(bool)));
     QObject::connect(m_connectionManager, SIGNAL(appStarted(bool)), this, SLOT(onAppStarted(bool)));

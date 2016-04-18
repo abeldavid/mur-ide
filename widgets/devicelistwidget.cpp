@@ -237,7 +237,6 @@ void ConnectedDevicesList::initWidgets()
 
 void ConnectedDevicesList::setConnectionType(QString type)
 {
-    qDebug() << type;
     if (type == ConnectedDevicesList::wifiCaption) {
         emit connectToWifi();
     }

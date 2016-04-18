@@ -29,7 +29,6 @@ private:
     void initSubSocket();
     void initReqSocket();
     void recreateReqSocket();
-    void initTimers();
 };
 
 #endif // WIFICONNECTION_H

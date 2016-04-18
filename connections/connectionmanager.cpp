@@ -40,7 +40,7 @@ void ConnectionManager::connectToWifi()
 
 void ConnectionManager::connectToBluetooth()
 {
-//    delete m_connection;
-//    m_connection = new BluetoothConnection(this);
-//    connectSignals();
+    delete m_connection;
+    m_connection = new BluetoothConnection(this);
+    connectSignals();
 }
