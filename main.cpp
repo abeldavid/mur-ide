@@ -3,6 +3,7 @@
 
 int main(int argc, char *argv[])
 {
+    qRegisterMetaType<StatusInfo>();
     QApplication a(argc, argv);
     MainWindow w;
     w.show();

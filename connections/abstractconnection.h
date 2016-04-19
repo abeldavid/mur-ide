@@ -14,6 +14,8 @@ public:
     explicit AbstractConnection(QObject *parent = 0);
     virtual ~AbstractConnection();
 public slots:
+    virtual void init() = 0;
+//    virtual void stop() = 0;
     virtual void runApp() = 0;
     virtual void killApp() = 0;
     virtual void sendFile(QString file) = 0;
@@ -23,6 +25,7 @@ signals:
     void appSent(bool);
     void statusUpdated(StatusInfo);
     void disconnected();
+
 protected slots:
     virtual void updateRobotInfo() = 0;
     virtual void onDisconected() = 0;

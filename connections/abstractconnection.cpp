@@ -2,9 +2,7 @@
 
 AbstractConnection::AbstractConnection(QObject *parent) :
     QObject(parent),
-    m_binaryPath("/home/root/apps/"),
-    m_connectionTimeout(new QTimer(this)),
-    m_updateDevicesTimer(new QTimer(this))
+    m_binaryPath("/home/root/apps/")
 {
 
 }
@@ -14,8 +12,16 @@ AbstractConnection::~AbstractConnection()
 
 }
 
+//void AbstractConnection::stop()
+//{
+//    emit destroyed();
+//}
+
 void AbstractConnection::initTimers()
 {
+    m_connectionTimeout = new QTimer(this);
+    m_updateDevicesTimer = new QTimer(this);
+
     m_connectionTimeout->setInterval(m_disconnectInterval);
     m_updateDevicesTimer->setInterval(m_updateInterval);
 

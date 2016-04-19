@@ -9,11 +9,20 @@
 #include "settingsmanager.h"
 
 WiFiConnection::WiFiConnection(QObject *parent) :
-    AbstractConnection(parent),
-    m_zmqContext(zmq_ctx_new())
+    AbstractConnection(parent)
 {
     m_subAddr = "tcp://" + SettingsManager::instance().ipAddress() + ":2052";
     m_reqAddr = "tcp://" + SettingsManager::instance().ipAddress() + ":7350";
+}
+
+WiFiConnection::~WiFiConnection()
+{
+
+}
+
+void WiFiConnection::init()
+{
+    m_zmqContext = zmq_ctx_new();
 
     m_zmqReqSoc = zmq_socket(m_zmqContext, ZMQ_REQ);
     initReqSocket();
@@ -24,10 +33,10 @@ WiFiConnection::WiFiConnection(QObject *parent) :
     initTimers();
 }
 
-WiFiConnection::~WiFiConnection()
-{
-
-}
+//void WiFiConnection::stop()
+//{
+//    emit destroyed();
+//}
 
 void WiFiConnection::runApp()
 {

@@ -11,6 +11,8 @@ public:
     explicit BluetoothConnection(QObject *parent = 0);
     ~BluetoothConnection();
 public slots:
+    void init();
+//    void stop();
     void runApp();
     void killApp();
     void sendFile(QString file);

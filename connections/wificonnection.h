@@ -10,6 +10,8 @@ public:
     explicit WiFiConnection(QObject *parent = 0);
     ~WiFiConnection();
 public slots:
+    void init();
+//    void stop();
     void runApp();
     void killApp();
     void sendFile(QString file);

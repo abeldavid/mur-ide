@@ -9,10 +9,18 @@ BluetoothConnection::BluetoothConnection(QObject *parent) :
     m_zmqContext(zmq_ctx_new())
 {
     m_reqAddr = "tcp://localhost:5556";
+}
 
+void BluetoothConnection::init()
+{
     m_zmqReqSoc = zmq_socket(m_zmqContext, ZMQ_REQ);
     initReqSocket();
 }
+
+//void BluetoothConnection::stop()
+//{
+//    emit destroyed();
+//}
 
 BluetoothConnection::~BluetoothConnection()
 {
@@ -34,6 +42,7 @@ void BluetoothConnection::killApp()
     qDebug() << "sending kill";
 //    if (sendCommand(m_commandKill)) {
     if (sendCommand(100)) {
+        qDebug() << "sendCommand Ok";
         emit appKilled(true);
     }
     else {
@@ -79,13 +88,16 @@ bool BluetoothConnection::sendCommand(uint8_t cmd)
 //        return false;
 //    }
 //    zmq_msg_close(&serverCmdData);
+
     zmq_msg_t robotInfo;
     zmq_msg_init(&robotInfo);
     if (-1 != zmq_msg_recv(&robotInfo, m_zmqReqSoc, 0)) {
+        qDebug() << "reply Ok";
         memcpy(&m_robotInfo, zmq_msg_data(&robotInfo), sizeof(StatusInfo));
         //Restarting connection timeout;
-        m_connectionTimeout->start();
-        m_isConnected = true;
+//        m_connectionTimeout->start();
+//        m_isConnected = true;
+        qDebug() << "emitting info";
         emit statusUpdated(m_robotInfo);
     }
     qDebug() << "all OK";
