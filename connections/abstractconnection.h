@@ -15,7 +15,6 @@ public:
     virtual ~AbstractConnection();
 public slots:
     virtual void init() = 0;
-//    virtual void stop() = 0;
     virtual void runApp() = 0;
     virtual void killApp() = 0;
     virtual void sendFile(QString file) = 0;

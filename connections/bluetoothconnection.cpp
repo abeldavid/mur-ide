@@ -17,11 +17,6 @@ void BluetoothConnection::init()
     initReqSocket();
 }
 
-//void BluetoothConnection::stop()
-//{
-//    emit destroyed();
-//}
-
 BluetoothConnection::~BluetoothConnection()
 {
 

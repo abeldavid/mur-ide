@@ -33,11 +33,6 @@ void WiFiConnection::init()
     initTimers();
 }
 
-//void WiFiConnection::stop()
-//{
-//    emit destroyed();
-//}
-
 void WiFiConnection::runApp()
 {
     if (sendCommand(m_commandRun)) {

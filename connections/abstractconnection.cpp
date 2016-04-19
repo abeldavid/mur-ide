@@ -12,11 +12,6 @@ AbstractConnection::~AbstractConnection()
 
 }
 
-//void AbstractConnection::stop()
-//{
-//    emit destroyed();
-//}
-
 void AbstractConnection::initTimers()
 {
     m_connectionTimeout = new QTimer(this);
