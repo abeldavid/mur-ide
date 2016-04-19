@@ -52,8 +52,8 @@ void ConnectionManager::setConnection(AbstractConnection *connection)
 
     m_connection->moveToThread(thread);
     connect(thread, SIGNAL(started()), m_connection, SLOT(init()));
-    connect(this, SIGNAL(stopConnection()), m_connection, SLOT(deleteLater()));
     connect(m_connection, SIGNAL(destroyed()), thread, SLOT(quit()));
+    connect(this, SIGNAL(stopConnection()), m_connection, SLOT(deleteLater()));
     connect(m_connection, SIGNAL(destroyed()), thread, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), m_connection, SLOT(deleteLater()));
     thread->start();

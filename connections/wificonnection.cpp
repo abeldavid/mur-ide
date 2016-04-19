@@ -11,8 +11,7 @@
 WiFiConnection::WiFiConnection(QObject *parent) :
     AbstractConnection(parent)
 {
-    m_subAddr = "tcp://" + SettingsManager::instance().ipAddress() + ":2052";
-    m_reqAddr = "tcp://" + SettingsManager::instance().ipAddress() + ":7350";
+
 }
 
 WiFiConnection::~WiFiConnection()
@@ -22,6 +21,9 @@ WiFiConnection::~WiFiConnection()
 
 void WiFiConnection::init()
 {
+    m_subAddr = "tcp://" + SettingsManager::instance().ipAddress() + ":2052";
+    m_reqAddr = "tcp://" + SettingsManager::instance().ipAddress() + ":7350";
+
     m_zmqContext = zmq_ctx_new();
 
     m_zmqReqSoc = zmq_socket(m_zmqContext, ZMQ_REQ);
@@ -111,7 +113,6 @@ void WiFiConnection::sendFile(QString file)
 
 void WiFiConnection::updateRobotInfo()
 {
-    qDebug() << "update info";
     zmq_msg_t robotInfo;
     zmq_msg_init(&robotInfo);
     if (-1 != zmq_msg_recv(&robotInfo, m_zmqInfoSub, ZMQ_DONTWAIT)) {
@@ -125,7 +126,6 @@ void WiFiConnection::updateRobotInfo()
 
 void WiFiConnection::onDisconected()
 {
-    qDebug() << "connection timeout";
     m_isConnected = false;
     recreateReqSocket();
     emit disconnected();
