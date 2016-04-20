@@ -2,7 +2,9 @@
 #define CONNECTIONMANAGER_H
 
 #include <QObject>
-#include <QThread>
+#include <QProcess>
+#include  <QString>
+
 #include "abstractconnection.h"
 
 // more like ConnectionProxy
@@ -32,11 +34,15 @@ signals:
     void stopConnection();
 
 private:
-    AbstractConnection *m_connection;
+    AbstractConnection* m_connection;
+    bool m_connectionExists;
+    QProcess* m_bluetoothProcess;
+    const QString m_bluetoothBinaryName;
 
 private slots:
     void setConnection(AbstractConnection *connection);
     void connectSignals();
+    void createBluetoothProcess();
 //    void disconnectSignals();
 
 };

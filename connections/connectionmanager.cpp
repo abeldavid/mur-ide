@@ -1,16 +1,26 @@
+#include <QDebug>
+#include <QThread>
+//#include <QIODevice>
 
 #include "connectionmanager.h"
 #include "wificonnection.h"
 #include "bluetoothconnection.h"
 
-ConnectionManager::ConnectionManager(QObject *parent) : QObject(parent)
+ConnectionManager::ConnectionManager(QObject *parent) :
+    QObject(parent),
+    m_connectionExists(false),
+    m_bluetoothBinaryName("C:\\RoboIDE2\\mur-ide\\connections\\bluetooth\\build\\exe.win32-2.7\\zmq_test.exe")
 {
+    createBluetoothProcess();
     connectToWifi();
 }
 
 ConnectionManager::~ConnectionManager()
 {
     emit stopConnection();
+    m_bluetoothProcess->kill();
+    m_bluetoothProcess->waitForFinished(1000);
+    m_bluetoothProcess->deleteLater();
 }
 
 void ConnectionManager::runApp()
@@ -30,23 +40,21 @@ void ConnectionManager::sendFile(QString file)
 
 void ConnectionManager::connectToWifi()
 {
-    if (m_connection != 0) {
-        m_connection->deleteLater();
-    }
     setConnection(new WiFiConnection);
 }
 
 void ConnectionManager::connectToBluetooth()
 {
-    if (m_connection != 0) {
-        m_connection->deleteLater();
-    }
+    m_bluetoothProcess->waitForStarted();
     setConnection(new BluetoothConnection);
 }
 
 void ConnectionManager::setConnection(AbstractConnection *connection)
 {
-
+    if (m_connectionExists) {
+        m_connection->deleteLater();
+    }
+    m_connectionExists = true;
     m_connection = connection;
     QThread *thread = new QThread;
 
@@ -73,3 +81,10 @@ void ConnectionManager::connectSignals()
     connect(m_connection, SIGNAL(statusUpdated(StatusInfo)), this, SIGNAL(statusUpdated(StatusInfo)));
     connect(m_connection, SIGNAL(disconnected()), this, SIGNAL(disconnected()));
 }
+
+void ConnectionManager::createBluetoothProcess()
+{
+    m_bluetoothProcess = new QProcess;
+    m_bluetoothProcess->start(m_bluetoothBinaryName);
+}
+

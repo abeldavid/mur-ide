@@ -1,5 +1,6 @@
 import zmq
 import time, random
+import bluetooth
 from ctypes import *
 
 DEVICES = c_uint8 * 6
@@ -24,7 +25,7 @@ socket.bind("tcp://*:5556")
 
 while True:
     message = socket.recv()
-    print "Received request: ", ord(message)
+    #print "Received request: ", ord(message)
     if ord(message) == 30 or ord(message) == 40:
         socket.send("")
     elif ord(message) == 100:
