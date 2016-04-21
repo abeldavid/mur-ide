@@ -26,7 +26,8 @@ defineTest(copyToDestdir) {
 HELP_COMMAND = $$[QT_INSTALL_BINS]\qcollectiongenerator
 HELP_SOURCE = $$PWD\help\robohelp.qhcp
 HELP_INDEX = $$OUT_PWD\robohelp.qhc
-HELP_CONTENT =$$PWD\help\help.qch
+HELP_CONTENT = $$PWD\help\help.qch
+BLUETOOTH_BIN_DIR = $$PWD\connections\bluetooth\build\exe.win32-2.7
 
 win32 {
     INCLUDEPATH += "$$PWD\extlibs\qsci\include"
@@ -74,11 +75,17 @@ Linux {
 
     build_help.commands = $$quote($${HELP_COMMAND} $${HELP_SOURCE} -o $${HELP_INDEX})
 }
-
 QMAKE_EXTRA_TARGETS += build_help
 POST_TARGETDEPS += build_help
 
 copyToDestdir($$HELP_CONTENT)
+
+BLUETOOTH_SOURCE = $$PWD\connections\bluetooth\build\exe.win32-2.7
+BLUETOOTH_SOURCE ~= s,/,\\,g
+BLUETOOTH_DEST = $$OUT_PWD\bluetooth
+BLUETOOTH_DEST ~= s,/,\\,g
+QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$quote($$BLUETOOTH_SOURCE) $$quote($$BLUETOOTH_DEST)
+#QMAKE_POST_LINK += $$QMAKE_COPY_DIR "\"{$$BLUETOOTH_SOURCE}\"" "\"{$$BLUETOOTH_DEST}\""
 
 include(widgets/widgets.pri)
 include(logic/logic.pri)

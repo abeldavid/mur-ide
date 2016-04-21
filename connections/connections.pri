@@ -6,14 +6,12 @@ HEADERS += \
     $$PWD/wificonnection.h \
     $$PWD/bluetoothconnection.h \
     $$PWD/connectionmanager.h \
-    $$PWD/usbconnection.h \
-    $$PWD/protocol/RoboPotocol.pb.h
+    $$PWD/usbconnection.h
 
 SOURCES += \
     $$PWD/abstractconnection.cpp \
     $$PWD/wificonnection.cpp \
     $$PWD/bluetoothconnection.cpp \
     $$PWD/connectionmanager.cpp \
-    $$PWD/usbconnection.cpp \
-    $$PWD/protocol/RoboPotocol.pb.cc
+    $$PWD/usbconnection.cpp
 

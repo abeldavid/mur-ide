@@ -9,7 +9,7 @@
 ConnectionManager::ConnectionManager(QObject *parent) :
     QObject(parent),
     m_connectionExists(false),
-    m_bluetoothBinaryName("C:\\RoboIDE2\\mur-ide\\connections\\bluetooth\\build\\exe.win32-2.7\\zmq_test.exe")
+    m_bluetoothBinaryName("bluetooth\\bluetooth_connector.exe")
 {
     createBluetoothProcess();
     connectToWifi();

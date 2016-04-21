@@ -7,7 +7,7 @@ build_exe_options = {
 	 }
 includes = ["zmq", "zmq.utils.garbage", "zmq.backend.cython"]
 setup(
-	name = "zmq_test", 
+	name = "bluetooth_connector", 
 	options = {"build_exe": build_exe_options}, 
-	executables = [Executable("zmq_test.py")]
+	executables = [Executable("bluetooth_connector.py")]
 )
