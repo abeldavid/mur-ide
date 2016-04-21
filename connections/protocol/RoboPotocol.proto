@@ -1,0 +1,55 @@
+package RoboProtocol;
+
+message Command { // type = 0x00
+  enum Value {
+    RUN = 0;
+    KILL = 1;
+  }
+}
+
+message BinaryPreamble { // type = 0x10
+  required string name = 1;
+  required uint32 binarySize = 2;
+  required uint32 chunkSize = 3;
+  required uint32 binaryCRC = 4;
+}
+
+message BinaryChunk { // type = 0x11
+  required uint32 chunkNumber = 1;
+  required bytes chunk = 2;
+}
+
+message BinaryEnd {} // type = 0x12
+
+message ChangeName { // type = 0x20
+  required string name = 1;
+}
+
+message ChangePassword { // type = 0x21
+  required string password = 1;
+}
+
+message SendBluetoothMAC { // type = 0x30
+  required string bluetoothMAC = 1;
+}
+
+message StatusInfoRequest {} // type = 0x40
+
+message StatusInfo { // type = 0x70
+  required uint32 deviceNum = 1;
+  required bytes Devices = 2;
+  required float yaw = 3;
+  required float pitch = 4;
+  required float roll = 5;
+  required float depth = 6;
+  required uint32 leak = 7;
+  required uint32 version = 8;
+  required uint32 cameras = 9;
+}
+
+message Result { // type = 0x80
+  enum Value {
+    SUCCESS = 1;
+    ERROR = 2; //undefined error
+  }
+}
