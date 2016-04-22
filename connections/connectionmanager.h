@@ -21,6 +21,7 @@ public slots:
     void sendFile(QString file);
     void connectToWifi();
     void connectToBluetooth();
+    void bluetoothDevicesReceived(QByteArray devices);
 
 signals:
     void runAppSignal();
@@ -32,6 +33,8 @@ signals:
     void statusUpdated(StatusInfo);
     void disconnected();
     void stopConnection();
+    void requestBluetoothDevices();
+    void receivedBluetoothDevices(QByteArray devices);
 
 private:
     AbstractConnection* m_connection;
@@ -43,6 +46,7 @@ private slots:
     void setConnection(AbstractConnection *connection);
     void connectSignals();
     void createBluetoothProcess();
+    void onBluetoothProcessExit(int exitCode, QProcess::ExitStatus exitStatus);
 //    void disconnectSignals();
 
 };

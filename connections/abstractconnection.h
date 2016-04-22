@@ -13,17 +13,21 @@ class AbstractConnection : public QObject
 public:
     explicit AbstractConnection(QObject *parent = 0);
     virtual ~AbstractConnection();
+
 public slots:
     virtual void init() = 0;
     virtual void runApp() = 0;
     virtual void killApp() = 0;
     virtual void sendFile(QString file) = 0;
+    virtual void bluetoothDevicesRequested(){}
+
 signals:
     void appKilled(bool);
     void appStarted(bool);
     void appSent(bool);
     void statusUpdated(StatusInfo);
     void disconnected();
+    void bluetoothDevicesReceived(QByteArray devices);
 
 protected slots:
     virtual void updateRobotInfo() = 0;

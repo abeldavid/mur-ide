@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <zmq.h>
+#include <QThread>
 
 #include "bluetoothconnection.h"
 #include "settingsmanager.h"
@@ -45,6 +46,7 @@ void BluetoothConnection::killApp()
 }
 
 void BluetoothConnection::sendFile(QString file) {
+    qDebug() << "not implemented";
     if (sendCommand(m_commandSend)) {
         emit appSent(true);
     }
@@ -52,6 +54,50 @@ void BluetoothConnection::sendFile(QString file) {
         emit appSent(false);
     }
 
+}
+
+void BluetoothConnection::bluetoothDevicesRequested()
+{
+    uint8_t retryNumber = 5;
+    if (!m_isConnected) {
+        recreateReqSocket();
+    }
+    uint8_t cmd = 200;
+    zmq_msg_t ideCmdData;
+    zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
+    memcpy(zmq_msg_data(&ideCmdData), &cmd, sizeof(uint8_t));
+
+    while (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0) && retryNumber > 0) {
+        recreateReqSocket();
+        QThread::msleep(1000);
+//        qDebug() << retryNumber;
+        --retryNumber;
+    }
+    zmq_msg_close(&ideCmdData);
+    if (retryNumber == 0){
+        return;
+    }
+
+    zmq_msg_t devicesMsg;
+
+    zmq_msg_init(&devicesMsg);
+    retryNumber = 5;
+    while (-1 == zmq_msg_recv(&devicesMsg, m_zmqReqSoc, 0) && retryNumber > 0) {
+        QThread::msleep(100);
+//        qDebug() << "retry receive";
+        --retryNumber;
+    }
+    if (retryNumber > 0) {
+//    if (-1 != zmq_msg_recv(&devicesMsg, m_zmqReqSoc, 0)) {
+//        std::string rpl = std::string(static_cast<char*>(zmq_msg_data(&devicesMsg)), zmq_msg_size(&devicesMsg));
+        QByteArray byteArray(static_cast<char*>(zmq_msg_data(&devicesMsg)), zmq_msg_size(&devicesMsg));
+        emit bluetoothDevicesReceived(byteArray);
+//        emit bluetoothDevicesReceived(QByteArray(rpl.c_str(), rpl.length()));
+    }
+//    else {
+//        emit bluetoothDevicesFailed();
+//    }
+    zmq_msg_close(&devicesMsg);
 }
 
 void BluetoothConnection::onDisconected()
@@ -120,6 +166,7 @@ void BluetoothConnection::updateRobotInfo()
 
     zmq_msg_t robotInfo;
     zmq_msg_init(&robotInfo);
+
     if (-1 != zmq_msg_recv(&robotInfo, m_zmqReqSoc, 0)) {
         memcpy(&m_robotInfo, zmq_msg_data(&robotInfo), sizeof(StatusInfo));
         //Restarting connection timeout;

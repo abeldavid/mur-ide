@@ -18,6 +18,7 @@
 #include "ftpwidget.h"
 #include "projectcreatedialog.h"
 #include "filecreatedialog.h"
+#include "bluetoothselectdialog.h"
 
 class MainWindow : public QMainWindow
 {
@@ -132,6 +133,7 @@ private:
     bool m_inCombinedRunState;
     bool m_currentErrorsFound;
     QComboBox *m_targetComboBox;
+    BluetoothSelectDialog *m_bluetoothSelectDialog;
 };
 
 #endif // MAINWINDOW_H

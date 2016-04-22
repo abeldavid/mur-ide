@@ -12,6 +12,8 @@ ConnectionManager::ConnectionManager(QObject *parent) :
     m_bluetoothBinaryName("bluetooth\\bluetooth_connector.exe")
 {
     createBluetoothProcess();
+//    connect(m_bluetoothProcess, SIGNAL(finished(int , QProcess::ExitStatus)),
+//            this, SLOT(onBluetoothProcessExit(int, QProcess::ExitStatus)));
     connectToWifi();
 }
 
@@ -47,6 +49,14 @@ void ConnectionManager::connectToBluetooth()
 {
     m_bluetoothProcess->waitForStarted();
     setConnection(new BluetoothConnection);
+    connect(this, SIGNAL(requestBluetoothDevices()), m_connection, SLOT(bluetoothDevicesRequested()));
+    connect(m_connection, SIGNAL(bluetoothDevicesReceived(QByteArray)), this, SLOT(bluetoothDevicesReceived(QByteArray)));
+    emit requestBluetoothDevices();
+}
+
+void ConnectionManager::bluetoothDevicesReceived(QByteArray devices)
+{
+    emit receivedBluetoothDevices(devices);
 }
 
 void ConnectionManager::setConnection(AbstractConnection *connection)
@@ -62,7 +72,7 @@ void ConnectionManager::setConnection(AbstractConnection *connection)
     connect(thread, SIGNAL(started()), m_connection, SLOT(init()));
     connect(m_connection, SIGNAL(destroyed()), thread, SLOT(quit()));
     connect(this, SIGNAL(stopConnection()), m_connection, SLOT(deleteLater()));
-    connect(m_connection, SIGNAL(destroyed()), thread, SLOT(deleteLater()));
+//    connect(m_connection, SIGNAL(destroyed()), thread, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), m_connection, SLOT(deleteLater()));
     thread->start();
 
@@ -86,5 +96,14 @@ void ConnectionManager::createBluetoothProcess()
 {
     m_bluetoothProcess = new QProcess;
     m_bluetoothProcess->start(m_bluetoothBinaryName);
+}
+
+void ConnectionManager::onBluetoothProcessExit(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    Q_UNUSED(exitCode);
+    if (exitStatus == QProcess::CrashExit) {
+        qDebug() << "crash, restarting";
+        createBluetoothProcess();
+    }
 }
 

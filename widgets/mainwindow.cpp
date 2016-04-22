@@ -40,7 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_projectCreateDialog(new ProjectCreateDialog(this)),
       m_fileCreateDialog(new FileCreateDialog(this)),
       m_inCombinedRunState(false),
-      m_targetComboBox(new QComboBox(this))
+      m_targetComboBox(new QComboBox(this)),
+      m_bluetoothSelectDialog(new BluetoothSelectDialog(this))
 {
     setCentralWidget(m_textEditorWidget);
     createActions();
@@ -825,6 +826,9 @@ void MainWindow::connectActionsToSlots()
 
     QObject::connect(m_connectedDevicesList, SIGNAL(connectToWifi()), m_connectionManager, SLOT(connectToWifi()));
     QObject::connect(m_connectedDevicesList, SIGNAL(connectToBluetooth()), m_connectionManager, SLOT(connectToBluetooth()));
+
+    QObject::connect(m_connectedDevicesList, SIGNAL(connectToBluetooth()), m_bluetoothSelectDialog, SLOT(exec()));
+    QObject::connect(m_connectionManager, SIGNAL(receivedBluetoothDevices(QByteArray)), m_bluetoothSelectDialog, SLOT(showDeviceSelect(QByteArray)));
 
     QObject::connect(m_connectionManager, SIGNAL(appKilled(bool)), this, SLOT(onAppKilled(bool)));
     QObject::connect(m_connectionManager, SIGNAL(appSent(bool)), this, SLOT(onEndFileUpload(bool)));
