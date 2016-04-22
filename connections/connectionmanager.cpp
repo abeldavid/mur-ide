@@ -51,12 +51,18 @@ void ConnectionManager::connectToBluetooth()
     setConnection(new BluetoothConnection);
     connect(this, SIGNAL(requestBluetoothDevices()), m_connection, SLOT(bluetoothDevicesRequested()));
     connect(m_connection, SIGNAL(bluetoothDevicesReceived(QByteArray)), this, SLOT(bluetoothDevicesReceived(QByteArray)));
+    connect(this, SIGNAL(connectToBluetoothDevice(QString)), m_connection, SLOT(connectToDevice(QString)));
     emit requestBluetoothDevices();
 }
 
 void ConnectionManager::bluetoothDevicesReceived(QByteArray devices)
 {
     emit receivedBluetoothDevices(devices);
+}
+
+void ConnectionManager::bluetoothDeviceSelected(QString deviceMAC)
+{
+    emit connectToBluetoothDevice(deviceMAC);
 }
 
 void ConnectionManager::setConnection(AbstractConnection *connection)

@@ -20,6 +20,8 @@ BluetoothSelectDialog::BluetoothSelectDialog(QWidget *parent) :
     m_deviceList = new QListWidget(this);
     layout->addWidget(m_deviceList);
     setLayout(layout);
+    connect(m_deviceList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(listItemSelected(QListWidgetItem*)));
 }
 
 void BluetoothSelectDialog::showDeviceSelect(QByteArray devices)
@@ -31,7 +33,13 @@ void BluetoothSelectDialog::showDeviceSelect(QByteArray devices)
         QJsonArray jsonDevices = jsonDoc.array();
         for (auto device: jsonDevices) {
             QJsonArray devArray(device.toArray());
-            m_deviceList->addItem(devArray.at(0).toString() + " - " + devArray.at(1).toString());
+            m_deviceList->addItem(devArray.at(0).toString() + m_nameSeparator + devArray.at(1).toString());
         }
     }
+}
+
+void BluetoothSelectDialog::listItemSelected(QListWidgetItem* item)
+{
+    emit deviceSelected(item->text().split(m_nameSeparator)[0]);
+    close();
 }

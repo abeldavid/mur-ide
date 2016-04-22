@@ -28,6 +28,7 @@ signals:
     void statusUpdated(StatusInfo);
     void disconnected();
     void bluetoothDevicesReceived(QByteArray devices);
+    void bluetoothDeviceConnected();
 
 protected slots:
     virtual void updateRobotInfo() = 0;

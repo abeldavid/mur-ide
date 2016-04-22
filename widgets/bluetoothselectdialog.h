@@ -18,7 +18,11 @@ signals:
     void deviceSelected(QString);
 
 private:
+    const QString m_nameSeparator = QString(" - ");
     QListWidget* m_deviceList;
+
+private slots:
+    void listItemSelected(QListWidgetItem* item);
 };
 
 #endif // BLUETOOTHSELECTDIALOG_H

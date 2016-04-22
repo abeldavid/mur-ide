@@ -2,6 +2,8 @@
 #define BLUETOOTHCONNECTION_H
 
 #include <QObject>
+#include <QString>
+#include <QByteArray>
 #include "abstractconnection.h"
 
 class BluetoothConnection : public AbstractConnection
@@ -18,6 +20,7 @@ public slots:
     void killApp();
     void sendFile(QString file);
     void bluetoothDevicesRequested();
+    void connectToDevice(QString deviceMAC);
 
 private slots:
     void updateRobotInfo();

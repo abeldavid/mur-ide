@@ -35,14 +35,11 @@ win32 {
 
     INCLUDEPATH += "$$PWD\extlibs\zmq\include"
 
-    INCLUDEPATH += "$$PWD\extlibs\protobuf\include"
-
     CONFIG(release, debug | release) : {
         message(Building for Windows release mode)
         LIBS += -L"$$PWD\extlibs\qsci\mingw32\lib\release"
         LIBS += -L"$$PWD\extlibs\zmq\mingw32\lib"
-        LIBS += -L"$$PWD\extlibs\zmq\mingw32\protobuf\lib"
-        LIBS += -lqscintilla2 -llibzmq -lprotobuf
+        LIBS += -lqscintilla2 -llibzmq
         EXTRA_DLL += \
             $$PWD\extlibs\qsci\mingw32\bin\release\qscintilla2.dll \
             $$PWD\extlibs\zmq\mingw32\bin\libzmq.dll
@@ -52,8 +49,7 @@ win32 {
         message(Building for Windows debug mode)
         LIBS += -L"$$PWD\extlibs\qsci\mingw32\lib\debug"
         LIBS += -L"$$PWD\extlibs\zmq\mingw32\lib"
-        LIBS += -L"$$PWD\extlibs\zmq\mingw32\protobuf\lib"
-        LIBS +=  -lqscintilla2 -llibzmq -lprotobuf
+        LIBS +=  -lqscintilla2 -llibzmq
 
         EXTRA_DLL += \
             $$PWD\extlibs\qsci\mingw32\bin\debug\qscintilla2.dll \

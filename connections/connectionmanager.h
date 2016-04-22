@@ -22,6 +22,7 @@ public slots:
     void connectToWifi();
     void connectToBluetooth();
     void bluetoothDevicesReceived(QByteArray devices);
+    void bluetoothDeviceSelected(QString deviceMAC);
 
 signals:
     void runAppSignal();
@@ -35,6 +36,7 @@ signals:
     void stopConnection();
     void requestBluetoothDevices();
     void receivedBluetoothDevices(QByteArray devices);
+    void connectToBluetoothDevice(QString deviceMAC);
 
 private:
     AbstractConnection* m_connection;

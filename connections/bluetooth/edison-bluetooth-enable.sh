@@ -2,5 +2,5 @@
 rfkill unblock bluetooth
 sleep 1
 hciconfig hci0 up
-sllep 1
+sleep 1
 hciconfig hci0 piscan

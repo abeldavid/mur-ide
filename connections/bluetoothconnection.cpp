@@ -46,13 +46,13 @@ void BluetoothConnection::killApp()
 }
 
 void BluetoothConnection::sendFile(QString file) {
-    qDebug() << "not implemented";
-    if (sendCommand(m_commandSend)) {
-        emit appSent(true);
-    }
-    else {
-        emit appSent(false);
-    }
+    qDebug() << "not implemented on Bluetooth";
+//    if (sendCommand(m_commandSend)) {
+//        emit appSent(true);
+//    }
+//    else {
+//        emit appSent(false);
+//    }
 
 }
 
@@ -62,15 +62,14 @@ void BluetoothConnection::bluetoothDevicesRequested()
     if (!m_isConnected) {
         recreateReqSocket();
     }
-    uint8_t cmd = 200;
+    uint8_t cmd = 200; // get device list command
     zmq_msg_t ideCmdData;
     zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
     memcpy(zmq_msg_data(&ideCmdData), &cmd, sizeof(uint8_t));
 
     while (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0) && retryNumber > 0) {
         recreateReqSocket();
-        QThread::msleep(1000);
-//        qDebug() << retryNumber;
+        QThread::msleep(500);
         --retryNumber;
     }
     zmq_msg_close(&ideCmdData);
@@ -83,21 +82,70 @@ void BluetoothConnection::bluetoothDevicesRequested()
     zmq_msg_init(&devicesMsg);
     retryNumber = 5;
     while (-1 == zmq_msg_recv(&devicesMsg, m_zmqReqSoc, 0) && retryNumber > 0) {
-        QThread::msleep(100);
-//        qDebug() << "retry receive";
+        QThread::msleep(500);
         --retryNumber;
     }
     if (retryNumber > 0) {
-//    if (-1 != zmq_msg_recv(&devicesMsg, m_zmqReqSoc, 0)) {
-//        std::string rpl = std::string(static_cast<char*>(zmq_msg_data(&devicesMsg)), zmq_msg_size(&devicesMsg));
         QByteArray byteArray(static_cast<char*>(zmq_msg_data(&devicesMsg)), zmq_msg_size(&devicesMsg));
         emit bluetoothDevicesReceived(byteArray);
-//        emit bluetoothDevicesReceived(QByteArray(rpl.c_str(), rpl.length()));
     }
-//    else {
-//        emit bluetoothDevicesFailed();
-//    }
     zmq_msg_close(&devicesMsg);
+}
+
+void BluetoothConnection::connectToDevice(QString deviceMAC)
+{
+//    qDebug() << deviceMAC;
+    uint8_t retryNumber = 5;
+    if (!m_isConnected) {
+        recreateReqSocket();
+    }
+    // send command
+    uint8_t cmd = 210; // get device list command
+    zmq_msg_t ideCmdData;
+    zmq_msg_init_size(&ideCmdData, sizeof(uint8_t));
+    memcpy(zmq_msg_data(&ideCmdData), &cmd, sizeof(uint8_t));
+
+    while (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0) && retryNumber > 0) {
+        recreateReqSocket();
+        QThread::msleep(500);
+        --retryNumber;
+    }
+    zmq_msg_close(&ideCmdData);
+    if (retryNumber == 0){
+        return;
+    }
+
+    // send MAC
+    zmq_msg_t macDataMsg;
+    zmq_msg_init_size(&macDataMsg, deviceMAC.size());
+    memcpy(zmq_msg_data(&macDataMsg), deviceMAC.toStdString().c_str(), deviceMAC.size());
+
+    while (-1 == zmq_msg_send(&macDataMsg, m_zmqReqSoc, 0) && retryNumber > 0) {
+        recreateReqSocket();
+        QThread::msleep(500);
+        --retryNumber;
+    }
+    zmq_msg_close(&macDataMsg);
+    if (retryNumber == 0){
+        return;
+    }
+
+    // receive result
+    zmq_msg_t resultMsg;
+
+    zmq_msg_init(&resultMsg);
+    retryNumber = 5;
+    while (-1 == zmq_msg_recv(&resultMsg, m_zmqReqSoc, 0) && retryNumber > 0) {
+        QThread::msleep(500);
+        --retryNumber;
+    }
+    if (retryNumber > 0) {
+        QByteArray byteArray(static_cast<char*>(zmq_msg_data(&resultMsg)), zmq_msg_size(&resultMsg));
+        if (QString::fromStdString(byteArray.toStdString()) == "Success") {
+            emit bluetoothDeviceConnected();
+        }
+    }
+    zmq_msg_close(&resultMsg);
 }
 
 void BluetoothConnection::onDisconected()
@@ -114,7 +162,7 @@ bool BluetoothConnection::sendCommand(uint8_t cmd)
     memcpy(zmq_msg_data(&ideCmdData), &cmd, sizeof(uint8_t));
 
     if (-1 == zmq_msg_send(&ideCmdData, m_zmqReqSoc, 0)) {
-        recreateReqSocket(); // TODO: check if correct (was not in run and kill, but was in send file)
+        recreateReqSocket();
         return false;
     }
     zmq_msg_close(&ideCmdData);
