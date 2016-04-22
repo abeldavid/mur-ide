@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QString>
-#include <QVBoxLayout>
+#include <QListWidget>
 
 class BluetoothSelectDialog : public QDialog
 {
@@ -17,6 +17,8 @@ public slots:
 signals:
     void deviceSelected(QString);
 
+private:
+    QListWidget* m_deviceList;
 };
 
 #endif // BLUETOOTHSELECTDIALOG_H
