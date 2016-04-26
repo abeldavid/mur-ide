@@ -272,6 +272,7 @@ void MainWindow::projectOpenDialog()
 
 void MainWindow::fileCreateDialog()
 {
+    m_fileCreateDialog->init();
     m_fileCreateDialog->exec();
 }
 

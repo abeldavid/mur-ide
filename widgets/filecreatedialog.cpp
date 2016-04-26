@@ -2,7 +2,6 @@
 #include "projectmanager.h"
 #include <QFormLayout>
 #include <QDialogButtonBox>
-#include <QComboBox>
 #include <QListView>
 #include <QLabel>
 #include <QDebug>
@@ -22,17 +21,17 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
     QLabel *nameLabel = new QLabel("Название файла: ", this);
     layout->addRow(nameLabel);
 
-    QComboBox *comboBox = new QComboBox(this);
-    comboBox->setView(new QListView()); // style problem workaround
+    m_comboBox = new QComboBox(this);
+    m_comboBox ->setView(new QListView()); // style problem workaround
 
     QStringListModel *model = new QStringListModel(Project::defaultFilePrefixes.keys(), this);
     QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
     proxy->setSourceModel(model);
     proxy->sort(0);
-    comboBox->setModel(proxy);
+    m_comboBox->setModel(proxy);
 
     m_nameEdit->setFixedWidth(300);
-    layout->addRow(m_nameEdit, comboBox);
+    layout->addRow(m_nameEdit, m_comboBox);
 
     QFrame* myFrame = new QFrame();
     myFrame->setFrameShape(QFrame::HLine);
@@ -43,15 +42,17 @@ FileCreateDialog::FileCreateDialog(QWidget *parent) :
                                                        this);
     layout->addRow(buttonBox);
 
-
-    this->setDefaultFileName(comboBox->currentText());
-
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(createFile()));
 
-    connect(comboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setDefaultFileName(QString)));
+    connect(m_comboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setDefaultFileName(QString)));
+}
+
+void FileCreateDialog::init()
+{
+    this->setDefaultFileName(m_comboBox->currentText());
 }
 
 void FileCreateDialog::createFile()
